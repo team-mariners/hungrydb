@@ -1,0 +1,12 @@
+language: ruby
+
+rvm:
+    - 2.6.5
+
+services:
+    - postgresql
+
+script:
+    - bundle exec rails db:create RAILS_ENV=test
+    - bundle exec rails db:migrate
+    - bundle exec rails test

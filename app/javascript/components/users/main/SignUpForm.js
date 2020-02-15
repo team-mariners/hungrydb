@@ -2,11 +2,11 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-const SignUp = () => {
+const SignUpForm = () => {
     return (
         <Form>
             <Form.Group controlId="formUsername">
-                <Form.Label>UserName</Form.Label>
+                <Form.Label>Username</Form.Label>
                 <Form.Control type="text"/>
             </Form.Group>            
 
@@ -25,11 +25,19 @@ const SignUp = () => {
                 <Form.Control type="password"/>
             </Form.Group>
 
+            <Form.Group controlId="formUserType">
+                <Form.Label>Sign up as</Form.Label>
+                <Form.Control as="select">
+                    <option>Customer</option>
+                    <option>Rider</option>
+                </Form.Control>
+            </Form.Group>
+
             <Button variant="primary" type="submit">
                 Sign up!
             </Button>
         </Form>
     )
-}
+};
 
-export default SignUp;
+export default SignUpForm;

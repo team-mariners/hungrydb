@@ -3,6 +3,10 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 const LoginForm = () => {
+    const handleLogin = () => {
+        event.preventDefault();
+    }
+
     return (
         <Form>
             <Form.Group>
@@ -15,7 +19,7 @@ const LoginForm = () => {
                 <Form.Control type="password"/>
             </Form.Group>
 
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={handleLogin}>
                 Login
             </Button>
         </Form>

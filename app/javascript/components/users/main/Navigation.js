@@ -4,7 +4,7 @@ import {NavLink} from 'react-router-dom';
 
 const Navigation = () => {
     return (
-        <Nav justify variant="tabs" defaultActiveKey="/signup">
+        <Nav justify variant="tabs" defaultActiveKey="/signup" id="navbar-signup-login">
             <Nav.Item>
                 <Nav.Link as={NavLink} to="/signup">Sign Up</Nav.Link>
             </Nav.Item>

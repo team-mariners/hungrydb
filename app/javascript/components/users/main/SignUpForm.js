@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
 const SignUpForm = () => {
+    const [isAgreed, setIsAgreed] = useState(false);
+    const [isInvalidSubmission, setIsInvalidSubmission] = useState(false);
+
+    const handleSignUp = (event) => {
+        event.preventDefault();
+
+        if (!isAgreed) {
+            setIsInvalidSubmission(true);
+            return;
+        }
+
+        setIsInvalidSubmission(false);
+    }
+
     return (
         <Form>
             <Form.Group controlId="formUsername">
@@ -33,7 +48,19 @@ const SignUpForm = () => {
                 </Form.Control>
             </Form.Group>
 
-            <Button variant="primary" type="submit">
+            <Form.Group controlId="formTerms">
+                <Form.Check>
+                    <Form.Check.Input type="checkbox"
+                        isInvalid={isInvalidSubmission}
+                        onClick={() => setIsAgreed(!isAgreed)}/>
+                    <Form.Check.Label>I agree to the terms and conditions.</Form.Check.Label>
+                    <FormControl.Feedback type="invalid">
+                        You need to agree to the terms and conditions first.
+                    </FormControl.Feedback>
+                </Form.Check>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" onClick={handleSignUp}>
                 Sign up!
             </Button>
         </Form>

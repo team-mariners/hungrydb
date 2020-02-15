@@ -1,0 +1,8 @@
+{
+    "name": "Hungrydb",
+    "website": "https://hungrydb.herokuapp.com",
+    "repository": "https://github.com/team-mariners/hungrydb",
+    "scripts": {
+        "postdeploy" : "rails db:create db:migrate db:seed"
+    }
+}

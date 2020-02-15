@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 const LoginForm = () => {
     const handleLogin = () => {
         event.preventDefault();
-    }
+    };
 
     return (
         <Form>

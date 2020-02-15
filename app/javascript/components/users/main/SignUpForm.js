@@ -16,7 +16,7 @@ const SignUpForm = () => {
         }
 
         setIsInvalidSubmission(false);
-    }
+    };
 
     return (
         <Form>

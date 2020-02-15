@@ -1,5 +1,13 @@
-scss_files: "app/assets/stylesheets/**/*.scss"
+# Default application configuration that all configurations inherit from.
 
+scss_files: "**/*.scss"
+plugin_directories: ['.scss-linters']
+
+# List of gem names to load custom linters from (make sure they are already
+# installed)
+plugin_gems: []
+
+# Default severity of all linters.
 severity: warning
 
 linters:
@@ -9,15 +17,15 @@ linters:
     space_after_bang: false
 
   BemDepth:
-    enabled: true
+    enabled: false
     max_elements: 1
 
   BorderZero:
     enabled: true
-    convention: zero
+    convention: zero # or `none`
 
   ChainedClasses:
-    enabled: true
+    enabled: false
 
   ColorKeyword:
     enabled: true
@@ -43,7 +51,7 @@ linters:
 
   ElsePlacement:
     enabled: true
-    style: same_line
+    style: same_line # or 'new_line'
 
   EmptyLineBetweenBlocks:
     enabled: true
@@ -53,19 +61,19 @@ linters:
     enabled: true
 
   ExtendDirective:
-    enabled: true
+    enabled: false
 
   FinalNewline:
     enabled: true
     present: true
 
   HexLength:
-    enabled: true
-    style: short
+    enabled: false
+    style: short # or 'long'
 
   HexNotation:
     enabled: true
-    style: lowercase
+    style: lowercase # or 'uppercase'
 
   HexValidation:
     enabled: true
@@ -75,8 +83,6 @@ linters:
 
   ImportantRule:
     enabled: true
-    exclude:
-      - "app/assets/stylesheets/utilities/**"
 
   ImportPath:
     enabled: true
@@ -86,15 +92,12 @@ linters:
   Indentation:
     enabled: true
     allow_non_nested_indentation: false
-    character: space
+    character: space # or 'tab'
     width: 4
 
   LeadingZero:
     enabled: true
-    style: include_zero
-
-  LengthVariable:
-    enabled: false
+    style: include_zero # or 'exclude_zero'
 
   MergeableSelector:
     enabled: true
@@ -103,22 +106,24 @@ linters:
   NameFormat:
     enabled: true
     allow_leading_underscore: true
-    convention: hyphenated_lowercase
+    convention: hyphenated_lowercase # or 'camel_case', or 'snake_case', or a regex pattern
 
   NestingDepth:
     enabled: true
-    max_depth: 3
+    max_depth: 4
     ignore_parent_selectors: false
 
   PlaceholderInExtend:
-    enabled: true
+    enabled: false
 
   PrivateNamingConvention:
-    enabled: true
+    enabled: false
     prefix: _
 
   PropertyCount:
-    enabled: false
+    enabled: true
+    include_nested: false
+    max_properties: 10
 
   PropertySortOrder:
     enabled: true
@@ -128,24 +133,21 @@ linters:
 
   PropertySpelling:
     enabled: true
-    extra_properties:
-      - font-display
-      - font-variant-numeric
-      - text-decoration-skip
+    extra_properties: []
+    disabled_properties: []
 
   PropertyUnits:
     enabled: true
     global: [
-      'ch', 'em', 'ex', 'rem',
-      'cm', 'in', 'mm', 'pc', 'pt', 'px', 'q',
-      'vh', 'vw', 'vmin', 'vmax',
-      'deg', 'grad', 'rad', 'turn',
-      'ms', 's',
-      'Hz', 'kHz',
-      'dpi', 'dpcm', 'dppx',
-      '%']
-    properties:
-      line-height: []
+      'ch', 'em', 'ex', 'rem',                 # Font-relative lengths
+      'cm', 'in', 'mm', 'pc', 'pt', 'px', 'q', # Absolute lengths
+      'vh', 'vw', 'vmin', 'vmax',              # Viewport-percentage lengths
+      'deg', 'grad', 'rad', 'turn',            # Angle
+      'ms', 's',                               # Duration
+      'Hz', 'kHz',                             # Frequency
+      'dpi', 'dpcm', 'dppx',                   # Resolution
+      '%']                                     # Other
+    properties: {}
 
   PseudoElement:
     enabled: true
@@ -158,14 +160,15 @@ linters:
 
   SelectorDepth:
     enabled: true
-    max_depth: 3
+    max_depth: 2
 
   SelectorFormat:
     enabled: true
-    convention: hyphenated_BEM
+    convention: hyphenated_lowercase # or 'strict_BEM', or 'hyphenated_BEM', or 'snake_case', or 'camel_case', or a regex pattern
 
   Shorthand:
     enabled: true
+    allowed_shorthands: [1, 2, 3]
 
   SingleLinePerProperty:
     enabled: true
@@ -176,34 +179,29 @@ linters:
 
   SpaceAfterComma:
     enabled: true
-    style: at_least_one_space
-
-  SpaceAfterComment:
-    enabled: true
-    style: at_least_one_space
-    allow_empty_comments: true
+    style: one_space # or 'no_space', or 'at_least_one_space'
 
   SpaceAfterPropertyColon:
     enabled: true
-    style: at_least_one_space
+    style: one_space # or 'no_space', or 'at_least_one_space', or 'aligned'
 
   SpaceAfterPropertyName:
     enabled: true
 
   SpaceAfterVariableColon:
-    enabled: true
-    style: at_least_one_space
+    enabled: false
+    style: one_space # or 'no_space', 'at_least_one_space' or 'one_space_or_newline'
 
   SpaceAfterVariableName:
     enabled: true
 
   SpaceAroundOperator:
     enabled: true
-    style: at_least_one_space
+    style: one_space # or 'at_least_one_space', or 'no_space'
 
   SpaceBeforeBrace:
     enabled: true
-    style: space
+    style: space # or 'new_line'
     allow_single_line_padding: false
 
   SpaceBetweenParens:
@@ -212,7 +210,7 @@ linters:
 
   StringQuotes:
     enabled: true
-    style: double_quotes
+    style: double_quotes # or single_quotes
 
   TrailingSemicolon:
     enabled: true
@@ -221,10 +219,10 @@ linters:
     enabled: true
 
   TrailingZero:
-    enabled: true
+    enabled: false
 
   TransitionAll:
-    enabled: true
+    enabled: false
 
   UnnecessaryMantissa:
     enabled: true
@@ -233,17 +231,20 @@ linters:
     enabled: true
 
   UrlFormat:
-    enabled: false
+    enabled: true
 
   UrlQuotes:
     enabled: true
 
   VariableForProperty:
     enabled: false
+    properties: []
 
   VendorPrefix:
     enabled: true
     identifier_list: base
+    additional_identifiers: []
+    excluded_identifiers: []
 
   ZeroUnit:
     enabled: true

@@ -1,4 +1,6 @@
-# README
+# Hungrydb
+
+![travis build status](https://travis-ci.org/team-mariners/hungrydb.svg?branch=master)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

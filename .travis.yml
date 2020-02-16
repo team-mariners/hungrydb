@@ -19,10 +19,10 @@ install:
     - sudo apt-get update  
     - sudo apt-get install yarn
     - bundle install
+    - npm install webpack
 
 before_script:
     - bundle exec rails db:create db:migrate RAILS_ENV=test
-    # - bundle exec rails webpacker:install
 
 script:
     - bundle exec rails webpacker:compile

@@ -27,5 +27,4 @@ before_script:
     - bundle exec rails db:create db:migrate RAILS_ENV=test
 
 script:
-    - bundle exec rails webpacker:compile
     - bundle exec rails test

@@ -1,5 +1,25 @@
 @import "constants";
 
 .homepage-navbar {
-    background-color: $orangered;
+    background-color: $latesky;
+}
+
+.homepage-background {
+    background-color: $lightearth;
+}
+
+.homepage-carousel-background {
+    background-color: $silver;
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+}
+
+.homepage-carousel-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 600px;
+    width: 1150px;
+    object-fit: cover;
 }

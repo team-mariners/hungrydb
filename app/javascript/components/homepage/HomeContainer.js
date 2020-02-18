@@ -1,15 +1,15 @@
 import React from 'react';
 import UserTypeCarousel from './UserTypeCarousel';
 import HomePromosCard from './HomePromosCard';
+import HomeRestaurantsCard from './HomeRestaurantsCard'; 
 
 const HomeContainer = () => {
     return (
-        <div>
+        <div >
             <UserTypeCarousel />
             <br/><br/><br/>
-            <HomePromosCard />
-            {/* <RestaurantsCard /> */}
-            <br/><br/><br/><br/><br/><br/><br/><br/>
+            <div className='homepage-cards-child'><HomePromosCard className='homepage-cards-child' /></div>
+            <div className='homepage-cards-child'><HomeRestaurantsCard className='homepage-cards-child' /></div>
         </div>
     )
 };

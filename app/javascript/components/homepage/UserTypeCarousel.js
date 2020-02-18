@@ -45,7 +45,7 @@ const UserTypeCarousel = () => {
 
                     <Carousel.Caption>
                         <Button variant="light" style={{paddingTop: '20px'}} href="/signup">
-                            <h5>Be A Part Of Something Special!</h5>
+                            <h5>Be Part Of Something Special!</h5>
                             <p>Delivery Rider Sign Up</p>
                         </Button>
                     </Carousel.Caption>

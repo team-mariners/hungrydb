@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import NaviBar from './NaviBar';
 import HomeContainer from './HomeContainer';
@@ -9,13 +9,13 @@ import SignUpForm from '../users/main/SignUpForm';
 export default function Home() {
     return (
         <Router>
-            <NaviBar/>
+            <NaviBar />
             <div className="homepage-background">
-            <br/><br/><br/>
-            <HomeContainer/>
+                <br /><br /><br />
+                <HomeContainer />
             </div>
-            <Route path="/login" render={() => <LoginForm/>}/>
-            <Route path="/signup" render={() => <SignUpForm/>}/>
+            <Route path="/login" render={() => <LoginForm />} />
+            <Route path="/signup" render={() => <SignUpForm />} />
         </Router>
     )
 };

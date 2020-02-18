@@ -16,7 +16,7 @@ const UserTypeCarousel = () => {
                     />
 
                     <Carousel.Caption>
-                        <Button variant="warning" href="/login">
+                        <Button variant="warning" style={{paddingTop: '20px'}} href="/login">
                             <h4>Order Now!</h4>
                             <p>Customer Delivery</p>
                         </Button>
@@ -30,7 +30,7 @@ const UserTypeCarousel = () => {
                     />
 
                     <Carousel.Caption>
-                        <Button variant="danger" href="/signup">
+                        <Button variant="danger" style={{paddingTop: '20px'}} href="/signup">
                             <h4>Join Us Today!</h4>
                             <p>Restaurant Sign Up</p>
                         </Button>
@@ -44,7 +44,7 @@ const UserTypeCarousel = () => {
                     />
 
                     <Carousel.Caption>
-                        <Button variant="info" href="/signup">
+                        <Button variant="light" style={{paddingTop: '20px'}} href="/signup">
                             <h5>Be A Part Of Something Special!</h5>
                             <p>Delivery Rider Sign Up</p>
                         </Button>

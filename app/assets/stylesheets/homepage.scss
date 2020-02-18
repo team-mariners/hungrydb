@@ -17,9 +17,16 @@
 
 .homepage-carousel-image {
     display: block;
-    height: 600px;
+    height: 550px;
     margin-left: auto;
     margin-right: auto;
     object-fit: cover;
     width: 1150px;
+}
+
+.homepage-promo-card {
+    height: 200px;
+    margin-left: 100px;
+    object-fit: cover;
+    width: 500px;
 }

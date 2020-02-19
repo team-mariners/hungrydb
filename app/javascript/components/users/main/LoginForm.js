@@ -5,13 +5,17 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 
 const LoginForm = () => {
+    /*
+     * Identifier refers to username or email.
+     * The validation rules of username and email is the same as the ones in signup form.
+     */
     const schema = yup.object({
-        email: yup.string().required(),
+        identifier: yup.string().matches(/^\w+$|^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/).required(),
         password: yup.string().required()
     });
 
     const formInitialValues = {
-        email: '',
+        identifier: '',
         password: ''
     };
 
@@ -34,15 +38,15 @@ const LoginForm = () => {
             }) => (
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Username or Email</Form.Label>
                     <Form.Control
-                        type="email"
-                        name="email"
-                        value={values.email}
+                        type="text"
+                        name="identifier"
+                        value={values.identifier}
                         onChange={handleChange}
-                        isInvalid={touched.email && !!errors.email}
+                        isInvalid={touched.identifier && !!errors.identifier}
                     />
-                    <Form.Control.Feedback type="invalid">Email cannot be empty.</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Username or email is invalid.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group>

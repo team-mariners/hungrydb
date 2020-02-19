@@ -6,12 +6,16 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 
 const SignUpForm = () => {
-    // Using yup helps us to declaratively verify the input data
+    /* Using yup helps us to declaratively verify the input data
+     * Username can only be alphanumeric.
+     * Email needs to match the format [text]@[text].[text].
+     * Password cannot have whitespace characters.
+     */
     const schema = yup.object({
-        username: yup.string().required(),
-        email: yup.string().required(),
-        password: yup.string().required(),
-        confirmPassword: yup.string().required(),
+        username: yup.string().matches(/^\w+$/).required(),
+        email: yup.string().matches(/^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/).required(),
+        password: yup.string().min(8).max(20).matches(/^\S+$/).required(),
+        confirmPassword: yup.string().oneOf([yup.ref('password')]).required(),
         terms: yup.bool().oneOf([true])
     });
 
@@ -50,7 +54,8 @@ const SignUpForm = () => {
                         onChange={handleChange}
                         isInvalid={touched.username && !!errors.username}
                         />
-                    <Form.Control.Feedback type="invalid">Username cannot be empty.</Form.Control.Feedback>
+                    <Form.Text className="text-muted">Username needs to be alphanumeric.</Form.Text>
+                    <Form.Control.Feedback type="invalid">Username is invalid.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="formEmail">
@@ -62,7 +67,7 @@ const SignUpForm = () => {
                         onChange={handleChange}
                         isInvalid={touched.email && !!errors.email}
                         />
-                    <Form.Control.Feedback type="invalid">Email cannot be empty.</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Email is invalid.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="formPassword">
@@ -74,6 +79,9 @@ const SignUpForm = () => {
                         onChange={handleChange}
                         isInvalid={touched.password && !!errors.password}
                         />
+                    <Form.Text className="text-muted">
+                        Password needs to be at least 8 characters long and cannot have spaces.
+                    </Form.Text>
                     <Form.Control.Feedback type="invalid">Password is invalid.</Form.Control.Feedback>
                 </Form.Group>
 
@@ -87,14 +95,6 @@ const SignUpForm = () => {
                         isInvalid={touched.confirmPassword && !!errors.confirmPassword}
                         />
                     <Form.Control.Feedback type="invalid">Password does not match.</Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="formUserType">
-                    <Form.Label>Sign up as</Form.Label>
-                    <Form.Control as="select">
-                        <option>Customer</option>
-                        <option>Rider</option>
-                    </Form.Control>
                 </Form.Group>
 
                 <Form.Group controlId="formTerms">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 
 const SignUpForm = () => {
     const [isAgreed, setIsAgreed] = useState(false);
@@ -16,6 +17,20 @@ const SignUpForm = () => {
         }
 
         setIsInvalidSubmission(false);
+
+        if (!isInvalidSubmission) {
+            axios.post('/signup', {
+                user: {
+                    username: document.getElementById("formUsername").value,
+                    email: document.getElementById("formEmail").value,
+                    password: document.getElementById("formPassword").value,
+                    password_confirmation: document.getElementById("formConfirmPassword").value
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
     };
 
     return (
@@ -23,7 +38,7 @@ const SignUpForm = () => {
             <Form.Group controlId="formUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text"/>
-            </Form.Group>            
+            </Form.Group>
 
             <Form.Group controlId="formEmail">
                 <Form.Label>Email</Form.Label>

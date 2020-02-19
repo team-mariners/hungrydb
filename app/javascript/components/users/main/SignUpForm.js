@@ -21,7 +21,7 @@ const SignUpForm = () => {
         password: "",
         confirmPassword: "",
         terms: false
-    }
+    };
 
     const handleSignUp = (values) => {
         console.log(values);

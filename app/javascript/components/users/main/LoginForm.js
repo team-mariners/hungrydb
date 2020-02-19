@@ -13,7 +13,7 @@ const LoginForm = () => {
     const formInitialValues = {
         email: '',
         password: ''
-    }
+    };
 
     const handleLogin = (values) => {
         console.log(values);

@@ -9,6 +9,7 @@
     "@rails/webpacker": "4.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.4.1",
+    "formik": "^2.1.4",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
@@ -17,7 +18,8 @@
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react_ujs": "^2.6.1",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "yup": "^0.28.1"
   },
   "version": "0.1.0",
   "devDependencies": {

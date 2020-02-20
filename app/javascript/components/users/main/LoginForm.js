@@ -24,13 +24,14 @@ const LoginForm = () => {
         console.log(values);
         axios.post('/login', {
             user: {
-                username: values.identifier,
+                login: values.identifier,
                 password: values.password,
             },
             withCredentials: true
         }).then(result => {
             console.log(result);
             console.log(result.request.response);
+            window.location.reload(true);
         })
         .catch(function(error) {
             console.log(error);

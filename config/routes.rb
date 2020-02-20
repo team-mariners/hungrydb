@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     sessions:           "admins/sessions",
   }
   devise_for :users, skip: :all
-  root 'pages#index'
+  root to: 'pages#index'
 
   devise_scope :user do
     get 'login', to: 'users/sessions#new'

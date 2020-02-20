@@ -11,7 +11,7 @@ const Index = (props) => {
             user: {...props.current_user}
         }).then(result => {
             console.log(result);
-            window.location.reload(false);
+            window.location.reload(true);
         }).catch(error => {
             console.log(error.message);
         })

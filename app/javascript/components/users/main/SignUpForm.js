@@ -39,7 +39,7 @@ const SignUpForm = () => {
             }
         })
         .then(result => {
-            window.location.reload(false);
+            window.location.reload(true);
         })
         .catch(function(error) {
             console.log(error.message);

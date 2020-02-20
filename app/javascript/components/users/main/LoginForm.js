@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
@@ -20,7 +21,18 @@ const LoginForm = () => {
     };
 
     const handleLogin = (values) => {
-        console.log(values);
+        axios.post('/login', {
+            user: {
+                login: values.identifier,
+                password: values.password,
+            },
+            withCredentials: true
+        }).then(result => {
+            window.location.reload(true);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
     };
 
     return (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
@@ -28,7 +29,20 @@ const SignUpForm = () => {
     };
 
     const handleSignUp = (values) => {
-        console.log(values);
+        axios.post('/signup', {
+            user: {
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                password_confirmation: values.confirmPassword
+            }
+        })
+        .then(result => {
+            window.location.reload(true);
+        })
+        .catch(function(error) {
+            console.log(error.message);
+        });
     };
 
     return (

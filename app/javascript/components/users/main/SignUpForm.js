@@ -29,13 +29,12 @@ const SignUpForm = () => {
     };
 
     const handleSignUp = (values) => {
-        console.log(values);
         axios.post('/signup', {
             user: {
-                username: document.getElementById("formUsername").value,
-                email: document.getElementById("formEmail").value,
-                password: document.getElementById("formPassword").value,
-                password_confirmation: document.getElementById("formConfirmPassword").value
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                password_confirmation: values.confirmPassword
             }
         })
         .then(result => {

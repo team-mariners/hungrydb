@@ -21,7 +21,6 @@ const LoginForm = () => {
     };
 
     const handleLogin = (values) => {
-        console.log(values);
         axios.post('/login', {
             user: {
                 login: values.identifier,
@@ -29,8 +28,6 @@ const LoginForm = () => {
             },
             withCredentials: true
         }).then(result => {
-            console.log(result);
-            console.log(result.request.response);
             window.location.reload(true);
         })
         .catch(function(error) {

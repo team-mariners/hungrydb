@@ -38,8 +38,11 @@ const SignUpForm = () => {
                 password_confirmation: document.getElementById("formConfirmPassword").value
             }
         })
+        .then(result => {
+            window.location.reload(false);
+        })
         .catch(function(error) {
-            console.log(error);
+            console.log(error.message);
         });
     };
 

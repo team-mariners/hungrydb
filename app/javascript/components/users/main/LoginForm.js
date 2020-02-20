@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
@@ -24,9 +24,13 @@ const LoginForm = () => {
         console.log(values);
         axios.post('/login', {
             user: {
-                username: document.getElementById("formUsername").value,
-                password: document.getElementById("formPassword").value,
-            }
+                username: values.identifier,
+                password: values.password,
+            },
+            withCredentials: true
+        }).then(result => {
+            console.log(result);
+            console.log(result.request.response);
         })
         .catch(function(error) {
             console.log(error);

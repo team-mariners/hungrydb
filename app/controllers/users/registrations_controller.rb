@@ -2,11 +2,8 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   skip_before_action :verify_authenticity_token
-  respond_to :json
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
-
-
 
   # GET /resource/sign_up
   # def new
@@ -17,7 +14,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
 
-    # To deal with duplicated username, as username is only marked unique but it's not a primary key.
+    # To deal with duplicated username, as username is only marked
+    # unique but it's not a primary key.
     begin
       resource.save
     rescue ActiveRecord::RecordNotUnique

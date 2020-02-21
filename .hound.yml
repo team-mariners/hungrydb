@@ -1,5 +1,5 @@
 jshint:
-    config_file: .jshintrc
+    enabled: false
 
 scss:
     config_file: .scss-lint.yml

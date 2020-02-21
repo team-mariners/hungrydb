@@ -3,14 +3,10 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
 const Index = (props) => {
-    console.log(props.current_user);
-
     const handleLogout = () => {
-        console.log("Logging out...");
         axios.get("/logout", {
             user: {...props.current_user}
         }).then(result => {
-            console.log(result);
             window.location.reload(true);
         }).catch(error => {
             console.log(error.message);

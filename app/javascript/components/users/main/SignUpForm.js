@@ -6,7 +6,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
-const SignUpForm = () => {
+const SignUpForm = (props) => {
     /* Using yup helps us to declaratively verify the input data
      * Username can only be alphanumeric.
      * Email needs to match the format [text]@[text].[text].
@@ -36,12 +36,19 @@ const SignUpForm = () => {
                 password: values.password,
                 password_confirmation: values.confirmPassword
             }
-        })
-        .then(result => {
+        }).then(() => {
             window.location.reload(true);
-        })
-        .catch(function(error) {
-            console.log(error.message);
+        }).catch(error => {
+            // If the server sends an error response back
+            if (error.response != undefined) {
+                const message = error.response.status == 400 ? "Username or email already exists."
+                    : "Something went wrong. Please contact the system administrator.";
+                props.showAlert(message);
+            } else {
+                // Else just display the error message 
+                // This is an error thrown by the client side, e.g. axios
+                props.showAlert(error.message);
+            }
         });
     };
 

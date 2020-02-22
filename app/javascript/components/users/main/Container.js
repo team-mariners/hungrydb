@@ -4,12 +4,12 @@ import { Route } from 'react-router-dom';
 import Navigation from './Navigation';
 import LoginForm from './LoginForm';
 
-const Container = () => {
+const Container = (props) => {
     return (
         <div className="container-signup-login">
             <Navigation/>
-            <Route path="/signup" render={() => <SignUpForm/>}/>
-            <Route path="/login" render={() => <LoginForm/>}/>
+            <Route path="/signup" render={() => <SignUpForm showAlert={props.showAlert}/>}/>
+            <Route path="/login" render={() => <LoginForm showAlert={props.showAlert}/>}/>
         </div>
     )
 };

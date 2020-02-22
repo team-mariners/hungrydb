@@ -6,7 +6,7 @@ const HomeRestaurantsCard = () => {
     return (
         <Card className='homepage-card-right'>
             <Card.Img variant="top" src={restaurantPic}/>
-            <Card.Footer >
+            <Card.Footer className="card-footer text-center">
                 <h4>Our Partner Restaurants</h4>
             </Card.Footer>
         </Card>

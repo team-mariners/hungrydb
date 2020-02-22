@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <Router>
             <NaviBar />
-            <div id="homepage-background">
+            <div className="homepage-background">
                 <br /><br /><br />
                 <HomeContainer />
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>

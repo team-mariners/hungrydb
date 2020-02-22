@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, skip: :all
-  root to: 'pages#index'
+  root to: 'pages#home'
 
   devise_scope :user do
     get 'login', to: 'users/sessions#new'

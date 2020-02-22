@@ -1,0 +1,40 @@
+@import "constants";
+
+.homepage-navbar {
+    background-color: $mildorange;
+}
+
+.homepage-background {
+    background-color: $lightpink;
+}
+
+.homepage-carousel-background {
+    background-color: $lightgrey;
+    margin: auto;
+    width: 1100px;
+}
+
+.homepage-carousel-image {
+    display: block;
+    height: 550px;
+    margin: auto;
+    object-fit: cover;
+    width: 1100px;
+}
+
+.homepage-cards-container {
+    display: flex;
+    justify-content: center;
+}
+
+.homepage-card-left {
+    height: 125px;
+    margin-right: 25px;
+    width: 525px;
+}
+
+.homepage-card-right {
+    height: 125px;
+    margin-left: 25px;
+    width: 525px;
+}

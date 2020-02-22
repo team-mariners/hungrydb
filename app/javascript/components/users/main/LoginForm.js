@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
     /*
      * Identifier refers to username or email.
      * The validation rules of username and email is the same as the ones in signup form.
@@ -27,11 +27,19 @@ const LoginForm = () => {
                 password: values.password,
             },
             withCredentials: true
-        }).then(result => {
+        }).then(() => {
             window.location.reload(true);
-        })
-        .catch(function(error) {
-            console.log(error);
+        }).catch((error) => {
+            // If server sends back an error response
+            if (error.response) {
+                const message = error.response.status == 401 ? "Invalid login credentials."
+                    : "Something went wrong. Please contact the system administrator.";
+                props.showAlert(message);
+            } else {
+                // Else just display the error message 
+                // This is an error thrown by the client side, e.g. axios
+                props.showAlert(error.message);
+            }
         });
     };
 

@@ -9,7 +9,7 @@ import React from 'react';
 const NaviBar = () => {
     return (
         <div>
-            <Navbar className="homepage-navbar" variant="dark">
+            <Navbar id="homepage-navbar" variant="dark">
                 <Navbar.Brand href="/">
                     <img
                         alt=""

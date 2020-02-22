@@ -1,35 +1,40 @@
 @import "constants";
 
-.homepage-navbar {
+#homepage-navbar {
     background-color: $mildorange;
 }
 
-.homepage-background {
+#homepage-background {
     background-color: $lightpink;
 }
 
 .homepage-carousel-background {
     background-color: $silver;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     width: 85%;
 }
 
 .homepage-carousel-image {
     display: block;
     height: 550px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     object-fit: cover;
     width: 1150px;
 }
 
-.homepage-card {
+.homepage-cards-container {
+    display: flex;
+    justify-content: center;
+}
+
+.homepage-card-left {
     height: 100px;
-    margin-left: 94px;
+    margin-right: 50px;
     width: 500px;
 }
 
-.homepage-cards-child {
-    float: left;
+.homepage-card-right {
+    height: 100px;
+    margin-left: 50px;
+    width: 500px;
 }

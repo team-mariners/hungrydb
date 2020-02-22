@@ -8,8 +8,10 @@ const HomeContainer = () => {
         <div >
             <UserTypeCarousel />
             <br/><br/><br/>
-            <div className='homepage-cards-child'><HomePromosCard className='homepage-cards-child' /></div>
-            <div className='homepage-cards-child'><HomeRestaurantsCard className='homepage-cards-child' /></div>
+            <div className='homepage-cards-container'>
+                <HomePromosCard />
+                <HomeRestaurantsCard />
+            </div>
         </div>
     )
 };

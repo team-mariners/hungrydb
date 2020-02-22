@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users, skip: :all
-  root to: 'pages#home'
 
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   devise_scope :user do
     get 'login', to: 'users/sessions#new'
     post 'login', to: 'users/sessions#create'
@@ -15,5 +15,10 @@ Rails.application.routes.draw do
     patch 'profile', to: 'users/registrations#update'
     put 'profile', to: 'users/registrations#update'
   end
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  authenticated :user do
+    root to: 'users#index', as: :authenticated_root
+  end
+
+  root to: 'pages#home'
 end

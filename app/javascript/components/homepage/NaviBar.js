@@ -23,8 +23,8 @@ const NaviBar = () => {
                 </Navbar.Brand>
 
                 <Nav className="mr-auto">
-                    <Form inline style={{ paddingLeft: "300px" }}>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Form inline>
+                        <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{width: "500px"}} />
                         <Button variant="outline-light">Go!</Button>
                     </Form>
                 </Nav>

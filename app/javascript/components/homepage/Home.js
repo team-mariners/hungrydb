@@ -13,7 +13,7 @@ export default function Home() {
             <div className="homepage-background">
                 <br /><br /><br />
                 <HomeContainer />
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </div>
             <Route path="/login" render={() => <LoginForm />} />
             <Route path="/signup" render={() => <SignUpForm />} />

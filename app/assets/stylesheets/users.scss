@@ -2,8 +2,12 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+@import "constants";
+
 .container-signup-login {
-    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 8px $grey;
+    margin: 50px auto;
     padding: 20px;
     width: 50%;
 }
@@ -14,4 +18,9 @@
 
 #navbar-signup-login {
     margin-bottom: 10px;
+}
+
+.dashboard-welcome-user {
+    padding: 10px;
+    width: 100%;
 }

@@ -63,7 +63,8 @@ const SignUpForm = (props) => {
                 handleChange,
                 values,
                 errors,
-                touched
+                touched,
+                isSubmitting
             }) => (
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formUsername">
@@ -132,7 +133,7 @@ const SignUpForm = (props) => {
                     </Form.Check>
                 </Form.Group>
 
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
+                <Button variant="primary" type="submit" onClick={handleSubmit} disabled={isSubmitting}>
                     Sign up!
             </Button>
             </Form>

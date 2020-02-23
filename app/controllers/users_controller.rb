@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
-    def main
-    end
+  before_action :authenticate_user!
+
+  def index
+  end
 end

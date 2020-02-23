@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Container from './Container';
 import Alert from 'react-bootstrap/Alert';
+import AppBar from '../../global/AppBar';
 
 const Main = () => {
     const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -22,6 +23,7 @@ const Main = () => {
             >
                 {errorMessage}
             </Alert>
+            <AppBar/>
             <Container showAlert={showAlert}/>
         </Router>
     )

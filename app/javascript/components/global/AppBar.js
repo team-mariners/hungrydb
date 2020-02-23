@@ -7,17 +7,23 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
+/**
+ * 
+ * @param {*} props : The props are as follow:
+ * isLoggedIn: set it to true if you want to display the logout button.
+ */
 const AppBar = (props) => {
     const handleLogout = () => {
-        console.log("Clicked");
-        axios.get("/logout", {
-            user: {...props.currentUser}
-        }).then(() => { 
+        axios.get("/logout"
+        ).then(() => {
             window.location.reload(false);
         }).catch(error => {
             console.log(error.message);
         })
     };
+
+    const logoutButton = props.isLoggedIn != true ? null : 
+        <Nav.Link onClick={handleLogout} style={{color: 'white'}}>Logout</Nav.Link>;
 
     return (
         <Navbar variant="dark" className="app-bar" expand="lg">
@@ -37,14 +43,14 @@ const AppBar = (props) => {
 
             <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
                 <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-light">Go!</Button>
                 </Form>
-                <Nav>
+                <Nav >
                     {props.children}
-                    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                    {logoutButton}
                 </Nav>
-           </Navbar.Collapse>
+            </Navbar.Collapse>
         </Navbar>
     )
 }

@@ -4,8 +4,8 @@ import NavigationBar from './common/NavigationBar';
 const Dashboard = (props) => {
     return (
         <React.Fragment>
-            <NavigationBar currentUser={props.currentUser}/>
-            <h2>Hello {props.currentUser.username}!</h2>
+            <NavigationBar/>
+            <h2 className="dashboard-welcome-user">Hello {props.currentUser.username}!</h2>
         </React.Fragment>
     )
 };

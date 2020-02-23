@@ -1,9 +1,9 @@
 import React from 'react';
 import AppBar from '../../global/AppBar';
 
-const NavigationBar = (props) => {
+const NavigationBar = () => {
     return (
-        <AppBar/>
+        <AppBar isLoggedIn={true}/>
     )
 };
 

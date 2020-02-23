@@ -10,10 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_15_165756) do
+ActiveRecord::Schema.define(version: 2020_02_23_110049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.bigint "users_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_admins_on_users_id"
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.bigint "users_id", null: false
+    t.bigint "can"
+    t.integer "cvv"
+    t.integer "rewardPoints", default: 0, null: false
+    t.string "locationHistory"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_customers_on_users_id"
+  end
+
+  create_table "managers", force: :cascade do |t|
+    t.bigint "users_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_managers_on_users_id"
+  end
+
+  create_table "riders", force: :cascade do |t|
+    t.bigint "users_id", null: false
+    t.string "currLocation"
+    t.string "status"
+    t.float "fee"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_riders_on_users_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "username", default: "", null: false
@@ -35,4 +70,8 @@ ActiveRecord::Schema.define(version: 2020_02_15_165756) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "admins", "users", column: "users_id"
+  add_foreign_key "customers", "users", column: "users_id"
+  add_foreign_key "managers", "users", column: "users_id"
+  add_foreign_key "riders", "users", column: "users_id"
 end

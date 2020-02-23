@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  users: one
+  currLocation: MyString
+  status: MyString
+  fee: 1.5
+
+two:
+  users: two
+  currLocation: MyString
+  status: MyString
+  fee: 1.5

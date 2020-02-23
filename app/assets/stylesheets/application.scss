@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+@import "constants";
+
+ .app-bar {
+    background-color: $mildorange;
+ }
+

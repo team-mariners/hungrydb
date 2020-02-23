@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Container from './Container';
+import Container from './authentication/Container';
 import Alert from 'react-bootstrap/Alert';
-import AppBar from '../../global/AppBar';
+import AppBar from '../global/AppBar';
 
-const Main = () => {
+const Authentication = () => {
     const [isAlertVisible, setIsAlertVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,4 +29,4 @@ const Main = () => {
     )
 };
 
-export default Main;
+export default Authentication;

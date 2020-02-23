@@ -3,9 +3,11 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 .container-signup-login {
-    margin: auto;
+    margin: 50px auto;
     padding: 20px;
     width: 50%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 8px grey;
 }
 
 .form-users-main {

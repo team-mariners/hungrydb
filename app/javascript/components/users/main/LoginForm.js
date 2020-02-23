@@ -54,7 +54,8 @@ const LoginForm = (props) => {
                 handleChange,
                 values,
                 errors,
-                touched
+                touched,
+                isSubmitting
             }) => (
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
@@ -80,7 +81,7 @@ const LoginForm = (props) => {
                     />
                     <Form.Control.Feedback type="invalid">Password is invalid.</Form.Control.Feedback>
                 </Form.Group>
-                <Button variant="primary" type="submit">Login</Button>
+                <Button variant="primary" type="submit" disabled={isSubmitting}>Login</Button>
             </Form>
            )}
         </Formik>

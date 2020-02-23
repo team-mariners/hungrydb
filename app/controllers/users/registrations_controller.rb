@@ -37,6 +37,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       render plain: "Username or email already exists", status: 400
     end
+
+    # Automatically grant the new user as a customer
+    @user.roles = "customer"
+    @user.save
+
+    # Customer.create(
+    #   users_id: @user.id
+    # )
   end
 
   # GET /resource/edit

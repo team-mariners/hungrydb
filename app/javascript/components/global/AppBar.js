@@ -19,7 +19,8 @@ const AppBar = (props) => {
     const handleLogout = () => {
         axios.get("/logout"
         ).then(() => {
-            window.location.reload(false);
+            // Redirect to homepage after successfully logged out
+            window.location.replace("/");
         }).catch(error => {
             console.log(error.message);
         })

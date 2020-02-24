@@ -1,9 +1,7 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
   def index
-    @user = current_user
-    roles = @user.roles
+    roles = current_user.roles
+
     if roles.include? 'manager'
       render 'managers/index'
     end

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Colors from './Colors';
 import Navbar from 'react-bootstrap/Navbar';
 import Logo from '../../../assets/images/thumbs-up-logo.png';
 import Nav from 'react-bootstrap/Nav';
@@ -13,6 +14,8 @@ import Button from 'react-bootstrap/Button';
  * isLoggedIn: set it to true if you want to display the logout button.
  */
 const AppBar = (props) => {
+    const navLinkstyle = Colors.navbarLink;
+
     const handleLogout = () => {
         axios.get("/logout"
         ).then(() => {
@@ -22,8 +25,12 @@ const AppBar = (props) => {
         })
     };
 
-    const logoutButton = props.isLoggedIn != true ? null : 
-        <Nav.Link onClick={handleLogout} style={{color: 'white'}}>Logout</Nav.Link>;
+    let logoutButton = null;
+    let profileButton = null;
+    if (props.isLoggedIn == true) {
+        logoutButton = <Nav.Link onClick={handleLogout} style={navLinkstyle}>Logout</Nav.Link>;
+        profileButton = <Nav.Link style={navLinkstyle}>Profile</Nav.Link>
+    }
 
     return (
         <Navbar variant="dark" className="app-bar" expand="lg">
@@ -48,6 +55,7 @@ const AppBar = (props) => {
                 </Form>
                 <Nav >
                     {props.children}
+                    {profileButton}
                     {logoutButton}
                 </Nav>
             </Navbar.Collapse>

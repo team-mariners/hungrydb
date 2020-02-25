@@ -1,8 +1,13 @@
 import React from 'react';
+import LeftBar from './manage/LeftBar';
+import RightPanel from './manage/RightPanel';
 
 const Manage = () => {
     return (
-        <h2>Manage</h2>
+        <div>
+            <LeftBar/>
+            <RightPanel/>
+        </div>
     )
 };
 

@@ -9,9 +9,9 @@ const NavigationBar = () => {
 
     return (
         <AppBar isLoggedIn={true}>
-            <Nav.Link style={navLinkstyle}>Orders</Nav.Link>
-            <Nav.Link style={navLinkstyle}>Stats</Nav.Link>
-            <Nav.Link style={navLinkstyle}>Reviews</Nav.Link>
+            <Nav.Link as={NavLink} to="/manager/orders" style={navLinkstyle}>Orders</Nav.Link>
+            <Nav.Link as={NavLink} to="/manager/stats" style={navLinkstyle}>Stats</Nav.Link>
+            <Nav.Link as={NavLink} to="/manager/reviews" style={navLinkstyle}>Reviews</Nav.Link>
             <Nav.Link as={NavLink} to="/manager/manage" style={navLinkstyle}>Manage</Nav.Link>
         </AppBar>
     )

@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 
     scope '/manager' do
       get 'manage', to: 'managers#index'
+      get 'orders', to: 'managers#index'
+      get 'stats', to: 'managers#index'
+      get 'reviews', to: 'managers#index'
     end
   end
 

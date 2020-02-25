@@ -3,6 +3,5 @@ class ManagersController < UsersController
     verify_role!('manager')
   end
 
-  def index
-  end
+  def index; end
 end

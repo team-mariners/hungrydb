@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     get 'profile', to: 'users/registrations#edit'
     patch 'profile', to: 'users/registrations#update'
     put 'profile', to: 'users/registrations#update'
+
+    get 'rider', to: 'pages#rider'
   end
 
   authenticated :user do

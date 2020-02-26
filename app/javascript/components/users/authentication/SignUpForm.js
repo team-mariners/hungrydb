@@ -28,7 +28,7 @@ const SignUpForm = (props) => {
         terms: false
     };
 
-    const handleSignUp = (values) => {
+    const handleSignUp = (values, formik) => {
         axios.post('/signup', {
             user: {
                 username: values.username,
@@ -49,6 +49,8 @@ const SignUpForm = (props) => {
                 // This is an error thrown by the client side, e.g. axios
                 props.showAlert(error.message);
             }
+
+            formik.setSubmitting(false);
         });
     };
 

@@ -9,11 +9,7 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit :account_update, keys: added_attrs
     end
 
-    def verify_role!(role)
-      roles = current_user.roles
-
-      if !roles.include? role
-        raise ActionController::RoutingError.new('404 Not Found')
-      end
+    def return_unauthorized
+      render :file => "public/401.html", :status => :unauthorized
     end
 end

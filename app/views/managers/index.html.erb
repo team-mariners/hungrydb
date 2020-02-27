@@ -1,1 +1,1 @@
-<%= react_component('managers/Index', currentManager: get_current_manager, isAdmin: has_role('admin'))%>
+<%= react_component('managers/Index', currentManager: get_current_manager, isAdmin: user_has_role('admin'))%>

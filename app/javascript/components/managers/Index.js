@@ -15,7 +15,7 @@ const Index = (props) => {
     return (
         <Router>
             <NavigationBar/>
-            <Route exact path="/" render={() => <Dashboard  currentUser={props.currentManager}/>}/>
+            <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
             <Route exact path="/manager/orders" render={() => <Orders/>}/>
             <Route exact path="/manager/stats" render={() => <Stats/>}/>
             <Route exact path="/manager/reviews" render={() => <Reviews/>}/>

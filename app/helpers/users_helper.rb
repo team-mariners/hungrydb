@@ -1,5 +1,5 @@
 module UsersHelper
-    protected def has_role(role)
+    def user_has_role?(role)
         if !user_signed_in?
             return false
         end
@@ -10,6 +10,16 @@ module UsersHelper
             return true
         else
             return false
+        end
+    end
+
+    def get_role_attributes(role)
+        if !user_has_role?(role)
+            return false
+        else
+            return role.capitalize.constantize.find_by(
+                user_id: current_user.id
+            )
         end
     end
 end

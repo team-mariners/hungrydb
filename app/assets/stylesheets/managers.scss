@@ -1,0 +1,28 @@
+@import "constants";
+
+.manager-summary-block {
+    width: 50%;
+    padding: 10px;
+    display: inline-block;
+}
+
+.manager-left-bar {
+    width: 25%;
+    height: 100%;
+    padding: 15px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: $lightorange;
+}
+
+.manager-left-bar-info {
+    margin-top: 20px;
+}
+
+.manager-right-panel {
+    width: 75%;
+    height: 100%;
+    padding: 15px;
+    display: inline-block;
+    vertical-align: top;
+}

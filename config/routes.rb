@@ -20,6 +20,13 @@ Rails.application.routes.draw do
 
   authenticated :user do
     root to: 'users#index', as: :authenticated_root
+
+    scope '/manager' do
+      get 'manage', to: 'managers#index'
+      get 'orders', to: 'managers#index'
+      get 'stats', to: 'managers#index'
+      get 'reviews', to: 'managers#index'
+    end
   end
 
   root to: 'pages#home'

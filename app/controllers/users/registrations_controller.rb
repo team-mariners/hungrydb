@@ -42,9 +42,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.roles = "customer"
     @user.save
 
-    # Customer.create(
-    #   users_id: @user.id
-    # )
+    Customer.create(
+      users_id: @user.id
+    )
   end
 
   # GET /resource/edit

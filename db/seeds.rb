@@ -7,33 +7,61 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Test customer
-User.create(
+testCustomer = User.create(
     username: 'customer',
     password: '12345678',
     email: 'customer@example.com',
     roles: 'customer'
 )
 
+Customer.create(
+    user_id: testCustomer.id
+)
+
 # Test rider
-User.create(
+testRider = User.create(
     username: 'rider',
     password: '12345678',
     email: 'rider@example.com',
     roles: 'customer,rider'
 )
 
+Customer.create(
+    user_id: testRider.id
+)
+
+Rider.create(
+    user_id: testRider.id
+)
+
 # Test restaurant manager
-User.create(
+testManager = User.create(
     username: 'manager',
     password: '12345678',
     email: 'manager@example.com',
     roles: 'customer,manager'
 )
 
+Customer.create(
+    user_id: testManager.id
+)
+
+Manager.create(
+    user_id: testManager.id
+)
+
 # Test administrator
-User.create(
+testAdmin = User.create(
     username: 'admin',
     password: '12345678',
     email: 'admin@example.com',
     roles: 'customer,admin'
+)
+
+Customer.create(
+    user_id: testAdmin.id
+)
+
+Admin.create(
+    user_id: testAdmin.id
 )

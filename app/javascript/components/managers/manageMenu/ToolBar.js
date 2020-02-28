@@ -4,10 +4,10 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-const ToolBar = () => {
+const ToolBar = (props) => {
     return (
         <div className="d-flex">
-            <Button className="mr-sm-3">New Dish</Button>
+            <Button className="mr-sm-3" onClick={props.setIsNewDishVisible}>New Dish</Button>
             <Button className="mr-sm-3">New Category</Button>
             <Dropdown className="mr-sm-3">
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>

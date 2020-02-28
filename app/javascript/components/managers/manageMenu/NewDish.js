@@ -1,26 +1,44 @@
 import React from 'react';
+import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
+const csrfToken = document.querySelector('[name=csrf-token').content;
+axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+
 const NewDish = (props) => {
     const schema = yup.object({
-        dishName: yup.string().matches(/^\w+$/).required(),
+        dishName: yup.string().matches(/^[\w\s]+$/).required(),
         price: yup.number().min(0).required(),
         dailyLimit: yup.number().integer().min(0).required()
-    })
+    });
 
     const formInitialValues = {
         dishName: "",
         price: "",
         dailyLimit: ""
-    }
+    };
 
     const handleSubmit = (values) => {
-        console.log(values);
-    }
+        const data = {
+            food: {
+                name: values.dishName.trim(),
+                price: parseFloat(values.price),
+                dailyLimit: parseInt(values.dailyLimit)
+            } 
+        };
+
+        console.log(data);
+        axios.post('/foods',data)
+            .then((result) => {
+                console.log(result);
+            }).catch((error) => {
+                console.log(error.message);
+            });
+    };
 
     return (
         <Modal show={props.show} onClose={props.onClose}>

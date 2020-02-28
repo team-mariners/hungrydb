@@ -32,6 +32,10 @@ Rails.application.routes.draw do
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
     end
+
+    scope '/foods' do
+      post '', to: 'foods#create'
+    end
   end
 
   root to: 'pages#home'

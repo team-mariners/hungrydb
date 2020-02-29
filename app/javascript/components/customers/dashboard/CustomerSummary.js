@@ -1,8 +1,14 @@
 import React from 'react';
+import LastOrder from './LastOrder';
+import LastReview from './LastReview';
 
 const CustomerSummary = (props) => {
     return (
-        <h2>Hello {props.currentUser.username}! You little twerp</h2>
+        <div className='dashboard-flex-in-flex'>
+            <h2>Hi {props.currentUser.username}! You little twerp</h2>
+            <LastOrder />
+            <LastReview />
+        </div>
     )
 }
 

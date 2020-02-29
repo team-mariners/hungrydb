@@ -1,11 +1,13 @@
 import React from 'react';
 import CustomerSummary from './CustomerSummary';
+import CustomerBenefits from './CustomerBenefits';
 
 const Dashboard = (props) => {
     return (
-        <React.Fragment>
+        <div id='customer-dashboard-container'>
             <CustomerSummary currentUser={props.currentUser} />
-       </React.Fragment>
+            <CustomerBenefits currentUser={props.currentUser} />
+        </div>
     )
 }
 

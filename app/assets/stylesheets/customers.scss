@@ -1,0 +1,12 @@
+#customer-dashboard-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-inline-start: auto;
+    margin-block-end: auto;
+}
+
+.dashboard-flex--in-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}

@@ -33,10 +33,7 @@ Rails.application.routes.draw do
       get 'manage_info', to: 'managers#index'
     end
 
-    scope '/foods' do
-      get '', to: 'foods#index'
-      post '', to: 'foods#create'
-    end
+      resources :foods, except: [:new, :edit, :show]
   end
 
   root to: 'pages#home'

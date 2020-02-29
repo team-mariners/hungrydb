@@ -11,7 +11,7 @@ import Dish from './Dish';
 const DishesList = (props) => {
     const dishes = props.dishes.map(dish => {
         return (
-            <ListGroup.Item key={dish.id}><Dish dish={dish}/></ListGroup.Item>
+            <ListGroup.Item key={dish.id}><Dish dish={dish} {...props}/></ListGroup.Item>
         )
     })
 

@@ -1,5 +1,6 @@
 class FoodsController < ApplicationController
     before_action :get_restaurant
+    before_action :load_food, only: %i[destroy]
 
     def create
         hash = food_params.to_hash.symbolize_keys
@@ -19,7 +20,15 @@ class FoodsController < ApplicationController
         render json: @restaurant.foods
     end
 
+    def destroy
+        @food.destroy
+    end
+
     private
+
+    def load_food
+        @food = @restaurant.foods.find(params[:id])
+    end
 
     def food_params
         params.require(:food).permit(:name, :price, :dailyLimit)

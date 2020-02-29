@@ -3,9 +3,12 @@ import axios from 'axios';
 import ToolBar from './manageMenu/ToolBar';
 import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
+import DeleteDish from './manageMenu/DeleteDIsh';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
+    const [isDeleteDishVisible, setIsDeleteDishVisible] = useState(false);
+    const [dishId, setDishId] = useState(null);
     const [dishes, setDishes] = useState([]);
 
     // This is basically componentDidUpdate. It will be triggered at the first rendering, and will only
@@ -21,22 +24,45 @@ const ManageMenu = (props) => {
         })
     }, []);
 
+    const showDeleteDish = (id) => {
+        setDishId(id);
+        setIsDeleteDishVisible(true);
+    }
+
     const handleDishCreated = (newDish) => {
         const newDishes = [...dishes, newDish];
         setDishes(newDishes);
         props.alerts.showSuccessAlert("New dish created! =D");
     };
 
+    const handleDishDeleted = (id) => {
+        const newDishes = [...dishes];
+        const index = newDishes.findIndex((dish) => dish.id === id);
+        newDishes.splice(index, 1);
+
+        console.log(newDishes);
+        setDishes(newDishes);
+        props.alerts.showSuccessAlert("Dish deleted! =D");
+    }
+
     return (
         <div className="p-3">
             <h1>Menu</h1>
             <ToolBar setIsNewDishVisible={() => setIsNewDishVisible(true)}/>
+            <DishesList
+                dishes={dishes}
+                showDeleteDish={showDeleteDish}/>
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
                 onDishCreated={handleDishCreated}
                 {...props}/>
-            <DishesList dishes={dishes}/>
+            <DeleteDish
+                dishId={dishId}
+                show={isDeleteDishVisible}
+                onClose={() => setIsDeleteDishVisible(false)}
+                onDishDeleted={handleDishDeleted}
+                {...props}/>
         </div>
     )
 };

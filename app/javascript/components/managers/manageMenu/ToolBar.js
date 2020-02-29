@@ -6,7 +6,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 const ToolBar = (props) => {
     return (
-        <div className="d-flex">
+        <div className="manageMenu-toolbar">
             <Button className="mr-sm-3" onClick={props.setIsNewDishVisible}>New Dish</Button>
             <Button className="mr-sm-3">New Category</Button>
             <Dropdown className="mr-sm-3">

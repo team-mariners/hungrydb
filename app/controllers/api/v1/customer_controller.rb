@@ -1,8 +1,10 @@
-class Api::V1::CustomersController < Api::V1::BaseController
+class Api::V1::CustomerController < Api::V1::BaseController
     def index
-        all_customers_query = "SELECT *
-                               FROM Customers"
-        respond_with Customer.find_by_sql(all_customers_query)
+        current_customer_query = "SELECT *
+                                  FROM Customers
+                                  WHERE user_id = #{current_user.id}
+                                  LIMIT 1"
+        respond_with Customer.find_by_sql(current_customer_query)
     end
   
     def create

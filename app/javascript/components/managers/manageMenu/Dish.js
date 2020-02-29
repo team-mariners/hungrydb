@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
  * dish: dish to be displayed
  */
 const Dish = (props) => {
+    console.log(props);
     return (
         <div>
             <div className="manageMenu-dish-info">
@@ -16,7 +17,7 @@ const Dish = (props) => {
                 </div>
                 
                 <div className="manageMenu-dish-price">
-                    <p><b>Price: </b>$ {props.dish.price}</p>
+                    <p><b>Price: </b>$ {parseFloat(props.dish.price).toFixed(2)}</p>
                     <p><b>Daily Limit: </b>{props.dish.dailyLimit}</p>
                     <p><b>Num orders: </b>{props.dish.numOrders}</p>
                 </div>

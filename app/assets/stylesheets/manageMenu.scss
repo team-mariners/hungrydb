@@ -6,7 +6,7 @@
     margin: 20px 0;
 }
 
-.manageMenu-dish {
+.manageMenu-dish-info {
     display: inline-flex;
     width: 100%;
 }
@@ -17,4 +17,9 @@
 
 .manageMenu-dish-price {
     width: 20%
+}
+
+.manageMenu-dish-footer {
+    display: flex;
+    justify-content: flex-end;
 }

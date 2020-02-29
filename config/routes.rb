@@ -32,6 +32,13 @@ Rails.application.routes.draw do
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
     end
+
+    scope '/customer' do
+      get 'home', to: 'customers#index'
+      get 'history', to: 'customers#history'
+      get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
+      get 'promotions', to: 'customers#promotions'
+    end
   end
 
   root to: 'pages#home'

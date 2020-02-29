@@ -29,6 +29,10 @@ const Index = (props) => {
     const showAlert = (message) => {
         setAlertMessage(message);
         setIsAlertVisible(true);
+
+        // Scroll to top of page
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
 
     const alerts = {

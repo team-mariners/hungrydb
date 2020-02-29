@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import DishForm from './DishForm';
+import { getProcessedDishValues } from '../../helpers/FormHelpers';
 
 const csrfToken = document.querySelector('[name=csrf-token').content;
 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
@@ -21,14 +22,8 @@ const NewDish = (props) => {
     };
 
     const handleSubmit = (values) => {
-        const data = {
-            food: {
-                name: values.dishName.trim(),
-                price: parseFloat(values.price),
-                dailyLimit: parseInt(values.dailyLimit)
-            } 
-        };
-
+        const data = getProcessedDishValues(values);
+       
         console.log(data);
         axios.post('/foods',data)
             .then((result) => {                

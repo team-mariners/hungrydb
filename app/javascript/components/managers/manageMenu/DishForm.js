@@ -13,7 +13,7 @@ import { Formik } from 'formik';
  */
 const DishForm = (props) => {
     const schema = yup.object({
-        dishName: yup.string().matches(/^[\w\s]+$/).required(),
+        dishName: yup.string().max(100).required(),
         price: yup.number().min(0).required(),
         dailyLimit: yup.number().integer().min(0).required()
     });
@@ -41,7 +41,7 @@ const DishForm = (props) => {
                                 onChange={handleChange}
                                 isInvalid={touched.dishName && !!errors.dishName} />
                             <Form.Text className="text-muted">
-                                Dish name is required and can only be alphanumeric.
+                                Dish name is required and can only be a maximum of 100 characters.
                             </Form.Text>
                             <Form.Control.Feedback type="invalid">
                                 Dish name is invalid.

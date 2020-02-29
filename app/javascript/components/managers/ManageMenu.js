@@ -45,13 +45,28 @@ const ManageMenu = (props) => {
 
     const handleDishDeleted = (id) => {
         const newDishes = [...dishes];
-        const index = newDishes.findIndex((dish) => dish.id === id);
+        const index = getDishIndex(id, newDishes);
         newDishes.splice(index, 1);
 
         console.log(newDishes);
         setDishes(newDishes);
         props.alerts.showSuccessAlert("Dish deleted! =D");
-    }
+    };
+
+    const handleDishEdited = (id, editedDish) => {
+        const newDishes = [...dishes];
+        const index = getDishIndex(id, newDishes);
+        newDishes.splice(index, 1, editedDish);
+
+        console.log(newDishes);
+        setDishes(newDishes);
+        props.alerts.showSuccessAlert("Dish edited! =D");
+    };
+
+    const getDishIndex = (id, dishes) => {
+        return dishes.findIndex(dish => dish.id === id);
+    };
+
 
     return (
         <div className="p-3">
@@ -75,7 +90,9 @@ const ManageMenu = (props) => {
             <EditDish
                 dish={dish}
                 show={isEditDishVisible}
-                onClose={() => setIsEditDishVisible(false)}/>
+                onClose={() => setIsEditDishVisible(false)}
+                onDishEdited={handleDishEdited}
+                {...props}/>
         </div>
     )
 };

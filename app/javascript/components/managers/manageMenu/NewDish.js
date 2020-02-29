@@ -43,9 +43,16 @@ const NewDish = (props) => {
             .then((result) => {                
                 console.log(result);
                 props.onDishCreated(result.data);
-                props.onClose();
             }).catch((error) => {
-                console.log(error.message);
+                let message = "";
+                if (error.response != undefined) {
+                    message = error.response.data.errors;
+                } else {
+                    message = error.message;
+                }
+                props.alerts.showFailureAlert(message);
+            }).finally(() => {
+                props.onClose();
             });
     };
 

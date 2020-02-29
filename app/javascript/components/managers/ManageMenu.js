@@ -4,7 +4,7 @@ import ToolBar from './manageMenu/ToolBar';
 import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
 
-const ManageMenu = () => {
+const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
     const [dishes, setDishes] = useState([]);
 
@@ -24,6 +24,7 @@ const ManageMenu = () => {
     const handleDishCreated = (newDish) => {
         const newDishes = [...dishes, newDish];
         setDishes(newDishes);
+        props.alerts.showSuccessAlert("New dish created! =D");
     };
 
     return (
@@ -33,7 +34,8 @@ const ManageMenu = () => {
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
-                onDishCreated={handleDishCreated}/>
+                onDishCreated={handleDishCreated}
+                {...props}/>
             <DishesList dishes={dishes}/>
         </div>
     )

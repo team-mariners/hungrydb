@@ -15,7 +15,6 @@ const DishesList = (props) => {
         )
     })
 
-
     return (
         <ListGroup className="manageMenu-dishes-List">            
             <Card>

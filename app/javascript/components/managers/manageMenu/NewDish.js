@@ -9,6 +9,13 @@ import { Formik } from 'formik';
 const csrfToken = document.querySelector('[name=csrf-token').content;
 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
+/**
+ * 
+ * @param {*} props 
+ * show: visibility of the newdish dialog.
+ * onClose: function which is executed upon clicking the close button of the newDish dialog.
+ * onDishCreated: function which is executed when a new dish is created.
+ */
 const NewDish = (props) => {
     const schema = yup.object({
         dishName: yup.string().matches(/^[\w\s]+$/).required(),
@@ -33,8 +40,10 @@ const NewDish = (props) => {
 
         console.log(data);
         axios.post('/foods',data)
-            .then((result) => {
+            .then((result) => {                
                 console.log(result);
+                props.onDishCreated(result.data);
+                props.onClose();
             }).catch((error) => {
                 console.log(error.message);
             });

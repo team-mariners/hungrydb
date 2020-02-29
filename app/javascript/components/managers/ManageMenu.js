@@ -21,6 +21,11 @@ const ManageMenu = () => {
         })
     }, []);
 
+    const handleDishCreated = (newDish) => {
+        const newDishes = [...dishes, newDish];
+        setDishes(newDishes);
+    };
+
     return (
         <div className="p-3">
             <h1>Menu</h1>
@@ -28,7 +33,7 @@ const ManageMenu = () => {
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
-                />
+                onDishCreated={handleDishCreated}/>
             <DishesList dishes={dishes}/>
         </div>
     )

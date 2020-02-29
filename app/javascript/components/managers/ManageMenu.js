@@ -4,11 +4,14 @@ import ToolBar from './manageMenu/ToolBar';
 import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
 import DeleteDish from './manageMenu/DeleteDIsh';
+import EditDish from './manageMenu/EditDish';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
     const [isDeleteDishVisible, setIsDeleteDishVisible] = useState(false);
-    const [dishId, setDishId] = useState(null);
+    const [isEditDishVisible, setIsEditDishVisible] = useState(false);
+    const [dishId, setDishId] = useState(null); // for deleteDish
+    const [dish, setDish] = useState(null); // for editDish
     const [dishes, setDishes] = useState([]);
 
     // This is basically componentDidUpdate. It will be triggered at the first rendering, and will only
@@ -27,6 +30,11 @@ const ManageMenu = (props) => {
     const showDeleteDish = (id) => {
         setDishId(id);
         setIsDeleteDishVisible(true);
+    }
+
+    const showEditDish = (dish) => {
+        setDish(dish);
+        setIsEditDishVisible(true);
     }
 
     const handleDishCreated = (newDish) => {
@@ -51,7 +59,8 @@ const ManageMenu = (props) => {
             <ToolBar setIsNewDishVisible={() => setIsNewDishVisible(true)}/>
             <DishesList
                 dishes={dishes}
-                showDeleteDish={showDeleteDish}/>
+                showDeleteDish={showDeleteDish}
+                showEditDish={showEditDish}/>
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
@@ -63,6 +72,10 @@ const ManageMenu = (props) => {
                 onClose={() => setIsDeleteDishVisible(false)}
                 onDishDeleted={handleDishDeleted}
                 {...props}/>
+            <EditDish
+                dish={dish}
+                show={isEditDishVisible}
+                onClose={() => setIsEditDishVisible(false)}/>
         </div>
     )
 };

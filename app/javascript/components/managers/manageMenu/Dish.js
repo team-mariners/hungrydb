@@ -23,7 +23,7 @@ const Dish = (props) => {
             </div>
 
             <div className="manageMenu-dish-footer">
-                <Button className="mr-3">Edit</Button>
+                <Button className="mr-3" onClick={() => props.showEditDish(props.dish)}>Edit</Button>
                 <Button type="button" onClick={() => props.showDeleteDish(props.dish.id)}>Delete</Button>
             </div>
         </div>

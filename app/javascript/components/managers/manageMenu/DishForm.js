@@ -4,6 +4,13 @@ import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
+/**
+ * 
+ * @param {*} props 
+ * initialValues: initialvalues of the form.
+ * handleSubmit: function which handles submission of the form.
+ * buttonName: name of the submit button
+ */
 const DishForm = (props) => {
     const schema = yup.object({
         dishName: yup.string().matches(/^[\w\s]+$/).required(),
@@ -72,7 +79,7 @@ const DishForm = (props) => {
                                 Daily limit is invalid.
                                 </Form.Control.Feedback>
                         </Form.Group>
-                        <Button type="submit">Create</Button>
+                        <Button type="submit">{props.buttonName}</Button>
                     </Form>
                 )}
         </Formik>

@@ -52,7 +52,8 @@ const NewDish = (props) => {
             <h1>New Dish</h1>
             <DishForm
                 initialValues={initialValues}
-                handleSubmit={handleSubmit}/>
+                handleSubmit={handleSubmit}
+                buttonName="Create"/>
         </Modal>
     )
 };

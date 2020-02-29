@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const LastReview = (props) => {
     return (
@@ -6,4 +6,4 @@ const LastReview = (props) => {
     )
 }
 
-export default LastReview;
+export default LastReview

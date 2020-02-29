@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const EligiblePromos = (props) => {
     return (
@@ -6,4 +6,4 @@ const EligiblePromos = (props) => {
     )
 }
 
-export default EligiblePromos;
+export default EligiblePromos

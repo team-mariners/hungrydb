@@ -1,7 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import CustomerNavBar from './CustomerNavBar';
-import Dashboard from './dashboard/CustomerDashboard';
+import React from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import CustomerNavBar from './CustomerNavBar'
+import Dashboard from './dashboard/CustomerDashboard'
 
 const Index = (props) => {
     console.log(props);
@@ -15,6 +15,6 @@ const Index = (props) => {
             <Route exact path="/customer/promotions" render={() => <CustomerPromos />}/>*/}
         </Router>
     )
-};
+}
 
-export default Index;
+export default Index

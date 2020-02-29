@@ -1,6 +1,6 @@
-import React from 'react';
-import LastOrder from './LastOrder';
-import LastReview from './LastReview';
+import React from 'react'
+import LastOrder from './LastOrder'
+import LastReview from './LastReview'
 
 const CustomerSummary = (props) => {
     return (
@@ -12,4 +12,4 @@ const CustomerSummary = (props) => {
     )
 }
 
-export default CustomerSummary;
+export default CustomerSummary

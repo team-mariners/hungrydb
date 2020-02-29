@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const LastOrder = (props) => {
     return (
@@ -6,4 +6,4 @@ const LastOrder = (props) => {
     )
 }
 
-export default LastOrder;
+export default LastOrder

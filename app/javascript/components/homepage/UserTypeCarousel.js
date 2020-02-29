@@ -1,8 +1,8 @@
-import React from 'react';
-import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
-import restaurantSlide from '../../../assets/images/japan-fukui-chef-happy.jpg';
-import riderSlide from '../../../assets/images/mat-rempit.jpg';
+import React from 'react'
+import Carousel from 'react-bootstrap/Carousel'
+import Button from 'react-bootstrap/Button'
+import restaurantSlide from '../../../assets/images/japan-fukui-chef-happy.jpg'
+import riderSlide from '../../../assets/images/mat-rempit.jpg'
 
 const UserTypeCarousel = () => {
     return (
@@ -40,4 +40,4 @@ const UserTypeCarousel = () => {
     )
 }
 
-export default UserTypeCarousel;
+export default UserTypeCarousel

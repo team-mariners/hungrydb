@@ -1,6 +1,6 @@
-import React from 'react';
-import Card from 'react-bootstrap/Card';
-import promoPic from '../../../assets/images/tony-stark-raining-money.jpg';
+import React from 'react'
+import Card from 'react-bootstrap/Card'
+import promoPic from '../../../assets/images/tony-stark-raining-money.jpg'
 
 const HomePromosCard = () => {
     return (
@@ -13,4 +13,4 @@ const HomePromosCard = () => {
     )
 }
 
-export default HomePromosCard;
+export default HomePromosCard

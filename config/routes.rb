@@ -41,5 +41,12 @@ Rails.application.routes.draw do
     end
   end
 
+  # JSON API
+  namespace :api do
+    namespace :v1 do
+      resources :customers, only: [:index, :create, :destroy, :update]
+    end
+  end
+
   root to: 'pages#home'
 end

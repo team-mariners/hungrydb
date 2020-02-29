@@ -1,6 +1,6 @@
-import Nav from 'react-bootstrap/Nav';
-import React from 'react';
-import AppBar from '../global/AppBar';
+import Nav from 'react-bootstrap/Nav'
+import React from 'react'
+import AppBar from '../global/AppBar'
 
 const NaviBar = () => {
     return (
@@ -11,6 +11,6 @@ const NaviBar = () => {
             </Nav>
         </AppBar>
     )
-};
+}
 
-export default NaviBar;
+export default NaviBar

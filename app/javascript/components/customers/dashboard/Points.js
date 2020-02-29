@@ -1,9 +1,15 @@
-import React from 'react';
+import React from 'react'
 
-const Points = (props) => {
-    return (
-        <h3>Points</h3>
-    )
+class Points extends React.Component {
+
+
+    render() {
+        return (
+            <React.Fragment>
+                <h1>Your Points: </h1>
+            </React.Fragment>
+        )
+    }
 }
 
-export default Points;
+export default Points

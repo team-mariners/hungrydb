@@ -238,6 +238,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 6.0.2, >= 6.0.2.1)
   react-rails (~> 2.6)
+  responders
   sass-rails (>= 6)
   selenium-webdriver
   spring

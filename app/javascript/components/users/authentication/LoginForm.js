@@ -20,7 +20,7 @@ const LoginForm = (props) => {
         password: ''
     };
 
-    const handleLogin = (values) => {
+    const handleLogin = (values, formik) => {
         axios.post('/login', {
             user: {
                 login: values.identifier,
@@ -40,6 +40,8 @@ const LoginForm = (props) => {
                 // This is an error thrown by the client side, e.g. axios
                 props.showAlert(error.message);
             }
+
+            formik.setSubmitting(false);
         });
     };
 

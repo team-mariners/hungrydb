@@ -30,6 +30,9 @@ Rails.application.routes.draw do
       get 'orders', to: 'managers#index'
       get 'stats', to: 'managers#index'
       get 'reviews', to: 'managers#index'
+      get 'manage_menu', to: 'managers#index'
+      get 'manage_promo', to: 'managers#index'
+      get 'manage_info', to: 'managers#index'
     end
   end
 

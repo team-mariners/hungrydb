@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     end
 
     scope '/foods' do
+      get '', to: 'foods#index'
       post '', to: 'foods#create'
     end
   end

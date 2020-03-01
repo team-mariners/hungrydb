@@ -12,6 +12,7 @@ const CustomerNavBar = () => {
             <Nav.Link as={NavLink} to="/customer/history" style={navLinkstyle}>History</Nav.Link>
             <Nav.Link as={NavLink} to="/customer/reviews" style={navLinkstyle}>Reviews</Nav.Link>
             <Nav.Link as={NavLink} to="/customer/promotions" style={navLinkstyle}>Promotions</Nav.Link>
+            <Nav.Link as={NavLink} to="/customer/cart" style={navLinkstyle}>Cart</Nav.Link>
         </AppBar>
     )
 }

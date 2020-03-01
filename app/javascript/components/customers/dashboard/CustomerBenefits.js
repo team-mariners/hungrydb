@@ -4,9 +4,13 @@ import EligiblePromos from './EligiblePromos'
 
 const CustomerBenefits = (props) => {
     return (
-        <div className='dashboard-flex-in-flex'>
-            <RewardPoints />
-            <EligiblePromos />
+        <div>
+            <div className='dashboard-right-flex'>
+                <RewardPoints />
+            </div>
+            <div className='dashboard-right-flex'>
+                <EligiblePromos />
+            </div>
         </div>
     )
 }

@@ -1,12 +1,17 @@
 #customer-dashboard-container {
     display: flex;
-    justify-content: space-evenly;
-    margin-inline-start: auto;
+    justify-content: space-around;
     margin-block-end: auto;
+    margin-inline-start: auto;
 }
 
-.dashboard-flex--in-flex {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+.dashboard-left-flex {
+    margin-bottom: 80px;
+    margin-top: 50px;
+}
+
+
+.dashboard-right-flex {
+    margin-bottom: 100px;
+    margin-top: 50px;
 }

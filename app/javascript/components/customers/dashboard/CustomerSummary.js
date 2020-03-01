@@ -4,10 +4,16 @@ import LastReview from './LastReview'
 
 const CustomerSummary = (props) => {
     return (
-        <div className='dashboard-flex-in-flex'>
-            <h2>Hi {props.currentUser.username}!</h2>
-            <LastOrder />
-            <LastReview />
+        <div>
+            <div className='dashboard-left-flex'>
+                <h2>Hi {props.currentUser.username}!</h2>
+            </div>
+            <div className='dashboard-left-flex'>
+                <LastOrder />
+            </div>
+            <div className='dashboard-left-flex'>
+                <LastReview />
+            </div>
         </div>
     )
 }

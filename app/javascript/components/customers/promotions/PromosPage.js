@@ -1,21 +1,20 @@
 import React from 'react'
+import axios from 'axios'
 
-class EligiblePromos extends React.Component {
+class PromosPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {promotions: []};
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer.json')
-            .then(res => res.json())
+        axios.get('/api/v1/customer.json')
             .then(
                 (response) => {
-                    const retrieved_promos = response[0].promos
+                    const retrieved_promos = response.data[0].promos
                     this.setState({ promotions: retrieved_promos })
-                    console.log("Promos:" + retrieved_promos)
-                }
-            )
+                    console.log("Promotions: " + retrieved_promos)
+            })
             .catch(error => {
                 console.log(error)
             })
@@ -35,14 +34,13 @@ class EligiblePromos extends React.Component {
                 )
             })
             return (
-                <div>
+                <React.Fragment>
                     <h3>Promotions:</h3>
                     {promos}
-                    <a href="customer/promotions">See more promotions</a>
-                </div>
+                </React.Fragment>
             )
         }
     }
 }
 
-export default EligiblePromos
+export default PromosPage

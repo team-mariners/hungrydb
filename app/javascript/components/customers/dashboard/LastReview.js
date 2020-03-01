@@ -11,7 +11,9 @@ class LastReview extends React.Component {
             .then(res => res.json())
             .then(
                 (response) => {
-                    this.setState({ lastOrder: response[0].last_review[0] })
+                    retrieved_last_review = response[0].last_review[0]
+                    this.setState({ lastOrder: retrieved_last_review })
+                    console.log("Last Review: " + retrieved_last_review)
                 }
             )
             .catch(error => {
@@ -29,6 +31,7 @@ class LastReview extends React.Component {
                 <React.Fragment>
                     <h3>Previous Review:</h3>
                     <h4>{this.state.lastOrder}</h4>
+                    <a href="customer/reviews">See more reviews</a>
                 </React.Fragment>
             )
         }

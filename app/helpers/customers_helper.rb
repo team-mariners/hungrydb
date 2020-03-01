@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module CustomersHelper
   def customer_info_bundle
     # Get the current user and customer

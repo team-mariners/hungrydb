@@ -44,7 +44,8 @@ Rails.application.routes.draw do
   # JSON API
   namespace :api do
     namespace :v1 do
-      resources :customer, only: %i( index create destroy update ) # [:index, :create, :destroy, :update]
+      resources :customer, only: %i[index create destroy update]
+                              # [:index, :create, :destroy, :update]
     end
   end
 

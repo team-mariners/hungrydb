@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CustomersController < UsersController
   before_action do
     if !helpers.user_has_role?('customer')

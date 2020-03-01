@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::CustomerController < Api::V1::BaseController
   
   # rubocop:disable Metrics/MethodLength
@@ -11,7 +13,7 @@ class Api::V1::CustomerController < Api::V1::BaseController
     # Use SQL to get last created_at
     review_query = nil
     last_review_query = nil
-    eligiblepromos_query = %w[HARDCODEDPROMO1, HARDCODEDPROMO2] # Limit with SQL
+    eligiblepromos_query = %w[HARDCODEDPROMO1 HARDCODEDPROMO2] # Limit with SQL
     respond_with ['customer': Customer.find_by_sql(current_customer_query),
                   orders: order_query, reviews: review_query,
                   last_order: last_order_query, last_review: last_review_query,
@@ -20,7 +22,9 @@ class Api::V1::CustomerController < Api::V1::BaseController
   # rubocop:enable Metrics/MethodLength
 
   def create
-    # insert_customer = "INSERT INTO Customers(user_id, can, cvv, rewardPoints, locationHistory)
+    # insert_customer = "INSERT INTO Customers(
+    #                    user_id, can, cvv, rewardPoints, locationHistory
+    #                    )
     #                    VALUES (#{item_params_values})"
     # respond_with :api, :v1, ActiveRecord::Base.connection.execute(insert_customer)
     respond_with :api, :v1, Customer.create(item_params)

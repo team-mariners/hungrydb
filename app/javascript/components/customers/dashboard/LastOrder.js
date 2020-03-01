@@ -1,9 +1,38 @@
 import React from 'react'
 
-const LastOrder = (props) => {
-    return (
-        <h3>KFC</h3>
-    )
+class LastOrder extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {lastOrder: null};
+    }
+
+    componentDidMount() {
+        fetch('/api/v1/customer.json')
+            .then(res => res.json())
+            .then(
+                (response) => {
+                    this.setState({ lastOrder: response[0].last_order[0] })
+                }
+            )
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    render() {
+        if (this.state.lastOrder === null) {
+            return (
+                <h3>No previous orders.</h3>
+            )
+        } else {
+            return (
+                <React.Fragment>
+                    <h3>Previous Order:</h3>
+                    <h4>{this.state.lastOrder}</h4>
+                </React.Fragment>
+            )
+        }
+    }
 }
 
 export default LastOrder

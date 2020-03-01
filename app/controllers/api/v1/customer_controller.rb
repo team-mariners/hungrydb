@@ -4,7 +4,11 @@ class Api::V1::CustomerController < Api::V1::BaseController
                                   FROM Customers
                                   WHERE user_id = #{current_user.id}
                                   LIMIT 1"
-        respond_with Customer.find_by_sql(current_customer_query)
+        last_order_query = ['Hardcoded Last Order 1']
+        last_review_query = nil
+        eligiblepromos_query = ['HARDCODED1', 'HARDCODED2']
+        respond_with ['customer': Customer.find_by_sql(current_customer_query),
+                        last_order: last_order_query, last_review: last_review_query, promos: eligiblepromos_query]
     end
   
     def create
@@ -37,4 +41,4 @@ class Api::V1::CustomerController < Api::V1::BaseController
         # Returns key-value set
         params.require(:customer).permit(:user_id, :can, :cvv, :rewardPoints, :locationHistory)
     end
-  end
+end

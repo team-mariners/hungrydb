@@ -5,7 +5,7 @@ import LastReview from './LastReview'
 const CustomerSummary = (props) => {
     return (
         <div className='dashboard-flex-in-flex'>
-            <h2>Hi {props.currentUser.username}! You little twerp</h2>
+            <h2>Hi {props.currentUser.username}!</h2>
             <LastOrder />
             <LastReview />
         </div>

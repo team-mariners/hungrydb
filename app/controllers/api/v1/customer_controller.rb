@@ -1,18 +1,23 @@
 class Api::V1::CustomerController < Api::V1::BaseController
+  
+  # rubocop:disable Metrics/MethodLength
   def index
     current_customer_query = "SELECT *
                               FROM Customers
                               WHERE user_id = #{current_user.id}
                               LIMIT 1"
     order_query = ['Hardcoded Order 1', 'Hardcoded Order 2']
-    last_order_query = [order_query[order_query.length() - 1]] # Use SQL to get last created_at
+    last_order_query = [order_query[order_query.length - 1]]
+    # Use SQL to get last created_at
     review_query = nil
     last_review_query = nil
-    eligiblepromos_query = ['HARDCODEDPROMO1', 'HARDCODEDPROMO2'] # SQL limit to 3
+    eligiblepromos_query = %w[HARDCODEDPROMO1, HARDCODEDPROMO2] # Limit with SQL
     respond_with ['customer': Customer.find_by_sql(current_customer_query),
                   orders: order_query, reviews: review_query,
-                  last_order: last_order_query, last_review: last_review_query, promos: eligiblepromos_query]
+                  last_order: last_order_query, last_review: last_review_query,
+                  promos: eligiblepromos_query]
   end
+  # rubocop:enable Metrics/MethodLength
 
   def create
     # insert_customer = "INSERT INTO Customers(user_id, can, cvv, rewardPoints, locationHistory)
@@ -43,6 +48,6 @@ class Api::V1::CustomerController < Api::V1::BaseController
   def item_params
     # Returns key-value set
     params.require(:customer)
-		      .permit(:user_id, :can, :cvv, :rewardPoints, :locationHistory)
+          .permit(:user_id, :can, :cvv, :rewardPoints, :locationHistory)
   end
 end

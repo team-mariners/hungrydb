@@ -59,5 +59,5 @@ gem "react-rails", "~> 2.6"
 gem 'devise'
 gem 'rack-cors'
 
-# Enables setting up of controllers that respond to JSON and respond with JSON objects
+# Enables controllers to respond_to and respond_with JSON
 gem 'responders'

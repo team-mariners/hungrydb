@@ -15,6 +15,7 @@ const Authentication = () => {
     
     return (
         <Router>
+            <AppBar/>
             <Alert
                 dismissible
                 variant="danger"
@@ -23,7 +24,6 @@ const Authentication = () => {
             >
                 {errorMessage}
             </Alert>
-            <AppBar/>
             <Container showAlert={showAlert}/>
         </Router>
     )

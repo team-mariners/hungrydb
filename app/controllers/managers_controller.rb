@@ -1,8 +1,6 @@
 class ManagersController < UsersController
   before_action do
-    if !helpers.user_has_role?('manager')
-      return_unauthorized
-    end
+    verify_role!('manager')
   end
 
   def index

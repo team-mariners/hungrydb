@@ -34,6 +34,8 @@ Rails.application.routes.draw do
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
     end
+
+      resources :foods, except: [:new, :edit, :show]
   end
 
   root to: 'pages#home'

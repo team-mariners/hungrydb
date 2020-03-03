@@ -35,7 +35,22 @@ Rails.application.routes.draw do
       get 'manage_info', to: 'managers#index'
     end
 
-      resources :foods, except: [:new, :edit, :show]
+    scope '/customer' do
+      get 'home', to: 'customers#index'
+      get 'history', to: 'customers#history'
+      get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
+      get 'promotions', to: 'customers#promotions'
+    end
+    
+    resources :foods, except: [:new, :edit, :show]
+  end
+
+  # JSON API
+  namespace :api do
+    namespace :v1 do
+      resources :customer, only: %i[index create destroy update]
+      # [:index, :create, :destroy, :update]
+    end
   end
 
   root to: 'pages#home'

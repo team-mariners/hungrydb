@@ -58,3 +58,6 @@ gem "react-rails", "~> 2.6"
 # Authentication
 gem 'devise'
 gem 'rack-cors'
+
+# Enables controllers to respond_to and respond_with JSON
+gem 'responders'

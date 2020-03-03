@@ -1,16 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Route } from 'react-router-dom';
-import NaviBar from './NaviBar';
-import HomeContainer from './HomeContainer';
-import LoginForm from '../users/authentication/LoginForm';
-import SignUpForm from '../users/authentication/SignUpForm';
+import React from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import NaviBar from './NaviBar'
+import HomeContainer from './HomeContainer'
+import LoginForm from '../users/authentication/LoginForm'
+import SignUpForm from '../users/authentication/SignUpForm'
 
 export default function Home() {
     return (
         <Router>
             <NaviBar />
-            <div className="homepage-background">
+            <div>
                 <br /><br /><br />
                 <HomeContainer />
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
@@ -19,4 +19,4 @@ export default function Home() {
             <Route path="/signup" render={() => <SignUpForm />} />
         </Router>
     )
-};
+}

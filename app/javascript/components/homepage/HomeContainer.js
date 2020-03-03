@@ -1,7 +1,7 @@
-import React from 'react';
-import UserTypeCarousel from './UserTypeCarousel';
-import HomePromosCard from './HomePromosCard';
-import HomeRestaurantsCard from './HomeRestaurantsCard'; 
+import React from 'react'
+import UserTypeCarousel from './UserTypeCarousel'
+import HomePromosCard from './HomePromosCard'
+import HomeRestaurantsCard from './HomeRestaurantsCard'
 
 const HomeContainer = () => {
     return (
@@ -14,6 +14,6 @@ const HomeContainer = () => {
             </div>
         </div>
     )
-};
+}
 
-export default HomeContainer;
+export default HomeContainer

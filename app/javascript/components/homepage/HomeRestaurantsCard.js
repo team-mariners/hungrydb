@@ -1,6 +1,6 @@
-import React from 'react';
-import Card from 'react-bootstrap/Card';
-import restaurantPic from '../../../assets/images/krusty-krab.png';
+import React from 'react'
+import Card from 'react-bootstrap/Card'
+import restaurantPic from '../../../assets/images/krusty-krab.png'
 
 const HomeRestaurantsCard = () => {
     return (
@@ -13,4 +13,4 @@ const HomeRestaurantsCard = () => {
     )
 }
 
-export default HomeRestaurantsCard;
+export default HomeRestaurantsCard

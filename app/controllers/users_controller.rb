@@ -6,6 +6,8 @@ class UsersController < ApplicationController
       render 'managers/index'
     elsif helpers.user_has_role?('admin')
       render 'admins/index'
+    elsif helpers.user_has_role?('customer')
+      render 'customers/index'
     end
   end
 end

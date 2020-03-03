@@ -49,12 +49,12 @@ const Index = (props) => {
                 {alertMessage}
             </Alert>
             <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
-            <Route exact path="/manager/orders" render={() => <Orders/>}/>
+            {/* <Route exact path="/manager/orders" render={() => <Orders/>}/>
             <Route exact path="/manager/stats" render={() => <Stats/>}/>
             <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
             <Route exact path="/manager/manage_menu" render={() => <ManageMenu alerts={alerts}/>}/>
             <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
-            <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/>
+            <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/> */}
         </Router>
     )
 };

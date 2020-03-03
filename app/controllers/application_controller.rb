@@ -14,4 +14,10 @@ class ApplicationController < ActionController::Base
     def return_unauthorized
       render :file => "public/401.html", :status => :unauthorized
     end
+
+    def verify_role!(role)
+      if !helpers.user_has_role?(role)
+        return_unauthorized
+      end
+    end
 end

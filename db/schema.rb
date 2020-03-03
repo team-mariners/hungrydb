@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_014752) do
+ActiveRecord::Schema.define(version: 2020_02_28_093711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,18 @@ ActiveRecord::Schema.define(version: 2020_02_26_014752) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_customers_on_user_id", unique: true
+  end
+
+  create_table "foods", force: :cascade do |t|
+    t.bigint "restaurant_id"
+    t.string "name", null: false
+    t.integer "dailyLimit", null: false
+    t.integer "numOrders", null: false
+    t.decimal "price", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["restaurant_id", "name"], name: "index_foods_on_restaurant_id_and_name", unique: true
+    t.index ["restaurant_id"], name: "index_foods_on_restaurant_id"
   end
 
   create_table "managers", force: :cascade do |t|
@@ -81,6 +93,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_014752) do
 
   add_foreign_key "admins", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "foods", "restaurants"
   add_foreign_key "managers", "users"
   add_foreign_key "restaurants", "managers", on_delete: :cascade
   add_foreign_key "riders", "users"

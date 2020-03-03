@@ -41,6 +41,8 @@ Rails.application.routes.draw do
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
     end
+    
+    resources :foods, except: [:new, :edit, :show]
   end
 
   # JSON API

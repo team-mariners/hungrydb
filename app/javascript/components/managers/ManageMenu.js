@@ -16,6 +16,7 @@ const ManageMenu = (props) => {
     const [dishes, setDishes] = useState([]);
 
     const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
+    const [foodCategories, setFoodCategories] = useState([]);
 
     // This is basically componentDidUpdate. It will be triggered at the first rendering, and will only
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
@@ -32,18 +33,21 @@ const ManageMenu = (props) => {
         axios.get("/food_categories")
         .then(result => {
             console.log(result)
+            setFoodCategories(result.data);
+        }).catch(error => {
+            console.log(error.message);
         })
     }, []);
 
     const showDeleteDish = (id) => {
         setDishId(id);
         setIsDeleteDishVisible(true);
-    }
+    };
 
     const showEditDish = (dish) => {
         setDish(dish);
         setIsEditDishVisible(true);
-    }
+    };
 
     const handleDishCreated = (newDish) => {
         const newDishes = [...dishes, newDish];
@@ -81,7 +85,8 @@ const ManageMenu = (props) => {
             <h1>Menu</h1>
             <ToolBar
                 setNewDishVisible={() => setIsNewDishVisible(true)}
-                setNewCategoryVisible={() => setIsNewCategoryVisible(true)}/>
+                setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
+                foodCategories={foodCategories}/>
             <DishesList
                 dishes={dishes}
                 showDeleteDish={showDeleteDish}

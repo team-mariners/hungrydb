@@ -5,6 +5,10 @@ import FormControl from 'react-bootstrap/FormControl';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const ToolBar = (props) => {
+    const foodCategories = props.foodCategories.map(category => (
+        <Dropdown.Item key={category.id}>{category.name}</Dropdown.Item>
+    ));
+
     return (
         <div className="manageMenu-toolbar">
             <Button className="mr-sm-3" onClick={props.setNewDishVisible}>New Dish</Button>
@@ -14,6 +18,7 @@ const ToolBar = (props) => {
 
                 <Dropdown.Menu>
                     <Dropdown.Item>View All</Dropdown.Item>
+                    {foodCategories}
                 </Dropdown.Menu>
             </Dropdown>            
 

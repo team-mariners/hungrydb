@@ -25,6 +25,11 @@ const ManageMenu = (props) => {
         }).catch(error => {
             console.log(error.message);
         })
+
+        axios.get("/food_categories")
+        .then(result => {
+            console.log(result)
+        })
     }, []);
 
     const showDeleteDish = (id) => {

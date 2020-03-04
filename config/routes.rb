@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     end
     
     resources :foods, except: [:new, :edit, :show]
+    resources :food_categories, except: [:new, :edit, :show]
   end
 
   # JSON API

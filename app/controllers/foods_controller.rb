@@ -42,7 +42,7 @@ class FoodsController < ApplicationController
     end
 
     def get_restaurant
-        @restaurant = Manager.find_by(user_id: current_user.id).restaurant
+        @restaurant = Utilities.get_restaurant(current_user)
     end
 
     def write(type, hash)

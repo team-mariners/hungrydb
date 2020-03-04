@@ -8,4 +8,12 @@ const getProcessedDishValues = (values) => {
     };
 };
 
-export { getProcessedDishValues };
+const getProcessedFoodCategory = (values) => {
+    return {
+        food_category: {
+            name: values.categoryName.trim()
+        }
+    }
+};
+
+export { getProcessedDishValues, getProcessedFoodCategory };

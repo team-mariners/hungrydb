@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
-const CategoryForm = (props) => {
+const FoodCategoryForm = (props) => {
     const schema = yup.object({
-        categoryName: yup.string().required()
+        categoryName: yup.string().max(100).required()
     });
 
     return (
@@ -30,7 +30,14 @@ const CategoryForm = (props) => {
                             type="text"
                             name="categoryName"
                             value={values.categoryName}
-                            onChange={handleChange}/>
+                            onChange={handleChange}
+                            isInvalid={touched.categoryName && !!errors.categoryName}/>
+                        <Form.Text className="text-muted">
+                            Maximum 100 characters.
+                        </Form.Text>
+                        <Form.Control.Feedback type="invalid">
+                            Food category is invalid.
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Button type="submit">{props.buttonName}</Button>
                 </Form>
@@ -39,4 +46,4 @@ const CategoryForm = (props) => {
     )
 };
 
-export default CategoryForm;
+export default FoodCategoryForm;

@@ -110,7 +110,8 @@ const ManageMenu = (props) => {
                 {...props}/>
             <NewFoodCategory
                 show={isNewCategoryVisible}
-                onClose={() => setIsNewCategoryVisible(false)}/>
+                onClose={() => setIsNewCategoryVisible(false)}
+                {...props}/>
         </div>
     )
 };

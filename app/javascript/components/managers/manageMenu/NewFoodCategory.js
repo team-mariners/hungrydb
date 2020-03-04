@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import FoodCategoryForm from './FoodCategoryForm';
-import { getProcessedFoodCategory } from '../../helpers/FormHelpers';
+import { getProcessedFoodCategory, getErrorMessage } from '../../helpers/FormHelpers';
 
 const NewFoodCategory = (props) => {
     const initialValues = {
@@ -16,6 +16,10 @@ const NewFoodCategory = (props) => {
         axios.post('/food_categories', data)
         .then(result => {
             console.log(result);
+        }).catch(error => {
+            props.alerts.showFailureAlert(getErrorMessage(error));
+        }).finally(() => {
+            props.onClose();
         })
     };
 

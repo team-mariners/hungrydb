@@ -16,4 +16,12 @@ const getProcessedFoodCategory = (values) => {
     }
 };
 
-export { getProcessedDishValues, getProcessedFoodCategory };
+const getErrorMessage = (error) => {
+    if (error.response != undefined) {
+        return error.response.data.errors;
+    } else {
+        return error.message;
+    }
+}
+
+export { getProcessedDishValues, getProcessedFoodCategory, getErrorMessage };

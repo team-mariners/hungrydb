@@ -5,6 +5,7 @@ import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
 import DeleteDish from './manageMenu/DeleteDIsh';
 import EditDish from './manageMenu/EditDish';
+import NewFoodCategory from './manageMenu/NewFoodCategory';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
@@ -13,6 +14,8 @@ const ManageMenu = (props) => {
     const [dishId, setDishId] = useState(null); // for deleteDish
     const [dish, setDish] = useState(null); // for editDish
     const [dishes, setDishes] = useState([]);
+
+    const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
 
     // This is basically componentDidUpdate. It will be triggered at the first rendering, and will only
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
@@ -76,7 +79,9 @@ const ManageMenu = (props) => {
     return (
         <div className="p-3">
             <h1>Menu</h1>
-            <ToolBar setIsNewDishVisible={() => setIsNewDishVisible(true)}/>
+            <ToolBar
+                setNewDishVisible={() => setIsNewDishVisible(true)}
+                setNewCategoryVisible={() => setIsNewCategoryVisible(true)}/>
             <DishesList
                 dishes={dishes}
                 showDeleteDish={showDeleteDish}
@@ -98,6 +103,9 @@ const ManageMenu = (props) => {
                 onClose={() => setIsEditDishVisible(false)}
                 onDishEdited={handleDishEdited}
                 {...props}/>
+            <NewFoodCategory
+                show={isNewCategoryVisible}
+                onClose={() => setIsNewCategoryVisible(false)}/>
         </div>
     )
 };

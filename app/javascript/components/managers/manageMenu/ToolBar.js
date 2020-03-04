@@ -7,8 +7,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 const ToolBar = (props) => {
     return (
         <div className="manageMenu-toolbar">
-            <Button className="mr-sm-3" onClick={props.setIsNewDishVisible}>New Dish</Button>
-            <Button className="mr-sm-3">New Category</Button>
+            <Button className="mr-sm-3" onClick={props.setNewDishVisible}>New Dish</Button>
+            <Button className="mr-sm-3" onClick={props.setNewCategoryVisible}>New Category</Button>
             <Dropdown className="mr-sm-3">
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>
 

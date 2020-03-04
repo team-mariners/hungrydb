@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get 'stats', to: 'managers#index'
       get 'reviews', to: 'managers#index'
       get 'manage_menu', to: 'managers#index'
+      get 'manage_menu/food_category/:id', to: 'managers#index'
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
     end

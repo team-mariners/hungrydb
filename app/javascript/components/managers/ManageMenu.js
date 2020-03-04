@@ -14,11 +14,13 @@ const ManageMenu = (props) => {
     const [dishId, setDishId] = useState(null); // for deleteDish
     const [dish, setDish] = useState(null); // for editDish
     const [dishes, setDishes] = useState([]);
+    const [visibleDishes, setVisibleDishes] = useState([]);
 
     const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
 
-    // This is basically componentDidUpdate. It will be triggered at the first rendering, and will only
+    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
+
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
     // which in this case it will never change since the array [] is never modified.
     useEffect(() => {
@@ -26,6 +28,7 @@ const ManageMenu = (props) => {
         .then(result => {
             console.log(result)
             setDishes(result.data);
+            setVisibleDishes(filterDishes(result.data));
         }).catch(error => {
             console.log(error.message);
         })
@@ -38,6 +41,25 @@ const ManageMenu = (props) => {
             console.log(error.message);
         })
     }, []);
+
+    useEffect(() => {
+        if (currFoodCategoryId == undefined) {
+            setVisibleDishes(dishes);
+            return;
+        }
+
+        const filteredDishes = filterDishes(dishes);
+        setVisibleDishes(filteredDishes);
+    }, [currFoodCategoryId]);
+
+    const filterDishes = (dishes) => {
+        console.log(currFoodCategoryId);
+        if (currFoodCategoryId == undefined) {
+            return dishes;
+        } else {
+            return dishes.filter(dish => dish.food_category_id == currFoodCategoryId);
+        }
+    }
 
     const showDeleteDish = (id) => {
         setDishId(id);
@@ -86,9 +108,10 @@ const ManageMenu = (props) => {
             <ToolBar
                 setNewDishVisible={() => setIsNewDishVisible(true)}
                 setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
-                foodCategories={foodCategories}/>
+                foodCategories={foodCategories}
+                setCurrFoodCategoryId={setCurrFoodCategoryId}/>
             <DishesList
-                dishes={dishes}
+                dishes={visibleDishes}
                 showDeleteDish={showDeleteDish}
                 showEditDish={showEditDish}/>
             <NewDish

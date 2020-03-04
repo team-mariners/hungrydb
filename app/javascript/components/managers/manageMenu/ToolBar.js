@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -6,7 +7,13 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 const ToolBar = (props) => {
     const foodCategories = props.foodCategories.map(category => (
-        <Dropdown.Item key={category.id}>{category.name}</Dropdown.Item>
+        <Dropdown.Item
+            key={category.id}
+            as={Link}
+            to={`/manager/manage_menu/food_category/${category.id}`}
+            onClick={() => props.setCurrFoodCategoryId(category.id)}>
+            {category.name}
+        </Dropdown.Item>
     ));
 
     return (
@@ -17,7 +24,12 @@ const ToolBar = (props) => {
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item>View All</Dropdown.Item>
+                    <Dropdown.Item
+                        as={Link}
+                        to="/manager/manage_menu"
+                        onClick={() => props.setCurrFoodCategoryId(undefined)}>
+                        View All
+                    </Dropdown.Item>
                     {foodCategories}
                 </Dropdown.Menu>
             </Dropdown>            

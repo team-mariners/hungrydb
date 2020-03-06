@@ -16,6 +16,7 @@ const NewFoodCategory = (props) => {
         axios.post('/food_categories', data)
         .then(result => {
             console.log(result);
+            props.onNewCategoryCreated(result.data);
         }).catch(error => {
             props.alerts.showFailureAlert(getErrorMessage(error));
         }).finally(() => {

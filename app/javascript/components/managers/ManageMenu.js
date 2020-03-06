@@ -101,6 +101,11 @@ const ManageMenu = (props) => {
         return dishes.findIndex(dish => dish.id === id);
     };
 
+    const handleNewFoodCategoryCreated = (newFoodCategory) => {
+        const newFoodCategories = [...foodCategories, newFoodCategory];
+        setFoodCategories(newFoodCategories);
+        props.alerts.showSuccessAlert("New food category created!");
+    }
 
     return (
         <div className="p-3">
@@ -134,6 +139,7 @@ const ManageMenu = (props) => {
             <NewFoodCategory
                 show={isNewCategoryVisible}
                 onClose={() => setIsNewCategoryVisible(false)}
+                onNewCategoryCreated={handleNewFoodCategoryCreated}
                 {...props}/>
         </div>
     )

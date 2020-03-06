@@ -25,7 +25,7 @@ class FoodCategoriesController < ApplicationController
                 @food_category = @restaurant.food_categories.create!(food_categories_param)
             else type == :update
             end
-            render json: @food
+            render json: @food_category
         rescue ActiveRecord::RecordNotUnique
             render json: {errors: "Food category already exists!"}, status: 500
         rescue ActiveRecord::RecordInvalid

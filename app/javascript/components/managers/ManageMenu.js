@@ -123,6 +123,7 @@ const ManageMenu = (props) => {
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
                 onDishCreated={handleDishCreated}
+                foodCategories={foodCategories}
                 {...props}/>
             <DeleteDish
                 dishId={dishId}

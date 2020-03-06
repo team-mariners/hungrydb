@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import { Typeahead } from 'react-bootstrap-typeahead';
 
 /**
  * 
@@ -10,12 +11,14 @@ import { Formik } from 'formik';
  * initialValues: initialvalues of the form.
  * handleSubmit: function which handles submission of the form.
  * buttonName: name of the submit button
+ * foodCategories: an array of all the foodCategories created by the user.
  */
 const DishForm = (props) => {
     const schema = yup.object({
         dishName: yup.string().max(100).required(),
         price: yup.number().min(0).required(),
-        dailyLimit: yup.number().integer().min(0).required()
+        dailyLimit: yup.number().integer().min(0).required(),
+        foodCategory: yup.object().required()
     });
 
     return (
@@ -29,7 +32,10 @@ const DishForm = (props) => {
                 values,
                 errors,
                 touched,
-                isSubmitting
+                isSubmitting,
+                setFieldValue,
+                setFieldTouched,
+                submitCount
             }) => (
                     <Form onSubmit={handleSubmit}>
                         <Form.Group>
@@ -79,6 +85,28 @@ const DishForm = (props) => {
                                 Daily limit is invalid.
                                 </Form.Control.Feedback>
                         </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Dish Category</Form.Label>
+                            {/* Update the condition of the conditional rendering of the feedback component if you are
+                                changing the invalid condition of Typeahead too! */}
+                            <Typeahead
+                                id="food-category-typeahead"
+                                onChange={(selected) => setFieldValue('foodCategory', selected[0])}
+                                onBlur={(event) => {if (submitCount > 0) setFieldTouched('foodCategory', true)}}
+                                labelKey="name"
+                                options={props.foodCategories}
+                                isInvalid={touched.foodCategory && !!errors.foodCategory}
+                            />
+                            <Form.Text className='text-muted'>
+                                Dish category is required and need to be created first.
+                            </Form.Text>
+                            <Form.Text className='text-danger'
+                                style={touched.foodCategory && !!errors.foodCategory ? {} : {display: "none"}}>
+                                Dish category is invalid.
+                            </Form.Text>
+                        </Form.Group>
+
                         <Button type="submit">{props.buttonName}</Button>
                     </Form>
                 )}

@@ -34,7 +34,7 @@ class FoodsController < ApplicationController
     end
 
     def food_params
-        params.require(:food).permit(:name, :price, :dailyLimit)
+        params.require(:food).permit(:name, :price, :dailyLimit, :food_category_id)
     end
 
     def food_params_hash

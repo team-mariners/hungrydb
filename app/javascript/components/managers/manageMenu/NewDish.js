@@ -18,10 +18,12 @@ const NewDish = (props) => {
     const initialValues = {
         dishName: "",
         price: "",
-        dailyLimit: ""
+        dailyLimit: "",
+        foodCategory: null
     };
 
     const handleSubmit = (values) => {
+        console.log(values);
         const data = getProcessedDishValues(values);
        
         console.log(data);
@@ -42,7 +44,8 @@ const NewDish = (props) => {
             <DishForm
                 initialValues={initialValues}
                 handleSubmit={handleSubmit}
-                buttonName="Create"/>
+                buttonName="Create"
+                {...props}/>
         </Modal>
     )
 };

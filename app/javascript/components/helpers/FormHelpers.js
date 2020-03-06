@@ -3,7 +3,8 @@ const getProcessedDishValues = (values) => {
         food: {
             name: values.dishName.trim(),
             price: parseFloat(values.price),
-            dailyLimit: parseInt(values.dailyLimit)
+            dailyLimit: parseInt(values.dailyLimit),
+            food_category_id: values.foodCategory.id
         } 
     };
 };

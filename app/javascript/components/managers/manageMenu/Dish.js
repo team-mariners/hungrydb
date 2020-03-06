@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
  * dish: dish to be displayed
  */
 const Dish = (props) => {
-    console.log(props);
     return (
         <div>
             <div className="manageMenu-dish-info">

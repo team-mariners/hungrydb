@@ -6,7 +6,7 @@ class FoodsController < ApplicationController
     before_action :load_food, only: %i[update destroy]
 
     def index
-        render json: @restaurant.foods
+        render json: @restaurant.foods.map { |food| get_food_as_hash(food) }
     end
 
     def create
@@ -41,6 +41,14 @@ class FoodsController < ApplicationController
         food_params.to_hash.symbolize_keys
     end
 
+    def get_food_as_hash(food)
+        food_category = FoodCategory.find(food.food_category_id)
+        hash = food.attributes
+        hash.delete('food_category_id')
+        hash['food_category'] = food_category.attributes
+        return hash
+    end
+
     def get_restaurant
         @restaurant = Utilities.get_restaurant(current_user)
     end
@@ -52,7 +60,7 @@ class FoodsController < ApplicationController
             else type == :update
                 @food.update(hash)
             end
-            render json: @food
+            render json: get_food_as_hash(@food)
         rescue ActiveRecord::RecordInvalid
             render json: {errors: "Dish is invalid!"}, status: 500
         rescue ActiveRecord::RecordNotUnique

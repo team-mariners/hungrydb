@@ -27,8 +27,7 @@ const ManageMenu = (props) => {
         axios.get("/foods")
         .then(result => {
             console.log(result)
-            setDishes(result.data);
-            setVisibleDishes(filterDishes(result.data));
+            setDishesAndVisibleDishes(result.data);
         }).catch(error => {
             console.log(error.message);
         })
@@ -42,23 +41,25 @@ const ManageMenu = (props) => {
         })
     }, []);
 
+    // Use for react router when the user choose a dish category.
     useEffect(() => {
+        console.log("hello");
+        filterAndSetVisibleDishes(dishes);
+    }, [currFoodCategoryId]);
+
+    const setDishesAndVisibleDishes = (dishes) => {
+        setDishes(dishes);
+        filterAndSetVisibleDishes(dishes);
+    }
+
+    const filterAndSetVisibleDishes = (dishes) => {
         if (currFoodCategoryId == undefined) {
             setVisibleDishes(dishes);
             return;
         }
 
-        const filteredDishes = filterDishes(dishes);
+        const filteredDishes = dishes.filter(dish => dish.food_category.id == currFoodCategoryId);
         setVisibleDishes(filteredDishes);
-    }, [currFoodCategoryId]);
-
-    const filterDishes = (dishes) => {
-        console.log(currFoodCategoryId);
-        if (currFoodCategoryId == undefined) {
-            return dishes;
-        } else {
-            return dishes.filter(dish => dish.food_category_id == currFoodCategoryId);
-        }
     }
 
     const showDeleteDish = (id) => {
@@ -73,7 +74,7 @@ const ManageMenu = (props) => {
 
     const handleDishCreated = (newDish) => {
         const newDishes = [...dishes, newDish];
-        setDishes(newDishes);
+        setDishesAndVisibleDishes(newDishes);
         props.alerts.showSuccessAlert("New dish created! =D");
     };
 
@@ -82,8 +83,9 @@ const ManageMenu = (props) => {
         const index = getDishIndex(id, newDishes);
         newDishes.splice(index, 1);
 
-        console.log(newDishes);
+        console.log(newDishes)
         setDishes(newDishes);
+        setVisibleDishes(newDishes);
         props.alerts.showSuccessAlert("Dish deleted! =D");
     };
 

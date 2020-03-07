@@ -84,8 +84,7 @@ const ManageMenu = (props) => {
         newDishes.splice(index, 1);
 
         console.log(newDishes)
-        setDishes(newDishes);
-        setVisibleDishes(newDishes);
+        setDishesAndVisibleDishes(newDishes);
         props.alerts.showSuccessAlert("Dish deleted! =D");
     };
 

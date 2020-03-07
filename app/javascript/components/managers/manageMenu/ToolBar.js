@@ -22,7 +22,7 @@ const ToolBar = (props) => {
 
             <Dropdown.Menu>
                 <Dropdown.Item onClick={props.setEditCategoryVisible}>Edit Category</Dropdown.Item>
-                <Dropdown.Item>Delete Category</Dropdown.Item>
+                <Dropdown.Item onClick={props.setDeleteCategoryVisible}>Delete Category</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>
     )

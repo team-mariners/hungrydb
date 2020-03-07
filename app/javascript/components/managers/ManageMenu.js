@@ -7,6 +7,7 @@ import DeleteDish from './manageMenu/DeleteDIsh';
 import EditDish from './manageMenu/EditDish';
 import NewFoodCategory from './manageMenu/NewFoodCategory';
 import EditFoodCategory from './manageMenu/EditFoodCategory';
+import DeleteFoodCategory from './manageMenu/DeleteFoodCategory';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
@@ -19,6 +20,7 @@ const ManageMenu = (props) => {
 
     const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
     const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
+    const [isDeleteCategoryVisible, setIsDeleteCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
 
     const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
@@ -138,6 +140,7 @@ const ManageMenu = (props) => {
                 setNewDishVisible={() => setIsNewDishVisible(true)}
                 setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
                 setEditCategoryVisible={() => setIsEditCategoryVisible(true)}
+                setDeleteCategoryVisible={() => setIsDeleteCategoryVisible(true)}
                 foodCategories={foodCategories}
                 currFoodCategoryId={currFoodCategoryId}
                 setCurrFoodCategoryId={setCurrFoodCategoryId}/>
@@ -175,6 +178,9 @@ const ManageMenu = (props) => {
                 getCurrentFoodCategory={getCurrentFoodCategory}
                 onCategoryEdited={handleFoodCategoryEdited}
                 {...props}/>
+            <DeleteFoodCategory
+                show={isDeleteCategoryVisible}
+                onClose={() => setIsDeleteCategoryVisible(false)}/>
         </div>
     )
 };

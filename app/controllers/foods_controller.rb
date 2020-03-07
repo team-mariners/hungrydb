@@ -45,7 +45,7 @@ class FoodsController < ApplicationController
         food_category = FoodCategory.find(food.food_category_id)
         hash = food.attributes
         hash.delete('food_category_id')
-        hash['food_category'] = food_category.attributes
+        hash['foodCategory'] = food_category.attributes
         return hash
     end
 

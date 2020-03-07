@@ -12,7 +12,7 @@ const Dish = (props) => {
             <div className="manageMenu-dish-info">
                 <div className="manageMenu-dish-name">
                     <p><b>Name: </b>{props.dish.name}</p>
-                    <p><b>Category: </b>{props.dish.food_category.name}</p>
+                    <p><b>Category: </b>{props.dish.foodCategory.name}</p>
                 </div>
                 
                 <div className="manageMenu-dish-price">

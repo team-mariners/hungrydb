@@ -58,7 +58,7 @@ const ManageMenu = (props) => {
             return;
         }
 
-        const filteredDishes = dishes.filter(dish => dish.food_category.id == currFoodCategoryId);
+        const filteredDishes = dishes.filter(dish => dish.foodCategory.id == currFoodCategoryId);
         setVisibleDishes(filteredDishes);
     }
 
@@ -94,8 +94,7 @@ const ManageMenu = (props) => {
         const index = getDishIndex(id, newDishes);
         newDishes.splice(index, 1, editedDish);
 
-        console.log(newDishes);
-        setDishes(newDishes);
+        setDishesAndVisibleDishes(newDishes);
         props.alerts.showSuccessAlert("Dish edited! =D");
     };
 
@@ -138,6 +137,7 @@ const ManageMenu = (props) => {
                 show={isEditDishVisible}
                 onClose={() => setIsEditDishVisible(false)}
                 onDishEdited={handleDishEdited}
+                foodCategories={foodCategories}
                 {...props}/>
             <NewFoodCategory
                 show={isNewCategoryVisible}

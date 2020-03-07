@@ -40,8 +40,6 @@ const Index = (props) => {
         showFailureAlert: showFailureAlert
     }
 
-    console.log(props);
-
     return (
         <Router>
             <NavigationBar/>

@@ -10,13 +10,15 @@ const EditDish = (props) => {
         initialValues = {
             dishName: "",
             price: "",
-            dailyLimit: ""
+            dailyLimit: "",
+            foodCategory: null
         };
     } else {
         initialValues = {
             dishName: props.dish.name,
             price: props.dish.price,
-            dailyLimit: props.dish.dailyLimit
+            dailyLimit: props.dish.dailyLimit,
+            foodCategory: props.dish.foodCategory
         }
     }
 
@@ -40,7 +42,8 @@ const EditDish = (props) => {
             <DishForm
                 initialValues={initialValues}
                 handleSubmit={editDish}
-                buttonName="Submit"/>
+                buttonName="Submit"
+                {...props}/>
         </Modal>
     )
 };

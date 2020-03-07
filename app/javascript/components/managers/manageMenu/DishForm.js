@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
@@ -21,6 +21,15 @@ const DishForm = (props) => {
         foodCategory: yup.object().required()
     });
 
+    console.log(props.initialValues);
+
+    const initialValues = { ...props.initialValues };
+    initialValues.foodCategory = null;
+
+    // useEffect(() => {
+    //     initialValues.foodCategory = props.initialValues.foodCategory
+    // }, [])
+
     return (
         <Formik
             validationSchema={schema}
@@ -35,7 +44,8 @@ const DishForm = (props) => {
                 isSubmitting,
                 setFieldValue,
                 setFieldTouched,
-                submitCount
+                submitCount,
+                handleBlur
             }) => (
                     <Form onSubmit={handleSubmit}>
                         <Form.Group>
@@ -92,17 +102,19 @@ const DishForm = (props) => {
                                 changing the invalid condition of Typeahead too! */}
                             <Typeahead
                                 id="food-category-typeahead"
-                                onChange={(selected) => setFieldValue('foodCategory', selected[0])}
-                                onBlur={(event) => {if (submitCount > 0) setFieldTouched('foodCategory', true)}}
+                                name="foodCategory"
                                 labelKey="name"
                                 options={props.foodCategories}
+                                selected={!!values.foodCategory ? [values.foodCategory] : []}
                                 isInvalid={touched.foodCategory && !!errors.foodCategory}
+                                onChange={(selected) => setFieldValue('foodCategory', selected[0])}
+                                onBlur={() => {setFieldTouched('foodCategory', true)}}
                             />
                             <Form.Text className='text-muted'>
                                 Dish category is required and need to be created first.
                             </Form.Text>
                             <Form.Text className='text-danger'
-                                style={touched.foodCategory && !!errors.foodCategory ? {} : {display: "none"}}>
+                                style={touched.foodCategory && !!errors.foodCategory ? {} : { display: "none" }}>
                                 Dish category is invalid.
                             </Form.Text>
                         </Form.Group>

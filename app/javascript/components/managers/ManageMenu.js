@@ -103,14 +103,32 @@ const ManageMenu = (props) => {
         return dishes.findIndex(dish => dish.id === id);
     };
 
+    const getCurrentFoodCategory = () => {
+        return foodCategories.find(category => category.id == currFoodCategoryId);
+    }
+
     const handleNewFoodCategoryCreated = (newFoodCategory) => {
         const newFoodCategories = [...foodCategories, newFoodCategory];
         setFoodCategories(newFoodCategories);
         props.alerts.showSuccessAlert("New food category created!");
     }
 
-    const getCurrentFoodCategory = () => {
-        return foodCategories.find(category => category.id == currFoodCategoryId);
+    const handleFoodCategoryEdited = (editedFoodCategory) => {
+        const newFoodCategories = [...foodCategories];
+        const index = newFoodCategories.findIndex(category => category.id == editedFoodCategory.id);
+        newFoodCategories.splice(index, 1, editedFoodCategory);
+
+        const newDishes = dishes.map(dish => {
+            if (dish.foodCategory.id === editedFoodCategory.id) {
+                dish.foodCategory = editedFoodCategory;
+            } 
+
+            return dish;
+        })
+
+        setFoodCategories(newFoodCategories);
+        setDishesAndVisibleDishes(newDishes);
+        props.alerts.showSuccessAlert("Food category edited!");
     }
 
     return (
@@ -154,7 +172,9 @@ const ManageMenu = (props) => {
             <EditFoodCategory
                 show={isEditCategoryVisible}
                 onClose={() => setIsEditCategoryVisible(false)}
-                getCurrentFoodCategory={getCurrentFoodCategory}/>
+                getCurrentFoodCategory={getCurrentFoodCategory}
+                onCategoryEdited={handleFoodCategoryEdited}
+                {...props}/>
         </div>
     )
 };

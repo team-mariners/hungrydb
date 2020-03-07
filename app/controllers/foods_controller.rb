@@ -58,7 +58,7 @@ class FoodsController < ApplicationController
             if type == :create
                 @food = @restaurant.foods.create!(hash)
             else type == :update
-                @food.update(hash)
+                @food.update!(hash)
             end
             render json: get_food_as_hash(@food)
         rescue ActiveRecord::RecordInvalid

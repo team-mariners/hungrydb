@@ -1,5 +1,6 @@
 class FoodCategoriesController < ApplicationController
     before_action :get_restaurant
+    before_action :load_food_category, only: %i[update]
 
     def index
         render json: @restaurant.food_categories
@@ -9,10 +10,18 @@ class FoodCategoriesController < ApplicationController
         write(:create)
     end
 
+    def update
+        write(:update)
+    end
+
     private
 
     def get_restaurant
         @restaurant = Utilities.get_restaurant(current_user)
+    end
+
+    def load_food_category
+        @food_category = @restaurant.food_categories.find(params[:id])
     end
 
     def food_categories_param
@@ -24,6 +33,7 @@ class FoodCategoriesController < ApplicationController
             if type == :create
                 @food_category = @restaurant.food_categories.create!(food_categories_param)
             else type == :update
+                @food_category.update!(food_categories_param)
             end
             render json: @food_category
         rescue ActiveRecord::RecordNotUnique

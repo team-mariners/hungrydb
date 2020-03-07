@@ -1,6 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import FoodCategoryForm from './FoodCategoryForm';
+import { getProcessedFoodCategory, getErrorMessage } from '../../helpers/FormHelpers';
 
 const EditFoodCategory = (props) => {
     const currFoodCategory = props.getCurrentFoodCategory();
@@ -9,11 +11,19 @@ const EditFoodCategory = (props) => {
     if (!!currFoodCategory) {
         initialValues = { categoryName: currFoodCategory.name };
     } else {
-        initialValues = { categoryName: "" };
+        initialValues = { categoryName: "" }; 
     }
 
     const editCategory = (values) => {
-        console.log(values);
+        const data = getProcessedFoodCategory(values);
+        axios.put(`/food_categories/${currFoodCategory.id}`, data)
+            .then(result => {
+                props.onCategoryEdited(result.data);
+            }).catch(error => {
+                props.alerts.showFailureAlert(getErrorMessage(error));
+            }).finally(() => {
+                props.onClose();
+            })
     };
 
     return (

@@ -16,10 +16,26 @@ const ToolBar = (props) => {
         </Dropdown.Item>
     ));
 
+    let categoryActions = (
+        <Dropdown className="mr-sm-3">
+            <Dropdown.Toggle>Category Actions</Dropdown.Toggle>
+
+            <Dropdown.Menu>
+                <Dropdown.Item>Edit Category</Dropdown.Item>
+                <Dropdown.Item>Delete Category</Dropdown.Item>
+            </Dropdown.Menu>
+        </Dropdown>
+    )
+
+    if (props.currFoodCategoryId == undefined) {
+        categoryActions = null;
+    } 
+
     return (
         <div className="manageMenu-toolbar">
             <Button className="mr-sm-3" onClick={props.setNewDishVisible}>New Dish</Button>
             <Button className="mr-sm-3" onClick={props.setNewCategoryVisible}>New Category</Button>
+
             <Dropdown className="mr-sm-3">
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>
 
@@ -32,10 +48,12 @@ const ToolBar = (props) => {
                     </Dropdown.Item>
                     {foodCategories}
                 </Dropdown.Menu>
-            </Dropdown>            
+            </Dropdown>
+
+            {categoryActions}
 
             <Form inline={true}>
-                <FormControl type="text" className="mr-sm-2" placeholder="Search Dishes"/>
+                <FormControl type="text" className="mr-sm-2" placeholder="Search Dishes" />
                 <Button type="button" variant="outline-success">Search</Button>
             </Form>
         </div>

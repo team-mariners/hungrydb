@@ -114,6 +114,7 @@ const ManageMenu = (props) => {
                 setNewDishVisible={() => setIsNewDishVisible(true)}
                 setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
                 foodCategories={foodCategories}
+                currFoodCategoryId={currFoodCategoryId}
                 setCurrFoodCategoryId={setCurrFoodCategoryId}/>
             <DishesList
                 dishes={visibleDishes}

@@ -4,6 +4,13 @@ import Button from 'react-bootstrap/Button';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
+/**
+ * 
+ * @param {*} props 
+ * buttonName: text to be displayed on the submit button.
+ * initiaValues: an object containing these key-value pairs: categoryName.
+ * handleSubmit: a function which handles the submit action of the form.
+ */
 const FoodCategoryForm = (props) => {
     const schema = yup.object({
         categoryName: yup.string().max(100).required()

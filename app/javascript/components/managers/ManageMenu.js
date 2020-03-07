@@ -6,6 +6,7 @@ import DishesList from './manageMenu/DishesList';
 import DeleteDish from './manageMenu/DeleteDIsh';
 import EditDish from './manageMenu/EditDish';
 import NewFoodCategory from './manageMenu/NewFoodCategory';
+import EditFoodCategory from './manageMenu/EditFoodCategory';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
@@ -17,6 +18,7 @@ const ManageMenu = (props) => {
     const [visibleDishes, setVisibleDishes] = useState([]);
 
     const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
+    const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
 
     const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
@@ -107,12 +109,17 @@ const ManageMenu = (props) => {
         props.alerts.showSuccessAlert("New food category created!");
     }
 
+    const getCurrentFoodCategory = () => {
+        return foodCategories.find(category => category.id == currFoodCategoryId);
+    }
+
     return (
         <div className="p-3">
             <h1>Menu</h1>
             <ToolBar
                 setNewDishVisible={() => setIsNewDishVisible(true)}
                 setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
+                setEditCategoryVisible={() => setIsEditCategoryVisible(true)}
                 foodCategories={foodCategories}
                 currFoodCategoryId={currFoodCategoryId}
                 setCurrFoodCategoryId={setCurrFoodCategoryId}/>
@@ -144,6 +151,10 @@ const ManageMenu = (props) => {
                 onClose={() => setIsNewCategoryVisible(false)}
                 onNewCategoryCreated={handleNewFoodCategoryCreated}
                 {...props}/>
+            <EditFoodCategory
+                show={isEditCategoryVisible}
+                onClose={() => setIsEditCategoryVisible(false)}
+                getCurrentFoodCategory={getCurrentFoodCategory}/>
         </div>
     )
 };

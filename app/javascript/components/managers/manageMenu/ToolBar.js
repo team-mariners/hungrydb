@@ -21,7 +21,7 @@ const ToolBar = (props) => {
             <Dropdown.Toggle>Category Actions</Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <Dropdown.Item>Edit Category</Dropdown.Item>
+                <Dropdown.Item onClick={props.setEditCategoryVisible}>Edit Category</Dropdown.Item>
                 <Dropdown.Item>Delete Category</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>

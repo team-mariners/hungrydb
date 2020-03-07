@@ -1,14 +1,19 @@
 import React from 'react';
-import AppBar from '../global/AppBar';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import Dashboard from './Dashboard';
+import NavBar from './NavBar';
+import Roles from './Roles';
+import Statistics from './Statistics';
 
 const Index = (props) => {
     return (
-        <React.Fragment>
-            <AppBar isLoggedIn={true} />
-            <h2>Hello {props.currentUser.username}!</h2>
-            <p>This user was updated on the Admins table on {props.roleAttributes.updated_at}</p>
-       </React.Fragment>
+        <Router>
+            <NavBar />
+            <Route exact path="/"><Dashboard currentUser={props.currentUser} roleAttributes={props.roleAttributes} /></Route>
+            <Route exact path="/admin/roles"><Roles currentUser={props.currentUser} /></Route>
+            <Route exact path="/admin/statistics"><Statistics statistics={props.statistics} /></Route>
+        </Router>
     )
 }
 

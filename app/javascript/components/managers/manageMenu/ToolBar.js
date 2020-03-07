@@ -21,8 +21,8 @@ const ToolBar = (props) => {
             <Dropdown.Toggle>Category Actions</Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <Dropdown.Item onClick={props.setEditCategoryVisible}>Edit Category</Dropdown.Item>
-                <Dropdown.Item onClick={props.setDeleteCategoryVisible}>Delete Category</Dropdown.Item>
+                <Dropdown.Item onClick={props.showEditCategory}>Edit Category</Dropdown.Item>
+                <Dropdown.Item onClick={props.showDeleteCategory}>Delete Category</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>
     )
@@ -33,8 +33,8 @@ const ToolBar = (props) => {
 
     return (
         <div className="manageMenu-toolbar">
-            <Button className="mr-sm-3" onClick={props.setNewDishVisible}>New Dish</Button>
-            <Button className="mr-sm-3" onClick={props.setNewCategoryVisible}>New Category</Button>
+            <Button className="mr-sm-3" onClick={props.showNewDish}>New Dish</Button>
+            <Button className="mr-sm-3" onClick={props.showNewCategory}>New Category</Button>
 
             <Dropdown className="mr-sm-3">
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>

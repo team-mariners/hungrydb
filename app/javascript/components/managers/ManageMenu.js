@@ -137,10 +137,10 @@ const ManageMenu = (props) => {
         <div className="p-3">
             <h1>Menu</h1>
             <ToolBar
-                setNewDishVisible={() => setIsNewDishVisible(true)}
-                setNewCategoryVisible={() => setIsNewCategoryVisible(true)}
-                setEditCategoryVisible={() => setIsEditCategoryVisible(true)}
-                setDeleteCategoryVisible={() => setIsDeleteCategoryVisible(true)}
+                showNewDish={() => setIsNewDishVisible(true)}
+                showNewCategory={() => setIsNewCategoryVisible(true)}
+                showEditCategory={() => setIsEditCategoryVisible(true)}
+                showDeleteCategory={() => setIsDeleteCategoryVisible(true)}
                 foodCategories={foodCategories}
                 currFoodCategoryId={currFoodCategoryId}
                 setCurrFoodCategoryId={setCurrFoodCategoryId}/>

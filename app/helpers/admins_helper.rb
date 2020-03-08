@@ -13,6 +13,47 @@ module AdminsHelper
         return output
     end
 
+    def give_role(userid, role)
+        if user_has_role?(userid, role)
+            return false
+        elsif !is_valid_role?(role)
+            return false
+        end
+
+        user = User.find_by(id: userid)
+
+        rolelist = user.roles.split(",")
+        rolelist.push(role)
+        roles = rolelist.sort.join(",")
+
+        role.capitalize.constantize.create(
+            user_id: user.id
+        )
+        user.roles = roles
+        user.save
+        return true
+    end
+
+    def remove_role(userid, role)
+        if !user_has_role?(userid, role)
+            return false
+        elsif !is_valid_role?(role)
+            return false
+        end
+
+        user = User.find_by(id: userid)
+
+        rolelist = user.roles.split(",")
+        rolelist.delete(role)
+        roles = rolelist.join(",")
+
+        user.roles = roles
+        user.save
+        record = role.capitalize.constantize.find_by(user_id: user.id)
+        record.destroy
+        return true
+    end
+
     protected
     def get_users_count
         return User.all.count

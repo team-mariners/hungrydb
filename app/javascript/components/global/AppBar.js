@@ -30,7 +30,7 @@ const AppBar = (props) => {
     let profileButton = null;
     if (props.isLoggedIn == true) {
         logoutButton = <Nav.Link onClick={handleLogout} style={navLinkstyle}>Logout</Nav.Link>;
-        profileButton = <Nav.Link style={navLinkstyle}>Profile</Nav.Link>
+        profileButton = <Nav.Link to="/profile" style={navLinkstyle}>Profile</Nav.Link>
     }
 
     return (

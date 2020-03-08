@@ -24,7 +24,10 @@ Rails.application.routes.draw do
     scope '/admin' do
       get 'dashboard', to: 'admins#index'
       get 'roles', to: 'admins#index'
+      get 'roles/:id', to: 'admins#index'
       get 'statistics', to: 'admins#index'
+
+      post 'getuserid', to: 'admins#getuserid'
     end
 
     scope '/manager' do

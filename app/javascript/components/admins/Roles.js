@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 const Roles = (props) => {
     const validation = Yup.object({
@@ -16,7 +17,17 @@ const Roles = (props) => {
     };
 
     const handleRoleEdit = (values, formik) => {
-        console.log(values);
+        axios.post('/admin/getuserid', {
+            username: values.identifier
+        }).then((response) => {
+            if (response.data == false) {
+                console.log("False was returned");
+            } else {
+                window.location.assign('/admin/roles/' + response.data);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
 
         formik.setSubmitting(false);
     }

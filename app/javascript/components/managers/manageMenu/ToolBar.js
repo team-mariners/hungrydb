@@ -44,7 +44,7 @@ const ToolBar = (props) => {
                         as={Link}
                         to="/manager/manage_menu"
                         onClick={() => props.setCurrFoodCategoryId(undefined)}>
-                        View All
+                        All Dishes
                     </Dropdown.Item>
                     {foodCategories}
                 </Dropdown.Menu>

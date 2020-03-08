@@ -1,1 +1,1 @@
-<%= react_component('admins/Index', currentUser: current_user, roleAttributes: get_role_attributes('admin')) %>
+<%= react_component('admins/Index', currentUser: current_user, roleAttributes: get_current_user_role_attributes('admin'), statistics: get_statistics, params: params) %>

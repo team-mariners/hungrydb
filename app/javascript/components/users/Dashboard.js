@@ -1,5 +1,7 @@
 import React from 'react';
 import NavigationBar from './common/NavigationBar';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 const Dashboard = (props) => {
     let hasAdmin = props.isAdmin ? "You currently have the admin role." : "You do not have the admin role."

@@ -39,12 +39,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     # Automatically grant the new user as a customer
-    @user.roles = "customer"
-    @user.save
-
-    Customer.create(
-      users_id: @user.id
-    )
+    helpers.give_role(@user.id, "customer")
   end
 
   # GET /resource/edit

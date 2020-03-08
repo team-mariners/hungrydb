@@ -23,6 +23,11 @@ Rails.application.routes.draw do
 
     scope '/admin' do
       get 'dashboard', to: 'admins#index'
+      get 'roles', to: 'admins#index'
+      get 'roles/:id', to: 'admins#index'
+      get 'statistics', to: 'admins#index'
+
+      post 'getuserid', to: 'admins#getuserid'
     end
 
     scope '/manager' do
@@ -33,6 +38,23 @@ Rails.application.routes.draw do
       get 'manage_menu', to: 'managers#index'
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
+    end
+
+    scope '/customer' do
+      get 'home', to: 'customers#index'
+      get 'history', to: 'customers#history'
+      get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
+      get 'promotions', to: 'customers#promotions'
+    end
+    
+    resources :foods, except: [:new, :edit, :show]
+  end
+
+  # JSON API
+  namespace :api do
+    namespace :v1 do
+      resources :customer, only: %i[index create destroy update]
+      # [:index, :create, :destroy, :update]
     end
   end
 

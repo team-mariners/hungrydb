@@ -1,0 +1,25 @@
+.manageMenu-toolbar {
+    display: inline-flex;
+}
+
+.manageMenu-dishes-List {
+    margin: 20px 0;
+}
+
+.manageMenu-dish-info {
+    display: inline-flex;
+    width: 100%;
+}
+
+.manageMenu-dish-name {
+    width: 80%
+}
+
+.manageMenu-dish-price {
+    width: 20%
+}
+
+.manageMenu-dish-footer {
+    display: flex;
+    justify-content: flex-end;
+}

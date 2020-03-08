@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     end
 
     def verify_role!(role)
-      if !helpers.user_has_role?(role)
+      if !helpers.current_user_has_role?(role)
         return_unauthorized
       end
     end

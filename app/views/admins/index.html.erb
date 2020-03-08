@@ -1,3 +1,1 @@
-if user_has_role?('admin')
-
-<%= react_component('admins/Index', currentUser: current_user, roleAttributes: get_role_attributes('admin')) %>
+<%= react_component('admins/Index', currentUser: current_user, roleAttributes: get_role_attributes('admin'), statistics: get_statistics) %>

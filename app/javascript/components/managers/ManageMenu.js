@@ -104,6 +104,10 @@ const ManageMenu = (props) => {
     };
 
     const getCurrentFoodCategory = () => {
+        if (currFoodCategoryId === undefined) {
+            return undefined;
+        } 
+
         return foodCategories.find(category => category.id == currFoodCategoryId);
     }
 
@@ -156,7 +160,8 @@ const ManageMenu = (props) => {
             <DishesList
                 dishes={visibleDishes}
                 showDeleteDish={showDeleteDish}
-                showEditDish={showEditDish}/>
+                showEditDish={showEditDish}
+                currFoodCategory={getCurrentFoodCategory()}/>
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}

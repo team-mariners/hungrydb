@@ -1,6 +1,6 @@
 class FoodCategoriesController < ApplicationController
     before_action :get_restaurant
-    before_action :load_food_category, only: %i[update]
+    before_action :load_food_category, only: %i[update destroy]
 
     def index
         render json: @restaurant.food_categories

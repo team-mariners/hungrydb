@@ -1,5 +1,5 @@
 class FoodsController < ApplicationController
-    before_action do
+    before_action only: %i[create update destroy] do
         verify_role!('manager') 
     end 
     before_action :get_restaurant

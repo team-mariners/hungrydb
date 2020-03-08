@@ -8,6 +8,7 @@ import EditDish from './manageMenu/EditDish';
 import NewFoodCategory from './manageMenu/NewFoodCategory';
 import EditFoodCategory from './manageMenu/EditFoodCategory';
 import DeleteFoodCategory from './manageMenu/DeleteFoodCategory';
+import { Redirect } from 'react-router-dom';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
@@ -22,7 +23,6 @@ const ManageMenu = (props) => {
     const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
     const [isDeleteCategoryVisible, setIsDeleteCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
-
     const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
 
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
@@ -30,7 +30,6 @@ const ManageMenu = (props) => {
     useEffect(() => {
         axios.get("/foods")
         .then(result => {
-            console.log(result)
             setDishesAndVisibleDishes(result.data);
         }).catch(error => {
             console.log(error.message);
@@ -45,9 +44,8 @@ const ManageMenu = (props) => {
         })
     }, []);
 
-    // Use for react router when the user choose a dish category.
+    // Use for react router when the user choose a dish category to filter.
     useEffect(() => {
-        console.log("hello");
         filterAndSetVisibleDishes(dishes);
     }, [currFoodCategoryId]);
 
@@ -133,6 +131,17 @@ const ManageMenu = (props) => {
         props.alerts.showSuccessAlert("Food category edited!");
     }
 
+    const handleFoodCategoryDeleted = (id) => {
+        const newFoodCategories = [...foodCategories];
+        const index = newFoodCategories.findIndex(category => category.id === id);
+        newFoodCategories.splice(index, 1);
+        setFoodCategories(newFoodCategories);
+        
+        props.history.push("/manager/manage_menu");
+        setCurrFoodCategoryId(undefined);
+        props.alerts.showSuccessAlert("Food category deleted!");
+    }
+
     return (
         <div className="p-3">
             <h1>Menu</h1>
@@ -180,7 +189,10 @@ const ManageMenu = (props) => {
                 {...props}/>
             <DeleteFoodCategory
                 show={isDeleteCategoryVisible}
-                onClose={() => setIsDeleteCategoryVisible(false)}/>
+                onClose={() => setIsDeleteCategoryVisible(false)}
+                currFoodCategoryId={currFoodCategoryId}
+                onCategoryDeleted={handleFoodCategoryDeleted}
+                {...props}/>
         </div>
     )
 };

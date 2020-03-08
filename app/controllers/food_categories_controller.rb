@@ -14,6 +14,14 @@ class FoodCategoriesController < ApplicationController
         write(:update)
     end
 
+    def destroy
+        if @food_category.foods.empty?
+            @food_category.destroy
+        else
+            render json: {errors: "Cannot delete food category that has dishes!"}, status: 500
+        end
+    end
+
     private
 
     def get_restaurant

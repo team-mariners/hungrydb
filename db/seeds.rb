@@ -65,3 +65,43 @@ Customer.create(
 Admin.create(
     user_id: testAdmin.id
 )
+
+testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(
+    name: "ameens",
+    minOrderCost: 5
+)
+
+testDish1 = testRestaurant.foods.create(
+    name: "roti prata",
+    dailyLimit: 110,
+    numOrders: 0,
+    price: 1.2
+)
+
+testDish2 = testRestaurant.foods.create(
+    name: "nasi pataya",
+    dailyLimit: 300,
+    numOrders: 0,
+    price: 5
+)
+
+testDish3 = testRestaurant.foods.create(
+    name: "milo dinosaur",
+    dailyLimit: 250,
+    numOrders: 0,
+    price: 2.1
+)
+
+testDish4 = testRestaurant.foods.create(
+    name: "cheese fries",
+    dailyLimit: 200,
+    numOrders: 0,
+    price: 3
+)
+
+testDish5 = testRestaurant.foods.create(
+    name: "maggi goreng",
+    dailyLimit: 130,
+    numOrders: 0,
+    price: 3.2
+)

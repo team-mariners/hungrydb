@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_04_054827) do
+ActiveRecord::Schema.define(version: 2020_03_08_121654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,14 +43,14 @@ ActiveRecord::Schema.define(version: 2020_03_04_054827) do
   end
 
   create_table "foods", force: :cascade do |t|
-    t.bigint "restaurant_id"
+    t.bigint "restaurant_id", null: false
     t.string "name", null: false
     t.integer "dailyLimit", null: false
     t.integer "numOrders", null: false
     t.decimal "price", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "food_category_id"
+    t.bigint "food_category_id", null: false
     t.index ["food_category_id"], name: "index_foods_on_food_category_id"
     t.index ["restaurant_id", "name"], name: "index_foods_on_restaurant_id_and_name", unique: true
     t.index ["restaurant_id"], name: "index_foods_on_restaurant_id"
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2020_03_04_054827) do
   end
 
   create_table "restaurants", force: :cascade do |t|
-    t.bigint "manager_id"
+    t.bigint "manager_id", null: false
     t.string "name", null: false
     t.decimal "minOrderCost", null: false
     t.datetime "created_at", precision: 6, null: false

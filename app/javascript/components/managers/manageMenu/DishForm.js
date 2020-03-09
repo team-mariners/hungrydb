@@ -16,7 +16,15 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 const DishForm = (props) => {
     const schema = yup.object({
         dishName: yup.string().max(100).required(),
-        price: yup.number().min(0).required(),
+        price: yup.number().min(0).required().test(
+            'Two Decimal Places Test',
+            'Price cannot have more than 2 decimal places',
+            value => {
+                const remainder = value * 100 - Math.floor(value * 100);
+                const isMaxTwoDp = remainder === 0;
+                return isMaxTwoDp;
+            }
+        ),
         dailyLimit: yup.number().integer().min(0).required(),
         foodCategory: yup.object().required()
     });
@@ -73,7 +81,7 @@ const DishForm = (props) => {
                                 onChange={handleChange}
                                 isInvalid={touched.price && !!errors.price} />
                             <Form.Text className="text-muted">
-                                Price is required and must be greater or equal to 0.
+                                Price is required, must be greater or equal to 0, and can only have 2 decimal places.
                             </Form.Text>
                             <Form.Control.Feedback type="invalid">
                                 Price is invalid.

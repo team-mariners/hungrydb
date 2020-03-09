@@ -11,7 +11,7 @@ const Index = (props) => {
         <Router>
             <NavBar />
             <Route exact path="/"><Dashboard currentUser={props.currentUser} roleAttributes={props.roleAttributes} /></Route>
-            <Route exact path="/admin/roles"><Roles currentUser={props.currentUser} /></Route>
+            <Route path="/admin/roles"><Roles currentUser={props.currentUser} userid={props.params.id} /></Route>
             <Route exact path="/admin/statistics"><Statistics statistics={props.statistics} /></Route>
         </Router>
     )

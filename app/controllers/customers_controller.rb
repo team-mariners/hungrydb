@@ -2,7 +2,7 @@
 
 class CustomersController < UsersController
   before_action do
-    if !helpers.user_has_role?('customer')
+    if !helpers.current_user_has_role?('customer')
       return_unauthorized
     end
   end

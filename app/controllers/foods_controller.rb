@@ -1,12 +1,12 @@
 class FoodsController < ApplicationController
-    before_action do
+    before_action only: %i[create update destroy] do
         verify_role!('manager') 
     end 
     before_action :get_restaurant
     before_action :load_food, only: %i[update destroy]
 
     def index
-        render json: @restaurant.foods
+        render json: @restaurant.foods.map { |food| get_food_as_hash(food) }
     end
 
     def create
@@ -34,15 +34,23 @@ class FoodsController < ApplicationController
     end
 
     def food_params
-        params.require(:food).permit(:name, :price, :dailyLimit)
+        params.require(:food).permit(:name, :price, :dailyLimit, :food_category_id)
     end
 
     def food_params_hash
         food_params.to_hash.symbolize_keys
     end
 
+    def get_food_as_hash(food)
+        food_category = FoodCategory.find(food.food_category_id)
+        hash = food.attributes
+        hash.delete('food_category_id')
+        hash['foodCategory'] = food_category.attributes
+        return hash
+    end
+
     def get_restaurant
-        @restaurant = Manager.find_by(user_id: current_user.id).restaurant
+        @restaurant = Utilities.get_restaurant(current_user)
     end
 
     def write(type, hash)
@@ -50,9 +58,9 @@ class FoodsController < ApplicationController
             if type == :create
                 @food = @restaurant.foods.create!(hash)
             else type == :update
-                @food.update(hash)
+                @food.update!(hash)
             end
-            render json: @food
+            render json: get_food_as_hash(@food)
         rescue ActiveRecord::RecordInvalid
             render json: {errors: "Dish is invalid!"}, status: 500
         rescue ActiveRecord::RecordNotUnique

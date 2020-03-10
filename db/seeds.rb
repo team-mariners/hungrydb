@@ -71,37 +71,54 @@ testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(
     minOrderCost: 5
 )
 
-testDish1 = testRestaurant.foods.create(
-    name: "roti prata",
-    dailyLimit: 110,
-    numOrders: 0,
-    price: 1.2
+testFoodCategory1 = testRestaurant.food_categories.create(
+    name: "Main"
 )
 
-testDish2 = testRestaurant.foods.create(
+testFoodCategory2 = testRestaurant.food_categories.create(
+    name: "Side dishes"
+)
+
+testFoodCategory3 = testRestaurant.food_categories.create(
+    name: "Drinks"
+)
+
+testDish1 = testRestaurant.foods.create(
     name: "nasi pataya",
     dailyLimit: 300,
     numOrders: 0,
-    price: 5
+    price: 5,
+    food_category_id: testFoodCategory1.id
+)
+
+testDish2 = testRestaurant.foods.create(
+    name: "maggi goreng",
+    dailyLimit: 130,
+    numOrders: 0,
+    price: 3.2,
+    food_category_id: testFoodCategory1.id
 )
 
 testDish3 = testRestaurant.foods.create(
-    name: "milo dinosaur",
-    dailyLimit: 250,
+    name: "roti prata",
+    dailyLimit: 110,
     numOrders: 0,
-    price: 2.1
+    price: 1.2,
+    food_category_id: testFoodCategory2.id
 )
 
 testDish4 = testRestaurant.foods.create(
     name: "cheese fries",
     dailyLimit: 200,
     numOrders: 0,
-    price: 3
+    price: 3,
+    food_category_id: testFoodCategory2.id
 )
 
 testDish5 = testRestaurant.foods.create(
-    name: "maggi goreng",
-    dailyLimit: 130,
+    name: "milo dinosaur",
+    dailyLimit: 250,
     numOrders: 0,
-    price: 3.2
+    price: 2.1,
+    food_category_id: testFoodCategory3.id
 )

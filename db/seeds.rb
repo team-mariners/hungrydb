@@ -68,7 +68,8 @@ Admin.create(
 
 testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(
     name: "ameens",
-    minOrderCost: 5
+    minOrderCost: 5,
+    address: "12 Clementi Rd, Singapore 129742"
 )
 
 testFoodCategory1 = testRestaurant.food_categories.create(

@@ -14,7 +14,7 @@ const ManageInfo = (props) => {
                 <tbody>
                     <tr>
                         <td><b>Address</b></td>
-                        <td>: Hello</td>
+                        <td>: {props.info.restaurant.address}</td>
                     </tr>
 
                     <tr>

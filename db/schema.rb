@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_28_093711) do
+ActiveRecord::Schema.define(version: 2020_03_08_121654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,14 +33,25 @@ ActiveRecord::Schema.define(version: 2020_02_28_093711) do
     t.index ["user_id"], name: "index_customers_on_user_id", unique: true
   end
 
-  create_table "foods", force: :cascade do |t|
+  create_table "food_categories", force: :cascade do |t|
     t.bigint "restaurant_id"
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["restaurant_id", "name"], name: "index_food_categories_on_restaurant_id_and_name", unique: true
+    t.index ["restaurant_id"], name: "index_food_categories_on_restaurant_id"
+  end
+
+  create_table "foods", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
     t.string "name", null: false
     t.integer "dailyLimit", null: false
     t.integer "numOrders", null: false
     t.decimal "price", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "food_category_id", null: false
+    t.index ["food_category_id"], name: "index_foods_on_food_category_id"
     t.index ["restaurant_id", "name"], name: "index_foods_on_restaurant_id_and_name", unique: true
     t.index ["restaurant_id"], name: "index_foods_on_restaurant_id"
   end
@@ -53,7 +64,7 @@ ActiveRecord::Schema.define(version: 2020_02_28_093711) do
   end
 
   create_table "restaurants", force: :cascade do |t|
-    t.bigint "manager_id"
+    t.bigint "manager_id", null: false
     t.string "name", null: false
     t.decimal "minOrderCost", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -93,6 +104,8 @@ ActiveRecord::Schema.define(version: 2020_02_28_093711) do
 
   add_foreign_key "admins", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "food_categories", "restaurants"
+  add_foreign_key "foods", "food_categories"
   add_foreign_key "foods", "restaurants"
   add_foreign_key "managers", "users"
   add_foreign_key "restaurants", "managers", on_delete: :cascade

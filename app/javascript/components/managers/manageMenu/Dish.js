@@ -7,13 +7,12 @@ import Button from 'react-bootstrap/Button';
  * dish: dish to be displayed
  */
 const Dish = (props) => {
-    console.log(props);
     return (
         <div>
             <div className="manageMenu-dish-info">
                 <div className="manageMenu-dish-name">
                     <p><b>Name: </b>{props.dish.name}</p>
-                    <p><b>Category: </b>NA</p>
+                    <p><b>Category: </b>{props.dish.foodCategory.name}</p>
                 </div>
                 
                 <div className="manageMenu-dish-price">

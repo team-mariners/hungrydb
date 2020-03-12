@@ -92,74 +92,6 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
--- Name: food_categories; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.food_categories (
-    id bigint NOT NULL,
-    restaurant_id bigint,
-    name character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: food_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.food_categories_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: food_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.food_categories_id_seq OWNED BY public.food_categories.id;
-
-
---
--- Name: foods; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.foods (
-    id bigint NOT NULL,
-    restaurant_id bigint NOT NULL,
-    name character varying NOT NULL,
-    "dailyLimit" integer NOT NULL,
-    "numOrders" integer NOT NULL,
-    price numeric NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    food_category_id bigint NOT NULL
-);
-
-
---
--- Name: foods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.foods_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: foods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.foods_id_seq OWNED BY public.foods.id;
-
-
---
 -- Name: managers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -191,16 +123,43 @@ ALTER SEQUENCE public.managers_id_seq OWNED BY public.managers.id;
 
 
 --
+-- Name: menu_sections; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menu_sections (
+    id bigint NOT NULL
+);
+
+
+--
+-- Name: menu_sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menu_sections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menu_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menu_sections_id_seq OWNED BY public.menu_sections.id;
+
+
+--
 -- Name: restaurants; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.restaurants (
     id bigint NOT NULL,
-    manager_id bigint NOT NULL,
-    name character varying NOT NULL,
-    "minOrderCost" numeric NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    name character varying(300) NOT NULL,
+    min_order_cost numeric NOT NULL,
+    address character varying(500) NOT NULL,
+    manager_id bigint NOT NULL
 );
 
 
@@ -323,24 +282,17 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 
 
 --
--- Name: food_categories id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.food_categories ALTER COLUMN id SET DEFAULT nextval('public.food_categories_id_seq'::regclass);
-
-
---
--- Name: foods id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.foods ALTER COLUMN id SET DEFAULT nextval('public.foods_id_seq'::regclass);
-
-
---
 -- Name: managers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.managers ALTER COLUMN id SET DEFAULT nextval('public.managers_id_seq'::regclass);
+
+
+--
+-- Name: menu_sections id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_sections ALTER COLUMN id SET DEFAULT nextval('public.menu_sections_id_seq'::regclass);
 
 
 --
@@ -389,27 +341,35 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: food_categories food_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.food_categories
-    ADD CONSTRAINT food_categories_pkey PRIMARY KEY (id);
-
-
---
--- Name: foods foods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.foods
-    ADD CONSTRAINT foods_pkey PRIMARY KEY (id);
-
-
---
 -- Name: managers managers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.managers
     ADD CONSTRAINT managers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: menu_sections menu_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_sections
+    ADD CONSTRAINT menu_sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: restaurants restaurants_manager_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.restaurants
+    ADD CONSTRAINT restaurants_manager_id_key UNIQUE (manager_id);
+
+
+--
+-- Name: restaurants restaurants_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.restaurants
+    ADD CONSTRAINT restaurants_name_key UNIQUE (name);
 
 
 --
@@ -459,52 +419,10 @@ CREATE UNIQUE INDEX index_customers_on_user_id ON public.customers USING btree (
 
 
 --
--- Name: index_food_categories_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_food_categories_on_restaurant_id ON public.food_categories USING btree (restaurant_id);
-
-
---
--- Name: index_food_categories_on_restaurant_id_and_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_food_categories_on_restaurant_id_and_name ON public.food_categories USING btree (restaurant_id, name);
-
-
---
--- Name: index_foods_on_food_category_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_foods_on_food_category_id ON public.foods USING btree (food_category_id);
-
-
---
--- Name: index_foods_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_foods_on_restaurant_id ON public.foods USING btree (restaurant_id);
-
-
---
--- Name: index_foods_on_restaurant_id_and_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_foods_on_restaurant_id_and_name ON public.foods USING btree (restaurant_id, name);
-
-
---
 -- Name: index_managers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_managers_on_user_id ON public.managers USING btree (user_id);
-
-
---
--- Name: index_restaurants_on_manager_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_restaurants_on_manager_id ON public.restaurants USING btree (manager_id);
 
 
 --
@@ -552,35 +470,11 @@ ALTER TABLE ONLY public.admins
 
 
 --
--- Name: restaurants fk_rails_66c3c396ea; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.restaurants
-    ADD CONSTRAINT fk_rails_66c3c396ea FOREIGN KEY (manager_id) REFERENCES public.managers(id) ON DELETE CASCADE;
-
-
---
--- Name: food_categories fk_rails_6fd8f27cd6; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.food_categories
-    ADD CONSTRAINT fk_rails_6fd8f27cd6 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
-
-
---
 -- Name: customers fk_rails_9917eeaf5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT fk_rails_9917eeaf5d FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: foods fk_rails_a28abb337f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.foods
-    ADD CONSTRAINT fk_rails_a28abb337f FOREIGN KEY (food_category_id) REFERENCES public.food_categories(id);
 
 
 --
@@ -592,11 +486,11 @@ ALTER TABLE ONLY public.riders
 
 
 --
--- Name: foods fk_rails_eae1e5c8ad; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: restaurants restaurants_manager_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.foods
-    ADD CONSTRAINT fk_rails_eae1e5c8ad FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+ALTER TABLE ONLY public.restaurants
+    ADD CONSTRAINT restaurants_manager_id_fkey FOREIGN KEY (manager_id) REFERENCES public.managers(id) ON DELETE CASCADE;
 
 
 --
@@ -612,14 +506,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200223103255'),
 ('20200223110049'),
 ('20200225011425'),
-('20200226014752'),
-('20200228031242'),
-('20200228081317'),
-('20200228093711'),
-('20200304051934'),
-('20200304054024'),
-('20200304054827'),
-('20200308120404'),
-('20200308121654');
+('20200312022449');
 
 

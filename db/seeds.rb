@@ -66,59 +66,64 @@ Admin.create(
     user_id: testAdmin.id
 )
 
-testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(
-    name: "ameens",
-    minOrderCost: 5
+ActiveRecord::Base.connection.exec_query(
+    'INSERT INTO restaurants(name, min_order_cost, address, manager_id)
+    VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', 1)'
 )
 
-testFoodCategory1 = testRestaurant.food_categories.create(
-    name: "Main"
-)
+# testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(
+#     name: "ameens",
+#     minOrderCost: 5
+# )
 
-testFoodCategory2 = testRestaurant.food_categories.create(
-    name: "Side dishes"
-)
+# testFoodCategory1 = testRestaurant.food_categories.create(
+#     name: "Main"
+# )
 
-testFoodCategory3 = testRestaurant.food_categories.create(
-    name: "Drinks"
-)
+# testFoodCategory2 = testRestaurant.food_categories.create(
+#     name: "Side dishes"
+# )
 
-testDish1 = testRestaurant.foods.create(
-    name: "nasi pataya",
-    dailyLimit: 300,
-    numOrders: 0,
-    price: 5,
-    food_category_id: testFoodCategory1.id
-)
+# testFoodCategory3 = testRestaurant.food_categories.create(
+#     name: "Drinks"
+# )
 
-testDish2 = testRestaurant.foods.create(
-    name: "maggi goreng",
-    dailyLimit: 130,
-    numOrders: 0,
-    price: 3.2,
-    food_category_id: testFoodCategory1.id
-)
+# testDish1 = testRestaurant.foods.create(
+#     name: "nasi pataya",
+#     dailyLimit: 300,
+#     numOrders: 0,
+#     price: 5,
+#     food_category_id: testFoodCategory1.id
+# )
 
-testDish3 = testRestaurant.foods.create(
-    name: "roti prata",
-    dailyLimit: 110,
-    numOrders: 0,
-    price: 1.2,
-    food_category_id: testFoodCategory2.id
-)
+# testDish2 = testRestaurant.foods.create(
+#     name: "maggi goreng",
+#     dailyLimit: 130,
+#     numOrders: 0,
+#     price: 3.2,
+#     food_category_id: testFoodCategory1.id
+# )
 
-testDish4 = testRestaurant.foods.create(
-    name: "cheese fries",
-    dailyLimit: 200,
-    numOrders: 0,
-    price: 3,
-    food_category_id: testFoodCategory2.id
-)
+# testDish3 = testRestaurant.foods.create(
+#     name: "roti prata",
+#     dailyLimit: 110,
+#     numOrders: 0,
+#     price: 1.2,
+#     food_category_id: testFoodCategory2.id
+# )
 
-testDish5 = testRestaurant.foods.create(
-    name: "milo dinosaur",
-    dailyLimit: 250,
-    numOrders: 0,
-    price: 2.1,
-    food_category_id: testFoodCategory3.id
-)
+# testDish4 = testRestaurant.foods.create(
+#     name: "cheese fries",
+#     dailyLimit: 200,
+#     numOrders: 0,
+#     price: 3,
+#     food_category_id: testFoodCategory2.id
+# )
+
+# testDish5 = testRestaurant.foods.create(
+#     name: "milo dinosaur",
+#     dailyLimit: 250,
+#     numOrders: 0,
+#     price: 2.1,
+#     food_category_id: testFoodCategory3.id
+# )

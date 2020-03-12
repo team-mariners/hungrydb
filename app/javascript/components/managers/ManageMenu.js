@@ -141,7 +141,7 @@ const ManageMenu = (props) => {
         newFoodCategories.splice(index, 1);
         setFoodCategories(newFoodCategories);
         
-        props.history.push("/manager/manage_menu");
+        props.history.replace("/manager/manage_menu");
         setCurrFoodCategoryId(undefined);
         props.alerts.showSuccessAlert("Food category deleted!");
     }

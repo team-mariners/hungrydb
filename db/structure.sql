@@ -127,27 +127,9 @@ ALTER SEQUENCE public.managers_id_seq OWNED BY public.managers.id;
 --
 
 CREATE TABLE public.menu_sections (
-    id bigint NOT NULL
+    ms_name character varying(100) NOT NULL,
+    restaurant_id bigint NOT NULL
 );
-
-
---
--- Name: menu_sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.menu_sections_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: menu_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.menu_sections_id_seq OWNED BY public.menu_sections.id;
 
 
 --
@@ -289,13 +271,6 @@ ALTER TABLE ONLY public.managers ALTER COLUMN id SET DEFAULT nextval('public.man
 
 
 --
--- Name: menu_sections id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.menu_sections ALTER COLUMN id SET DEFAULT nextval('public.menu_sections_id_seq'::regclass);
-
-
---
 -- Name: restaurants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -353,7 +328,7 @@ ALTER TABLE ONLY public.managers
 --
 
 ALTER TABLE ONLY public.menu_sections
-    ADD CONSTRAINT menu_sections_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT menu_sections_pkey PRIMARY KEY (ms_name, restaurant_id);
 
 
 --
@@ -483,6 +458,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.riders
     ADD CONSTRAINT fk_rails_c5d0d20a0d FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: menu_sections menu_sections_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_sections
+    ADD CONSTRAINT menu_sections_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
 
 
 --

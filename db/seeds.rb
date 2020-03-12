@@ -66,9 +66,21 @@ Admin.create(
     user_id: testAdmin.id
 )
 
+test_manager_1 = Manager.find(1)
+
 ActiveRecord::Base.connection.exec_query(
-    'INSERT INTO restaurants(name, min_order_cost, address, manager_id)
-    VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', 1)'
+    "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
+    VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', #{test_manager_1.id});"
+)
+
+test_restaurant_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM restaurants
+     WHERE manager_id = #{test_manager_1.id};"
+).to_a[0]
+
+test_menu_section_1 = ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO menu_sections(ms_name, restaurant_id)
+    VALUES ('main', #{test_restaurant_1["id"]});"
 )
 
 # testRestaurant = Manager.find_by(user_id: testManager.id).create_restaurant!(

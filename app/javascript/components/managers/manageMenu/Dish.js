@@ -11,14 +11,14 @@ const Dish = (props) => {
         <div>
             <div className="manageMenu-dish-info">
                 <div className="manageMenu-dish-name">
-                    <p><b>Name: </b>{props.dish.name}</p>
-                    <p><b>Category: </b>{props.dish.foodCategory.name}</p>
+                    <p><b>Name: </b>{props.dish.f_name}</p>
+                    <p><b>Category: </b>{props.dish.menu_section.ms_name}</p>
                 </div>
                 
                 <div className="manageMenu-dish-price">
                     <p><b>Price: </b>$ {parseFloat(props.dish.price).toFixed(2)}</p>
-                    <p><b>Daily Limit: </b>{props.dish.dailyLimit}</p>
-                    <p><b>Num orders: </b>{props.dish.numOrders}</p>
+                    <p><b>Daily Limit: </b>{props.dish.daily_limit}</p>
+                    <p><b>Num orders: </b>{props.dish.num_orders}</p>
                 </div>
             </div>
 

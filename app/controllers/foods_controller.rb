@@ -6,7 +6,20 @@ class FoodsController < ApplicationController
     before_action :load_food, only: %i[update destroy]
 
     def index
-        render json: @restaurant.foods.map { |food| get_food_as_hash(food) }
+        @foods = ActiveRecord::Base.connection.exec_query(
+            "SELECT * 
+            FROM foods JOIN menu_sections USING(ms_name, restaurant_id)
+            WHERE restaurant_id = #{@restaurant["id"]}"
+        )
+
+        @foods.each do |row|
+            menu_section = {"ms_name" => row["ms_name"], "url_id" => row["url_id"]}
+            row["menu_section"] = menu_section
+            row.delete("ms_name")
+            row.delete("url_id")
+        end
+
+        render json: @foods
     end
 
     def create

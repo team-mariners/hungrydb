@@ -114,57 +114,57 @@ test_menu_section_3 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 # --------------------------------------------------- Foods ---------------------------------------------------------
-# ActiveRecord::Base.connection.exec_query(
-#     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-#     VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
-# )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
+    VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
+)
 
-# test_food_1 = ActiveRecord::Base.connection.exec_query(
-#     "SELECT * FROM foods
-#     WHERE f_name = 'nasi pataya'
-#     AND restaurant_id = #{test_restaurant_1["id"]}"
-# ).to_a[0]
+test_food_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM foods
+    WHERE f_name = 'nasi pataya'
+    AND restaurant_id = #{test_restaurant_1["id"]}"
+).to_a[0]
 
-# ActiveRecord::Base.connection.exec_query(
-#     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-#     VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
-# )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
+    VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
+)
 
-# test_food_2 = ActiveRecord::Base.connection.exec_query(
-#     "SELECT * FROM foods
-#     WHERE f_name = 'maggi goreng'
-#     AND restaurant_id = #{test_restaurant_1["id"]}"
-# ).to_a[0]
+test_food_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM foods
+    WHERE f_name = 'maggi goreng'
+    AND restaurant_id = #{test_restaurant_1["id"]}"
+).to_a[0]
 
-# ActiveRecord::Base.connection.exec_query(
-#     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-#     VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
-# )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
+    VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
+)
 
-# test_food_3 = ActiveRecord::Base.connection.exec_query(
-#     "SELECT * FROM foods
-#     WHERE f_name = 'roti prata'
-#     AND restaurant_id = #{test_restaurant_1["id"]}"
-# ).to_a[0]
+test_food_3 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM foods
+    WHERE f_name = 'roti prata'
+    AND restaurant_id = #{test_restaurant_1["id"]}"
+).to_a[0]
 
-# ActiveRecord::Base.connection.exec_query(
-#     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-#     VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
-# )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
+    VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
+)
 
-# test_food_4 = ActiveRecord::Base.connection.exec_query(
-#     "SELECT * FROM foods
-#     WHERE f_name = 'cheese fries'
-#     AND restaurant_id = #{test_restaurant_1["id"]}"
-# ).to_a[0]
+test_food_4 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM foods
+    WHERE f_name = 'cheese fries'
+    AND restaurant_id = #{test_restaurant_1["id"]}"
+).to_a[0]
 
-# ActiveRecord::Base.connection.exec_query(
-#     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-#     VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, '#{test_menu_section_3["ms_name"]}')"    
-# )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
+    VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, '#{test_menu_section_3["ms_name"]}')"    
+)
 
-# test_food_5 = ActiveRecord::Base.connection.exec_query(
-#     "SELECT * FROM foods
-#     WHERE f_name = 'milo dinosaur'
-#     AND restaurant_id = #{test_restaurant_1["id"]}"
-# ).to_a[0]
+test_food_5 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM foods
+    WHERE f_name = 'milo dinosaur'
+    AND restaurant_id = #{test_restaurant_1["id"]}"
+).to_a[0]

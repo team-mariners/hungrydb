@@ -30,6 +30,7 @@ const ManageMenu = (props) => {
     useEffect(() => {
         axios.get("/foods")
         .then(result => {
+            console.log(result);
             setDishesAndVisibleDishes(result.data);
         }).catch(error => {
             console.log(error.message);
@@ -60,7 +61,7 @@ const ManageMenu = (props) => {
             return;
         }
 
-        const filteredDishes = dishes.filter(dish => dish.foodCategory.id == currFoodCategoryId);
+        const filteredDishes = dishes.filter(dish => dish.menu_section.url_id == currFoodCategoryId);
         setVisibleDishes(filteredDishes);
     }
 

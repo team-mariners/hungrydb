@@ -51,7 +51,7 @@ const Index = (props) => {
                 <Route exact path="/manager/orders" render={() => <Orders/>}/>
                 <Route exact path="/manager/stats" render={() => <Stats/>}/>
                 <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
-                <Route exact path={["/manager/manage_menu/food_category/:id", "/manager/manage_menu"]}
+                <Route exact path={["/manager/manage_menu/food_category/:name", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
                 <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
                 <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/>

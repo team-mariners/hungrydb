@@ -4,7 +4,7 @@ class FoodCategoriesController < ApplicationController
 
     def index
         @food_categories = ActiveRecord::Base.connection.exec_query(
-            "SELECT ms_name
+            "SELECT * 
             FROM menu_sections
             WHERE restaurant_id = #{@restaurant["id"]}"
         ).to_a
@@ -35,12 +35,9 @@ class FoodCategoriesController < ApplicationController
     end
 
     def load_food_category
-        info = params[:menu_section]
-
         @food_category = ActiveRecord::Base.connection.exec_query(
             "SELECT * FROM menu_sections
-            WHERE ms_name = '#{info[:ms_name]}'
-            AND restaurant_id = #{info[:restaurant_id]};"
+            WHERE url_id = #{params[:id]};"
         ).to_a[0]
     end
 

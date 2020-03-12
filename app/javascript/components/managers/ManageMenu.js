@@ -23,7 +23,7 @@ const ManageMenu = (props) => {
     const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
     const [isDeleteCategoryVisible, setIsDeleteCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
-    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
+    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.name);
 
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
     // which in this case it will never change since the array [] is never modified.

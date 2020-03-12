@@ -11,17 +11,17 @@ class ManagersController < UsersController
   private
 
   def verify_url
-    current_uri = request.env['PATH_INFO']
-    print current_uri
+    # current_uri = request.env['PATH_INFO']
+    # print current_uri
 
-    # Check if the given food category id exist or not before going to the respective food category page
-    if current_uri.match(/^\/manager\/manage_menu\/food_category\/\d+$/)
-      id = params[:id].to_i
-      begin
-        FoodCategory.find(id)
-      rescue
-        raise ActionController::RoutingError, 'Does not exist'
-      end  
-    end
+    # # Check if the given food category id exist or not before going to the respective food category page
+    # if current_uri.match(/^\/manager\/manage_menu\/food_category\/\S+$/)
+    #   id = params[:name]
+    #   begin
+    #     FoodCategory.find(id)
+    #   rescue
+    #     raise ActionController::RoutingError, 'Does not exist'
+    #   end  
+    # end
   end
 end

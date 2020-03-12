@@ -92,6 +92,44 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
+-- Name: foods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.foods (
+    id bigint NOT NULL,
+    f_name character varying(100) NOT NULL,
+    daily_limit integer NOT NULL,
+    num_orders integer DEFAULT 0 NOT NULL,
+    price numeric NOT NULL,
+    is_active boolean DEFAULT true NOT NULL,
+    restaurant_id bigint NOT NULL,
+    ms_name character varying(100) NOT NULL,
+    CONSTRAINT foods_daily_limit CHECK ((daily_limit >= 0)),
+    CONSTRAINT foods_num_orders CHECK ((num_orders >= 0)),
+    CONSTRAINT foods_price CHECK ((price >= (0)::numeric))
+);
+
+
+--
+-- Name: foods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.foods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: foods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.foods_id_seq OWNED BY public.foods.id;
+
+
+--
 -- Name: managers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -264,6 +302,13 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 
 
 --
+-- Name: foods id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.foods ALTER COLUMN id SET DEFAULT nextval('public.foods_id_seq'::regclass);
+
+
+--
 -- Name: managers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -313,6 +358,22 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: foods foods_f_name_restaurant_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.foods
+    ADD CONSTRAINT foods_f_name_restaurant_id_key UNIQUE (f_name, restaurant_id);
+
+
+--
+-- Name: foods foods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.foods
+    ADD CONSTRAINT foods_pkey PRIMARY KEY (id);
 
 
 --
@@ -461,6 +522,22 @@ ALTER TABLE ONLY public.riders
 
 
 --
+-- Name: foods foods_ms_name_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.foods
+    ADD CONSTRAINT foods_ms_name_restaurant_id_fkey FOREIGN KEY (ms_name, restaurant_id) REFERENCES public.menu_sections(ms_name, restaurant_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: foods foods_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.foods
+    ADD CONSTRAINT foods_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
+
+
+--
 -- Name: menu_sections menu_sections_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -489,6 +566,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200223103255'),
 ('20200223110049'),
 ('20200225011425'),
-('20200312022449');
+('20200312022449'),
+('20200312032412');
 
 

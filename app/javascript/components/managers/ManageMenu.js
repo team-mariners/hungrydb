@@ -135,9 +135,9 @@ const ManageMenu = (props) => {
         props.alerts.showSuccessAlert("Food category edited!");
     }
 
-    const handleFoodCategoryDeleted = (id) => {
+    const handleFoodCategoryDeleted = (url_id) => {
         const newFoodCategories = [...foodCategories];
-        const index = newFoodCategories.findIndex(category => category.id === id);
+        const index = newFoodCategories.findIndex(category => category.url_id === url_id);
         newFoodCategories.splice(index, 1);
         setFoodCategories(newFoodCategories);
         

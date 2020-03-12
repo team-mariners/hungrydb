@@ -6,7 +6,8 @@ class FoodCategoriesController < ApplicationController
         @food_categories = ActiveRecord::Base.connection.exec_query(
             "SELECT url_id, ms_name
             FROM menu_sections
-            WHERE restaurant_id = #{@restaurant["id"]}"
+            WHERE restaurant_id = #{@restaurant["id"]}
+            ORDER BY url_id"
         ).to_a
 
         render json: @food_categories
@@ -21,11 +22,23 @@ class FoodCategoriesController < ApplicationController
     end
 
     def destroy
-        if @food_category.foods.empty?
-            @food_category.destroy
-        else
-            render json: {errors: "Cannot delete food category that has dishes!"}, status: 500
-        end
+        # Test this query on rail console for menu section that has food
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM menu_sections
+            WHERE url_id = #{params[:id]}
+            AND NOT EXISTS (
+                SELECT 1
+                FROM Foods
+                WHERE ms_name = '#{@food_category["ms_name"]}'
+                AND restaurant_id = #{@restaurant["id"]}
+            );"
+        )        
+
+        # if @food_category.foods.empty?
+        #     @food_category.destroy
+        # else
+        #     render json: {errors: "Cannot delete food category that has dishes!"}, status: 500
+        # end
     end
 
     private

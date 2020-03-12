@@ -21,6 +21,7 @@ class FoodCategoriesController < ApplicationController
         write(:update)
     end
 
+    # Only destroy food category that does not have dish in it
     def destroy
         # Test this query on rail console for menu section that has food
         ActiveRecord::Base.connection.exec_query(
@@ -29,16 +30,19 @@ class FoodCategoriesController < ApplicationController
             AND NOT EXISTS (
                 SELECT 1
                 FROM Foods
-                WHERE ms_name = '#{@food_category["ms_name"]}'
-                AND restaurant_id = #{@restaurant["id"]}
+                WHERE ms_url_id = #{params[:id]}
             );"
         )        
 
-        # if @food_category.foods.empty?
-        #     @food_category.destroy
-        # else
-        #     render json: {errors: "Cannot delete food category that has dishes!"}, status: 500
-        # end
+        menu_section = ActiveRecord::Base.connection.exec_query(
+            "SELECT 1
+            FROM menu_sections
+            WHERE url_id = #{params[:id]}"
+        )
+
+        if (!menu_section.empty?)
+            render json: {errors: "Cannot delete menu section that has dish in it!"}, status: 500
+        end
     end
 
     private

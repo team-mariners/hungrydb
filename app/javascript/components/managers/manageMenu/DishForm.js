@@ -20,8 +20,7 @@ const DishForm = (props) => {
             'Two Decimal Places Test',
             'Price cannot have more than 2 decimal places',
             value => {
-                const remainder = value * 100 - Math.floor(value * 100);
-                const isMaxTwoDp = remainder === 0;
+                const isMaxTwoDp = value.toString().match(/^[1-9]\d*\.?\d{0,2}$/) !== null;
                 return isMaxTwoDp;
             }
         ),

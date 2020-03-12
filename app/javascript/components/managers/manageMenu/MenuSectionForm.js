@@ -8,12 +8,12 @@ import { Formik } from 'formik';
  * 
  * @param {*} props 
  * buttonName: text to be displayed on the submit button.
- * initiaValues: an object containing these key-value pairs: categoryName.
+ * initiaValues: an object containing these key-value pairs: sectionName.
  * handleSubmit: a function which handles the submit action of the form.
  */
-const FoodCategoryForm = (props) => {
+const MenuSectionForm = (props) => {
     const schema = yup.object({
-        categoryName: yup.string().max(100).required()
+        sectionName: yup.string().max(100).required()
     });
 
     return (
@@ -35,15 +35,15 @@ const FoodCategoryForm = (props) => {
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                             type="text"
-                            name="categoryName"
-                            value={values.categoryName}
+                            name="sectionName"
+                            value={values.sectionName}
                             onChange={handleChange}
-                            isInvalid={touched.categoryName && !!errors.categoryName}/>
+                            isInvalid={touched.sectionName && !!errors.sectionName}/>
                         <Form.Text className="text-muted">
                             Maximum 100 characters.
                         </Form.Text>
                         <Form.Control.Feedback type="invalid">
-                            Food category is invalid.
+                            Menu section is invalid.
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Button type="submit">{props.buttonName}</Button>
@@ -53,4 +53,4 @@ const FoodCategoryForm = (props) => {
     )
 };
 
-export default FoodCategoryForm;
+export default MenuSectionForm;

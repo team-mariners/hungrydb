@@ -6,35 +6,35 @@ import FormControl from 'react-bootstrap/FormControl';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const ToolBar = (props) => {
-    const foodCategories = props.foodCategories.map(menuSection => (
+    const menuSections = props.menuSections.map(menuSection => (
         <Dropdown.Item
             key={menuSection.url_id}
             as={Link}
             to={`/manager/manage_menu/food_category/${menuSection.url_id}`}
-            onClick={() => props.setCurrFoodCategoryId(menuSection.url_id)}>
+            onClick={() => props.setCurrMenuSectionId(menuSection.url_id)}>
             {menuSection.ms_name}
         </Dropdown.Item>
     ));
 
     let categoryActions = (
         <Dropdown className="mr-sm-3">
-            <Dropdown.Toggle>Category Actions</Dropdown.Toggle>
+            <Dropdown.Toggle>Section Actions</Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <Dropdown.Item onClick={props.showEditCategory}>Edit Category</Dropdown.Item>
-                <Dropdown.Item onClick={props.showDeleteCategory}>Delete Category</Dropdown.Item>
+                <Dropdown.Item onClick={props.showEditMenuSection}>Edit Section</Dropdown.Item>
+                <Dropdown.Item onClick={props.showDeleteMenuSection}>Delete Section</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>
     )
 
-    if (props.currFoodCategoryId == undefined) {
+    if (props.currMenuSectionId == undefined) {
         categoryActions = null;
     } 
 
     return (
         <div className="manageMenu-toolbar">
             <Button className="mr-sm-3" onClick={props.showNewDish}>New Dish</Button>
-            <Button className="mr-sm-3" onClick={props.showNewCategory}>New Category</Button>
+            <Button className="mr-sm-3" onClick={props.showNewMenuSection}>New Section</Button>
 
             <Dropdown className="mr-sm-3">
                 <Dropdown.Toggle>Filter</Dropdown.Toggle>
@@ -43,10 +43,10 @@ const ToolBar = (props) => {
                     <Dropdown.Item
                         as={Link}
                         to="/manager/manage_menu"
-                        onClick={() => props.setCurrFoodCategoryId(undefined)}>
+                        onClick={() => props.setCurrMenuSectionId(undefined)}>
                         All Dishes
                     </Dropdown.Item>
-                    {foodCategories}
+                    {menuSections}
                 </Dropdown.Menu>
             </Dropdown>
 

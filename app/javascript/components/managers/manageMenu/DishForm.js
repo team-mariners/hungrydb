@@ -11,19 +11,23 @@ import { Typeahead } from 'react-bootstrap-typeahead';
  * initialValues: initialvalues of the form.
  * handleSubmit: function which handles submission of the form.
  * buttonName: name of the submit button
- * foodCategories: an array of all the foodCategories created by the user.
+ * menuSections: an array of all the menuSections created by the user.
  */
 const DishForm = (props) => {
     const schema = yup.object({
         dishName: yup.string().max(100).required(),
-        price: yup.number().min(0).required().test(
+        price: yup.number().min(0).test(
             'Two Decimal Places Test',
             'Price cannot have more than 2 decimal places',
             value => {
+                if (value == undefined) {
+                    return false;
+                }
+
                 const isMaxTwoDp = value.toString().match(/^[1-9]\d*\.?\d{0,2}$/) !== null;
                 return isMaxTwoDp;
             }
-        ),
+        ).required(),
         dailyLimit: yup.number().integer().min(0).required(),
         foodCategory: yup.object().required()
     });
@@ -111,7 +115,7 @@ const DishForm = (props) => {
                                 id="food-category-typeahead"
                                 name="foodCategory"
                                 labelKey="ms_name"
-                                options={props.foodCategories}
+                                options={props.menuSections}
                                 selected={!!values.foodCategory ? [values.foodCategory] : []}
                                 isInvalid={touched.foodCategory && !!errors.foodCategory}
                                 onChange={(selected) => setFieldValue('foodCategory', selected[0])}

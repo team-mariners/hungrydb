@@ -9,10 +9,10 @@ const getProcessedDishValues = (values) => {
     };
 };
 
-const getProcessedFoodCategory = (values) => {
+const getProcessedMenuSection = (values) => {
     return {
         menu_section: {
-            name: values.categoryName.trim()
+            name: values.sectionName.trim()
         }
     }
 };
@@ -25,4 +25,4 @@ const getErrorMessage = (error) => {
     }
 }
 
-export { getProcessedDishValues, getProcessedFoodCategory, getErrorMessage };
+export { getProcessedDishValues, getProcessedMenuSection, getErrorMessage };

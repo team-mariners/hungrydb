@@ -5,10 +5,9 @@ import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
 import DeleteDish from './manageMenu/DeleteDIsh';
 import EditDish from './manageMenu/EditDish';
-import NewFoodCategory from './manageMenu/NewFoodCategory';
-import EditFoodCategory from './manageMenu/EditFoodCategory';
-import DeleteFoodCategory from './manageMenu/DeleteFoodCategory';
-import { Redirect } from 'react-router-dom';
+import NewMenuSection from './manageMenu/NewMenuSection';
+import EditMenuSection from './manageMenu/EditMenuSection';
+import DeleteMenuSection from './manageMenu/DeleteMenuSection';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
@@ -19,11 +18,11 @@ const ManageMenu = (props) => {
     const [dishes, setDishes] = useState([]);
     const [visibleDishes, setVisibleDishes] = useState([]);
 
-    const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(false);
-    const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
-    const [isDeleteCategoryVisible, setIsDeleteCategoryVisible] = useState(false);
-    const [foodCategories, setFoodCategories] = useState([]);
-    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
+    const [isNewMenuSectionVisible, setIsNewMenuSectionVisible] = useState(false);
+    const [isEditMenuSectionVisible, setIsEditMenuSectionVisible] = useState(false);
+    const [isDeleteMenuSectionVisible, setIsDeleteMenuSectionVisible] = useState(false);
+    const [menuSections, setMenuSections] = useState([]);
+    const [currMenuSectionId, setCurrMenuSectionId] = useState(props.match.params.id);
 
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
     // which in this case it will never change since the array [] is never modified.
@@ -39,16 +38,16 @@ const ManageMenu = (props) => {
         axios.get("/food_categories")
         .then(result => {
             console.log(result);
-            setFoodCategories(result.data);
+            setMenuSections(result.data);
         }).catch(error => {
             console.log(error.message);
         })
     }, []);
 
-    // Use for react router when the user choose a dish category to filter.
+    // Use for react router when the user choose a menu section to filter.
     useEffect(() => {
         filterAndSetVisibleDishes(dishes);
-    }, [currFoodCategoryId]);
+    }, [currMenuSectionId]);
 
     const setDishesAndVisibleDishes = (dishes) => {
         setDishes(dishes);
@@ -56,12 +55,12 @@ const ManageMenu = (props) => {
     }
 
     const filterAndSetVisibleDishes = (dishes) => {
-        if (currFoodCategoryId == undefined) {
+        if (currMenuSectionId == undefined) {
             setVisibleDishes(dishes);
             return;
         }
 
-        const filteredDishes = dishes.filter(dish => dish.menu_section.url_id == currFoodCategoryId);
+        const filteredDishes = dishes.filter(dish => dish.menu_section.url_id == currMenuSectionId);
         setVisibleDishes(filteredDishes);
     }
 
@@ -104,49 +103,49 @@ const ManageMenu = (props) => {
         return dishes.findIndex(dish => dish.id === id);
     };
 
-    const getCurrentFoodCategory = () => {
-        if (currFoodCategoryId === undefined) {
+    const getCurrentMenuSection = () => {
+        if (currMenuSectionId === undefined) {
             return undefined;
         } 
 
-        return foodCategories.find(category => category.url_id == currFoodCategoryId);
+        return menuSections.find(section => section.url_id == currMenuSectionId);
     }
 
-    const handleNewFoodCategoryCreated = (newFoodCategory) => {
-        const newFoodCategories = [...foodCategories, newFoodCategory];
-        setFoodCategories(newFoodCategories);
-        props.alerts.showSuccessAlert("New food category created!");
+    const handleNewMenuSectionCreated = (newMenuSection) => {
+        const newMenuSections = [...menuSections, newMenuSection];
+        setMenuSections(newMenuSections);
+        props.alerts.showSuccessAlert("New menu section created!");
     }
 
-    const handleFoodCategoryEdited = (editedFoodCategory) => {
-        const newFoodCategories = [...foodCategories];
-        const index = newFoodCategories.findIndex(category => category.url_id == editedFoodCategory.url_id);
-        newFoodCategories.splice(index, 1, editedFoodCategory);
+    const handleMenuSectionEdited = (editedMenuSection) => {
+        const newMenuSections = [...menuSections];
+        const index = newMenuSections.findIndex(section => section.url_id == editedMenuSection.url_id);
+        newMenuSections.splice(index, 1, editedMenuSection);
 
-        console.log(editedFoodCategory);
+        console.log(editedMenuSection);
 
         const newDishes = dishes.map(dish => {
-            if (dish.menu_section.url_id === editedFoodCategory.url_id) {
-                dish.menu_section = editedFoodCategory;
+            if (dish.menu_section.url_id === editedMenuSection.url_id) {
+                dish.menu_section = editedMenuSection;
             } 
 
             return dish;
         })
 
-        setFoodCategories(newFoodCategories);
+        setMenuSections(newMenuSections);
         setDishesAndVisibleDishes(newDishes);
-        props.alerts.showSuccessAlert("Food category edited!");
+        props.alerts.showSuccessAlert("Menu section edited!");
     }
 
-    const handleFoodCategoryDeleted = (url_id) => {
-        const newFoodCategories = [...foodCategories];
-        const index = newFoodCategories.findIndex(category => category.url_id === url_id);
-        newFoodCategories.splice(index, 1);
-        setFoodCategories(newFoodCategories);
+    const handleMenuSectionDeleted = (url_id) => {
+        const newMenuSections = [...menuSections];
+        const index = newMenuSections.findIndex(section => section.url_id === url_id);
+        newMenuSections.splice(index, 1);
+        setMenuSections(newMenuSections);
         
         props.history.replace("/manager/manage_menu");
-        setCurrFoodCategoryId(undefined);
-        props.alerts.showSuccessAlert("Food category deleted!");
+        setCurrMenuSectionId(undefined);
+        props.alerts.showSuccessAlert("Menu section deleted!");
     }
 
     return (
@@ -154,22 +153,22 @@ const ManageMenu = (props) => {
             <h1>Menu</h1>
             <ToolBar
                 showNewDish={() => setIsNewDishVisible(true)}
-                showNewCategory={() => setIsNewCategoryVisible(true)}
-                showEditCategory={() => setIsEditCategoryVisible(true)}
-                showDeleteCategory={() => setIsDeleteCategoryVisible(true)}
-                foodCategories={foodCategories}
-                currFoodCategoryId={currFoodCategoryId}
-                setCurrFoodCategoryId={setCurrFoodCategoryId}/>
+                showNewMenuSection={() => setIsNewMenuSectionVisible(true)}
+                showEditMenuSection={() => setIsEditMenuSectionVisible(true)}
+                showDeleteMenuSection={() => setIsDeleteMenuSectionVisible(true)}
+                menuSections={menuSections}
+                currMenuSectionId={currMenuSectionId}
+                setCurrMenuSectionId={setCurrMenuSectionId}/>
             <DishesList
                 dishes={visibleDishes}
                 showDeleteDish={showDeleteDish}
                 showEditDish={showEditDish}
-                currFoodCategory={getCurrentFoodCategory()}/>
+                currMenuSection={getCurrentMenuSection()}/>
             <NewDish
                 show={isNewDishVisible}
                 onClose={() => setIsNewDishVisible(false)}
                 onDishCreated={handleDishCreated}
-                foodCategories={foodCategories}
+                menuSections={menuSections}
                 {...props}/>
             <DeleteDish
                 dishId={dishId}
@@ -182,24 +181,24 @@ const ManageMenu = (props) => {
                 show={isEditDishVisible}
                 onClose={() => setIsEditDishVisible(false)}
                 onDishEdited={handleDishEdited}
-                foodCategories={foodCategories}
+                menuSections={menuSections}
                 {...props}/>
-            <NewFoodCategory
-                show={isNewCategoryVisible}
-                onClose={() => setIsNewCategoryVisible(false)}
-                onNewCategoryCreated={handleNewFoodCategoryCreated}
+            <NewMenuSection
+                show={isNewMenuSectionVisible}
+                onClose={() => setIsNewMenuSectionVisible(false)}
+                onNewMenuSectionCreated={handleNewMenuSectionCreated}
                 {...props}/>
-            <EditFoodCategory
-                show={isEditCategoryVisible}
-                onClose={() => setIsEditCategoryVisible(false)}
-                getCurrentFoodCategory={getCurrentFoodCategory}
-                onCategoryEdited={handleFoodCategoryEdited}
+            <EditMenuSection
+                show={isEditMenuSectionVisible}
+                onClose={() => setIsEditMenuSectionVisible(false)}
+                getCurrentMenuSection={getCurrentMenuSection}
+                onMenuSectionEdited={handleMenuSectionEdited}
                 {...props}/>
-            <DeleteFoodCategory
-                show={isDeleteCategoryVisible}
-                onClose={() => setIsDeleteCategoryVisible(false)}
-                currFoodCategoryId={currFoodCategoryId}
-                onCategoryDeleted={handleFoodCategoryDeleted}
+            <DeleteMenuSection
+                show={isDeleteMenuSectionVisible}
+                onClose={() => setIsDeleteMenuSectionVisible(false)}
+                currMenuSectionId={currMenuSectionId}
+                onMenuSectionDeleted={handleMenuSectionDeleted}
                 {...props}/>
         </div>
     )

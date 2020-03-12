@@ -123,9 +123,11 @@ const ManageMenu = (props) => {
         const index = newFoodCategories.findIndex(category => category.url_id == editedFoodCategory.url_id);
         newFoodCategories.splice(index, 1, editedFoodCategory);
 
+        console.log(editedFoodCategory);
+
         const newDishes = dishes.map(dish => {
-            if (dish.foodCategory.url_id === editedFoodCategory.url_id) {
-                dish.foodCategory = editedFoodCategory;
+            if (dish.menu_section.url_id === editedFoodCategory.url_id) {
+                dish.menu_section = editedFoodCategory;
             } 
 
             return dish;

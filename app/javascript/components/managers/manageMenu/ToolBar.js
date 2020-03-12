@@ -8,10 +8,10 @@ import Dropdown from 'react-bootstrap/Dropdown';
 const ToolBar = (props) => {
     const foodCategories = props.foodCategories.map(menuSection => (
         <Dropdown.Item
-            key={menuSection.ms_name}
+            key={menuSection.url_id}
             as={Link}
-            to={`/manager/manage_menu/food_category/${menuSection.ms_name}`}
-            onClick={() => props.setCurrFoodCategoryId(menuSection.ms_name)}>
+            to={`/manager/manage_menu/food_category/${menuSection.url_id}`}
+            onClick={() => props.setCurrFoodCategoryId(menuSection.url_id)}>
             {menuSection.ms_name}
         </Dropdown.Item>
     ));

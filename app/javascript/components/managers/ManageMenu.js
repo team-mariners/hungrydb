@@ -23,7 +23,7 @@ const ManageMenu = (props) => {
     const [isEditCategoryVisible, setIsEditCategoryVisible] = useState(false);
     const [isDeleteCategoryVisible, setIsDeleteCategoryVisible] = useState(false);
     const [foodCategories, setFoodCategories] = useState([]);
-    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.name);
+    const [currFoodCategoryId, setCurrFoodCategoryId] = useState(props.match.params.id);
 
     // be triggered in subsequent rerendering if the array [] that is passed to it as parameter changes,
     // which in this case it will never change since the array [] is never modified.
@@ -108,7 +108,7 @@ const ManageMenu = (props) => {
             return undefined;
         } 
 
-        return foodCategories.find(category => category.id == currFoodCategoryId);
+        return foodCategories.find(category => category.url_id == currFoodCategoryId);
     }
 
     const handleNewFoodCategoryCreated = (newFoodCategory) => {
@@ -119,11 +119,11 @@ const ManageMenu = (props) => {
 
     const handleFoodCategoryEdited = (editedFoodCategory) => {
         const newFoodCategories = [...foodCategories];
-        const index = newFoodCategories.findIndex(category => category.id == editedFoodCategory.id);
+        const index = newFoodCategories.findIndex(category => category.url_id == editedFoodCategory.url_id);
         newFoodCategories.splice(index, 1, editedFoodCategory);
 
         const newDishes = dishes.map(dish => {
-            if (dish.foodCategory.id === editedFoodCategory.id) {
+            if (dish.foodCategory.url_id === editedFoodCategory.url_id) {
                 dish.foodCategory = editedFoodCategory;
             } 
 

@@ -4,7 +4,7 @@ class FoodCategoriesController < ApplicationController
 
     def index
         @food_categories = ActiveRecord::Base.connection.exec_query(
-            "SELECT * 
+            "SELECT url_id, ms_name
             FROM menu_sections
             WHERE restaurant_id = #{@restaurant["id"]}"
         ).to_a
@@ -55,11 +55,18 @@ class FoodCategoriesController < ApplicationController
                     "INSERT INTO menu_sections(ms_name, restaurant_id)
                     VALUES ('#{name}', #{@restaurant["id"]});"
                 )
-
-                @food_category = {"ms_name" => name}
             else type == :update
-                @food_category.update!(food_categories_param)
+                old_name = @food_category["ms_name"]
+
+                ActiveRecord::Base.connection.exec_query(
+                    "UPDATE menu_sections
+                    SET ms_name='#{name}'
+                    WHERE ms_name='#{old_name}'
+                    AND restaurant_id=#{@restaurant["id"]}"
+                )
             end
+
+            @food_category = get_food(name)
             render json: @food_category
         rescue ActiveRecord::RecordNotUnique
             render json: {errors: "Food category already exists!"}, status: 500
@@ -68,5 +75,14 @@ class FoodCategoriesController < ApplicationController
         rescue => error
             render json: {errors: error.message}, status: 500
         end
+    end
+
+    def get_food(name)
+        ActiveRecord::Base.connection.exec_query(
+            "SELECT url_id, ms_name
+            FROM menu_sections
+            WHERE ms_name='#{name}'
+            AND restaurant_id=#{@restaurant["id"]};"
+        ).to_a[0]
     end
 end

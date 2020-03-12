@@ -9,15 +9,16 @@ const EditFoodCategory = (props) => {
     let initialValues = {};
 
     if (!!currFoodCategory) {
-        initialValues = { categoryName: currFoodCategory.name };
+        initialValues = { categoryName: currFoodCategory.ms_name };
     } else {
         initialValues = { categoryName: "" }; 
     }
 
     const editCategory = (values) => {
         const data = getProcessedFoodCategory(values);
-        axios.put(`/food_categories/${currFoodCategory.id}`, data)
+        axios.put(`/food_categories/${currFoodCategory.url_id}`, data)
             .then(result => {
+                console.log(result);
                 props.onCategoryEdited(result.data);
             }).catch(error => {
                 props.alerts.showFailureAlert(getErrorMessage(error));

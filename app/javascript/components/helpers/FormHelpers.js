@@ -11,7 +11,7 @@ const getProcessedDishValues = (values) => {
 
 const getProcessedFoodCategory = (values) => {
     return {
-        food_category: {
+        menu_section: {
             name: values.categoryName.trim()
         }
     }

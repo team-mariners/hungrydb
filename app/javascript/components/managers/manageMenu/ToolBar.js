@@ -6,13 +6,13 @@ import FormControl from 'react-bootstrap/FormControl';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const ToolBar = (props) => {
-    const foodCategories = props.foodCategories.map(category => (
+    const foodCategories = props.foodCategories.map(menuSection => (
         <Dropdown.Item
-            key={category.id}
+            key={menuSection.ms_name}
             as={Link}
-            to={`/manager/manage_menu/food_category/${category.id}`}
-            onClick={() => props.setCurrFoodCategoryId(category.id)}>
-            {category.name}
+            to={`/manager/manage_menu/food_category/${menuSection.ms_name}`}
+            onClick={() => props.setCurrFoodCategoryId(menuSection.ms_name)}>
+            {menuSection.ms_name}
         </Dropdown.Item>
     ));
 

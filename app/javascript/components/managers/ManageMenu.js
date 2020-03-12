@@ -37,7 +37,7 @@ const ManageMenu = (props) => {
 
         axios.get("/food_categories")
         .then(result => {
-            console.log(result)
+            console.log(result);
             setFoodCategories(result.data);
         }).catch(error => {
             console.log(error.message);

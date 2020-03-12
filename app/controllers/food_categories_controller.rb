@@ -3,7 +3,13 @@ class FoodCategoriesController < ApplicationController
     before_action :load_food_category, only: %i[update destroy]
 
     def index
-        render json: @restaurant.food_categories
+        @food_categories = ActiveRecord::Base.connection.exec_query(
+            "SELECT ms_name
+            FROM menu_sections
+            WHERE restaurant_id = #{@restaurant["id"]}"
+        ).to_a
+
+        render json: @food_categories
     end
 
     def create
@@ -29,17 +35,31 @@ class FoodCategoriesController < ApplicationController
     end
 
     def load_food_category
-        @food_category = @restaurant.food_categories.find(params[:id])
+        info = params[:menu_section]
+
+        @food_category = ActiveRecord::Base.connection.exec_query(
+            "SELECT * FROM menu_sections
+            WHERE ms_name = '#{info[:ms_name]}'
+            AND restaurant_id = #{info[:restaurant_id]};"
+        ).to_a[0]
     end
 
     def food_categories_param
-        params.require(:food_category).permit(:name)
+        params.require(:menu_section).permit(:name)
     end
 
     def write(type)
         begin
+            filtered_param = food_categories_param
+            name = filtered_param["name"]
+
             if type == :create
-                @food_category = @restaurant.food_categories.create!(food_categories_param)
+                ActiveRecord::Base.connection.exec_query(
+                    "INSERT INTO menu_sections(ms_name, restaurant_id)
+                    VALUES ('#{name}', #{@restaurant["id"]});"
+                )
+
+                @food_category = {"ms_name" => name}
             else type == :update
                 @food_category.update!(food_categories_param)
             end
@@ -48,8 +68,8 @@ class FoodCategoriesController < ApplicationController
             render json: {errors: "Food category already exists!"}, status: 500
         rescue ActiveRecord::RecordInvalid
             render json: {errors: "Food category is invalid!"}, status: 500
-        rescue
-            render json: {errors: "Internal server error!"}, status: 500
+        rescue => error
+            render json: {errors: error.message}, status: 500
         end
     end
 end

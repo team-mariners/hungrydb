@@ -103,7 +103,7 @@ CREATE TABLE public.foods (
     price numeric NOT NULL,
     is_active boolean DEFAULT true NOT NULL,
     restaurant_id bigint NOT NULL,
-    ms_name character varying(100) NOT NULL,
+    ms_url_id bigint NOT NULL,
     CONSTRAINT foods_daily_limit CHECK ((daily_limit >= 0)),
     CONSTRAINT foods_num_orders CHECK ((num_orders >= 0)),
     CONSTRAINT foods_price CHECK ((price >= (0)::numeric))
@@ -557,11 +557,11 @@ ALTER TABLE ONLY public.riders
 
 
 --
--- Name: foods foods_ms_name_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: foods foods_ms_url_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.foods
-    ADD CONSTRAINT foods_ms_name_restaurant_id_fkey FOREIGN KEY (ms_name, restaurant_id) REFERENCES public.menu_sections(ms_name, restaurant_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT foods_ms_url_id_fkey FOREIGN KEY (ms_url_id) REFERENCES public.menu_sections(url_id) ON DELETE CASCADE;
 
 
 --

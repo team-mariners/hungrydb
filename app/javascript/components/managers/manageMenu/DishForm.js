@@ -111,7 +111,7 @@ const DishForm = (props) => {
                             <Typeahead
                                 id="food-category-typeahead"
                                 name="foodCategory"
-                                labelKey="name"
+                                labelKey="ms_name"
                                 options={props.foodCategories}
                                 selected={!!values.foodCategory ? [values.foodCategory] : []}
                                 isInvalid={touched.foodCategory && !!errors.foodCategory}

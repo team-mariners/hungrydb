@@ -115,8 +115,8 @@ test_menu_section_3 = ActiveRecord::Base.connection.exec_query(
 
 # --------------------------------------------------- Foods ---------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-    VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
+    VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"    
 )
 
 test_food_1 = ActiveRecord::Base.connection.exec_query(
@@ -126,8 +126,8 @@ test_food_1 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-    VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, '#{test_menu_section_1["ms_name"]}')"    
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
+    VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"    
 )
 
 test_food_2 = ActiveRecord::Base.connection.exec_query(
@@ -137,8 +137,8 @@ test_food_2 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-    VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
+    VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"    
 )
 
 test_food_3 = ActiveRecord::Base.connection.exec_query(
@@ -148,8 +148,8 @@ test_food_3 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-    VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, '#{test_menu_section_2["ms_name"]}')"    
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
+    VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"    
 )
 
 test_food_4 = ActiveRecord::Base.connection.exec_query(
@@ -159,8 +159,8 @@ test_food_4 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_name)
-    VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, '#{test_menu_section_3["ms_name"]}')"    
+    "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
+    VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, #{test_menu_section_3["url_id"]})"    
 )
 
 test_food_5 = ActiveRecord::Base.connection.exec_query(

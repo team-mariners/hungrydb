@@ -29,17 +29,13 @@ const DishForm = (props) => {
             }
         ).required(),
         dailyLimit: yup.number().integer().min(0).required(),
-        foodCategory: yup.object().required()
+        menuSection: yup.object().required()
     });
 
     console.log(props.initialValues);
 
     const initialValues = { ...props.initialValues };
-    initialValues.foodCategory = null;
-
-    // useEffect(() => {
-    //     initialValues.foodCategory = props.initialValues.foodCategory
-    // }, [])
+    initialValues.menuSection = null;
 
     return (
         <Formik
@@ -108,25 +104,25 @@ const DishForm = (props) => {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Dish Category</Form.Label>
+                            <Form.Label>Menu section</Form.Label>
                             {/* Update the condition of the conditional rendering of the feedback component if you are
                                 changing the invalid condition of Typeahead too! */}
                             <Typeahead
-                                id="food-category-typeahead"
-                                name="foodCategory"
+                                id="menu-section-typeahead"
+                                name="menuSection"
                                 labelKey="ms_name"
                                 options={props.menuSections}
-                                selected={!!values.foodCategory ? [values.foodCategory] : []}
-                                isInvalid={touched.foodCategory && !!errors.foodCategory}
-                                onChange={(selected) => setFieldValue('foodCategory', selected[0])}
-                                onBlur={() => {setFieldTouched('foodCategory', true)}}
+                                selected={!!values.menuSection ? [values.menuSection] : []}
+                                isInvalid={touched.menuSection && !!errors.menuSection}
+                                onChange={(selected) => setFieldValue('menuSection', selected[0])}
+                                onBlur={() => {setFieldTouched('menuSection', true)}}
                             />
                             <Form.Text className='text-muted'>
-                                Dish category is required and need to be created first.
+                                Menu section is required and need to be created first.
                             </Form.Text>
                             <Form.Text className='text-danger'
-                                style={touched.foodCategory && !!errors.foodCategory ? {} : { display: "none" }}>
-                                Dish category is invalid.
+                                style={touched.menuSection && !!errors.menuSection ? {} : { display: "none" }}>
+                                Menu section is invalid.
                             </Form.Text>
                         </Form.Group>
 

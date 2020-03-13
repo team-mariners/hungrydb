@@ -13,7 +13,7 @@ const NewMenuSection = (props) => {
         console.log(values);
         const data = getProcessedMenuSection(values);
        
-        axios.post('/food_categories', data)
+        axios.post('/menu_sections', data)
         .then(result => {
             console.log(result);
             props.onNewMenuSectionCreated(result.data);

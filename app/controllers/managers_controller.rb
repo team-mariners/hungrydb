@@ -14,8 +14,8 @@ class ManagersController < UsersController
     current_uri = request.env['PATH_INFO']
     print current_uri
 
-    # Check if the given food category id exist or not before going to the respective food category page
-    if current_uri.match(/^\/manager\/manage_menu\/food_category\/-?\d+$/)
+    # Check if the given menu section id exist or not before going to the respective menu section page
+    if current_uri.match(/^\/manager\/manage_menu\/menu_sections\/-?\d+$/)
       id = params[:id]
 
       result = ActiveRecord::Base.connection.exec_query(

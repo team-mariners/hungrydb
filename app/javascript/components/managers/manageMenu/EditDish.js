@@ -11,14 +11,14 @@ const EditDish = (props) => {
             dishName: "",
             price: "",
             dailyLimit: "",
-            foodCategory: null
+            menuSection: null
         };
     } else {
         initialValues = {
             dishName: props.dish.f_name,
             price: props.dish.price,
             dailyLimit: props.dish.daily_limit,
-            foodCategory: props.dish.menu_section
+            menuSection: props.dish.menu_section
         }
     }
 

@@ -4,8 +4,8 @@ import ConfirmationDialog from '../../utilities/ConfirmationDialog';
 import { getErrorMessage } from '../../helpers/FormHelpers';
 
 const DeleteMenuSection = (props) => {
-    const deleteCategory = () => {
-        axios.delete(`/food_categories/${props.currMenuSectionId}`)
+    const deleteSection = () => {
+        axios.delete(`/menu_sections/${props.currMenuSectionId}`)
         .then(result => {
             console.log(result);
             props.onMenuSectionDeleted(props.currMenuSectionId);
@@ -17,7 +17,7 @@ const DeleteMenuSection = (props) => {
     };
 
     return (
-        <ConfirmationDialog onConfirm={deleteCategory} {...props}/>
+        <ConfirmationDialog onConfirm={deleteSection} {...props}/>
     )
 };
 

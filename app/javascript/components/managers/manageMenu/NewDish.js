@@ -19,7 +19,7 @@ const NewDish = (props) => {
         dishName: "",
         price: "",
         dailyLimit: "",
-        foodCategory: null
+        menuSection: null
     };
 
     const handleSubmit = (values) => {

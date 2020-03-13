@@ -16,7 +16,7 @@ const EditMenuSection = (props) => {
 
     const editSection = (values) => {
         const data = getProcessedMenuSection(values);
-        axios.put(`/food_categories/${currMenuSection.url_id}`, data)
+        axios.put(`/menu_sections/${currMenuSection.url_id}`, data)
             .then(result => {
                 console.log(result);
                 props.onMenuSectionEdited(result.data);

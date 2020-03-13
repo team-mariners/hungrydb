@@ -3,7 +3,6 @@ class FoodsController < ApplicationController
         verify_role!('manager') 
     end 
     before_action :get_restaurant
-    # before_action :load_food, only: %i[update destroy]
 
     def index
         @foods = ActiveRecord::Base.connection.exec_query(
@@ -32,15 +31,6 @@ class FoodsController < ApplicationController
     end
 
     private
-
-    # def load_food
-    #     food_row = ActiveRecord::Base.connection.exec_query(
-    #         "SELECT * 
-    #         FROM foods F JOIN menu_sections M ON (F.ms_url_id = M.url_id)
-    #         WHERE F.restaurant_id = #{params[:id]}"
-    #     )
-    #     return process_food_row(food_row)
-    # end
 
     def food_params
         params.require(:food).permit(:name, :price, :daily_limit, :ms_url_id)

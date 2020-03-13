@@ -1,16 +1,15 @@
-class FoodCategoriesController < ApplicationController
+class MenuSectionsController < ApplicationController
     before_action :get_restaurant
-    before_action :load_food_category, only: %i[update destroy]
 
     def index
-        @food_categories = ActiveRecord::Base.connection.exec_query(
+        @menu_sections = ActiveRecord::Base.connection.exec_query(
             "SELECT url_id, ms_name
             FROM menu_sections
             WHERE restaurant_id = #{@restaurant["id"]}
             ORDER BY url_id"
         ).to_a
 
-        render json: @food_categories
+        render json: @menu_sections
     end
 
     def create
@@ -21,7 +20,7 @@ class FoodCategoriesController < ApplicationController
         write(:update)
     end
 
-    # Only destroy food category that does not have dish in it
+    # Only destroy menu section that does not have dish in it
     def destroy
         # Test this query on rail console for menu section that has food
         ActiveRecord::Base.connection.exec_query(
@@ -51,20 +50,13 @@ class FoodCategoriesController < ApplicationController
         @restaurant = Utilities.get_restaurant(current_user)
     end
 
-    def load_food_category
-        @food_category = ActiveRecord::Base.connection.exec_query(
-            "SELECT * FROM menu_sections
-            WHERE url_id = #{params[:id]};"
-        ).to_a[0]
-    end
-
-    def food_categories_param
+    def menu_sections_param
         params.require(:menu_section).permit(:name)
     end
 
     def write(type)
         begin
-            filtered_param = food_categories_param
+            filtered_param = menu_sections_param
             name = filtered_param["name"]
 
             if type == :create
@@ -73,28 +65,25 @@ class FoodCategoriesController < ApplicationController
                     VALUES ('#{name}', #{@restaurant["id"]});"
                 )
             else type == :update
-                old_name = @food_category["ms_name"]
-
                 ActiveRecord::Base.connection.exec_query(
                     "UPDATE menu_sections
-                    SET ms_name='#{name}'
-                    WHERE ms_name='#{old_name}'
-                    AND restaurant_id=#{@restaurant["id"]}"
+                    SET ms_name = '#{name}'
+                    WHERE url_id = #{params[:id]}"
                 )
             end
 
-            @food_category = get_food(name)
-            render json: @food_category
+            @menu_section = get_menu_section(name)
+            render json: @menu_section
         rescue ActiveRecord::RecordNotUnique
-            render json: {errors: "Food category already exists!"}, status: 500
+            render json: {errors: "Menu section already exists!"}, status: 500
         rescue ActiveRecord::RecordInvalid
-            render json: {errors: "Food category is invalid!"}, status: 500
+            render json: {errors: "Menu section is invalid!"}, status: 500
         rescue => error
             render json: {errors: error.message}, status: 500
         end
     end
 
-    def get_food(name)
+    def get_menu_section(name)
         ActiveRecord::Base.connection.exec_query(
             "SELECT url_id, ms_name
             FROM menu_sections

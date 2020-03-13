@@ -10,13 +10,13 @@ const ToolBar = (props) => {
         <Dropdown.Item
             key={menuSection.url_id}
             as={Link}
-            to={`/manager/manage_menu/food_category/${menuSection.url_id}`}
+            to={`/manager/manage_menu/menu_sections/${menuSection.url_id}`}
             onClick={() => props.setCurrMenuSectionId(menuSection.url_id)}>
             {menuSection.ms_name}
         </Dropdown.Item>
     ));
 
-    let categoryActions = (
+    let sectionActions = (
         <Dropdown className="mr-sm-3">
             <Dropdown.Toggle>Section Actions</Dropdown.Toggle>
 
@@ -28,7 +28,7 @@ const ToolBar = (props) => {
     )
 
     if (props.currMenuSectionId == undefined) {
-        categoryActions = null;
+        sectionActions = null;
     } 
 
     return (
@@ -50,7 +50,7 @@ const ToolBar = (props) => {
                 </Dropdown.Menu>
             </Dropdown>
 
-            {categoryActions}
+            {sectionActions}
 
             <Form inline={true}>
                 <FormControl type="text" className="mr-sm-2" placeholder="Search Dishes" />

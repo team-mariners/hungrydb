@@ -47,7 +47,7 @@ class MenuSectionsController < ApplicationController
     private
 
     def get_restaurant
-        @restaurant = Utilities.get_restaurant(current_user)
+        @restaurant = helpers.get_restaurant(current_user)
     end
 
     def menu_sections_param

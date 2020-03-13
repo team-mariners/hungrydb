@@ -8,7 +8,8 @@ class FoodsController < ApplicationController
         @foods = ActiveRecord::Base.connection.exec_query(
             "SELECT * 
             FROM foods F JOIN menu_sections M ON (F.ms_url_id = M.url_id)
-            WHERE F.restaurant_id = #{@restaurant["id"]}"
+            WHERE F.restaurant_id = #{@restaurant["id"]}
+            ORDER BY id"
         ).to_a
 
         @foods.each do |row|
@@ -26,14 +27,24 @@ class FoodsController < ApplicationController
         write(:update)
     end
 
-    def destroy
-        @food.destroy
+    def deactivate
+        filtered_params = toggle_params
+
+        ActiveRecord::Base.connection.exec_query(
+            "UPDATE foods
+            SET is_active = #{filtered_params["is_active"]}
+            WHERE id = #{params[:id]}"
+        )
     end
 
     private
 
     def food_params
         params.require(:food).permit(:name, :price, :daily_limit, :ms_url_id)
+    end
+
+    def toggle_params
+        params.require(:toggle).permit(:is_active)
     end
 
     def get_restaurant

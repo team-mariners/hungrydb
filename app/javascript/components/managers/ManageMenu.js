@@ -3,7 +3,7 @@ import axios from 'axios';
 import ToolBar from './manageMenu/ToolBar';
 import NewDish from './manageMenu/NewDish';
 import DishesList from './manageMenu/DishesList';
-import DeleteDish from './manageMenu/DeleteDIsh';
+import ToggleDish from './manageMenu/ToggleDish';
 import EditDish from './manageMenu/EditDish';
 import NewMenuSection from './manageMenu/NewMenuSection';
 import EditMenuSection from './manageMenu/EditMenuSection';
@@ -11,10 +11,9 @@ import DeleteMenuSection from './manageMenu/DeleteMenuSection';
 
 const ManageMenu = (props) => {
     const [isNewDishVisible, setIsNewDishVisible] = useState(false);
-    const [isDeleteDishVisible, setIsDeleteDishVisible] = useState(false);
+    const [isToggleDishVisible, setIsToggleDishVisible] = useState(false);
     const [isEditDishVisible, setIsEditDishVisible] = useState(false);
-    const [dishId, setDishId] = useState(null); // for deleteDish
-    const [dish, setDish] = useState(null); // for editDish
+    const [dish, setDish] = useState(null); // for editDish and toggleDish
     const [dishes, setDishes] = useState([]);
     const [visibleDishes, setVisibleDishes] = useState([]);
 
@@ -64,9 +63,9 @@ const ManageMenu = (props) => {
         setVisibleDishes(filteredDishes);
     }
 
-    const showDeleteDish = (id) => {
-        setDishId(id);
-        setIsDeleteDishVisible(true);
+    const showToggleDishIsActive = (dish) => {
+        setDish(dish);
+        setIsToggleDishVisible(true);
     };
 
     const showEditDish = (dish) => {
@@ -80,24 +79,22 @@ const ManageMenu = (props) => {
         props.alerts.showSuccessAlert("New dish created! =D");
     };
 
-    const handleDishDeleted = (id) => {
-        const newDishes = [...dishes];
-        const index = getDishIndex(id, newDishes);
-        newDishes.splice(index, 1);
-
-        console.log(newDishes)
-        setDishesAndVisibleDishes(newDishes);
-        props.alerts.showSuccessAlert("Dish deleted! =D");
+    const handleDishDeactivated = (deactivatedDish) => {
+        updateDishes(deactivatedDish.id, deactivatedDish);
+        props.alerts.showSuccessAlert(`Dish ${deactivatedDish.is_active? "Activated" : "Deactivated"}! =D`);
     };
 
     const handleDishEdited = (id, editedDish) => {
+        updateDishes(id, editedDish);
+        props.alerts.showSuccessAlert("Dish edited! =D");
+    };
+
+    const updateDishes = (id, editedDish) => {
         const newDishes = [...dishes];
         const index = getDishIndex(id, newDishes);
         newDishes.splice(index, 1, editedDish);
-
         setDishesAndVisibleDishes(newDishes);
-        props.alerts.showSuccessAlert("Dish edited! =D");
-    };
+    }
 
     const getDishIndex = (id, dishes) => {
         return dishes.findIndex(dish => dish.id === id);
@@ -161,7 +158,7 @@ const ManageMenu = (props) => {
                 setCurrMenuSectionId={setCurrMenuSectionId}/>
             <DishesList
                 dishes={visibleDishes}
-                showDeleteDish={showDeleteDish}
+                showToggleDishIsActive={showToggleDishIsActive}
                 showEditDish={showEditDish}
                 currMenuSection={getCurrentMenuSection()}/>
             <NewDish
@@ -170,11 +167,11 @@ const ManageMenu = (props) => {
                 onDishCreated={handleDishCreated}
                 menuSections={menuSections}
                 {...props}/>
-            <DeleteDish
-                dishId={dishId}
-                show={isDeleteDishVisible}
-                onClose={() => setIsDeleteDishVisible(false)}
-                onDishDeleted={handleDishDeleted}
+            <ToggleDish
+                dish={dish}
+                show={isToggleDishVisible}
+                onClose={() => setIsToggleDishVisible(false)}
+                onDishDeactivated={handleDishDeactivated}
                 {...props}/>
             <EditDish
                 dish={dish}

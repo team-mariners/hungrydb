@@ -48,8 +48,10 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
     
-    resources :foods, except: [:new, :edit, :show]
+    resources :foods, except: [:new, :edit, :show, :destroy]        
     resources :menu_sections, except: [:new, :edit, :show]
+
+    put '/foods/deactivate/:id', to: 'foods#deactivate'
   end
 
   # JSON API

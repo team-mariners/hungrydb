@@ -21,7 +21,7 @@ class CreateRestaurantPromotionsTrigger < ActiveRecord::Migration[6.0]
         ON restaurant_promotions
         DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW
-        EXECUTE FUNCTION check_has_promotions_exist();
+        EXECUTE PROCEDURE check_has_promotions_exist();
     SQL
   end
 

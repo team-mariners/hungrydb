@@ -18,7 +18,7 @@ class CreatePromotionsTrigger < ActiveRecord::Migration[6.0]
         AFTER UPDATE OR INSERT ON promotions
         DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW 
-        EXECUTE FUNCTION check_promotions_constraint();
+        EXECUTE PROCEDURE check_promotions_constraint();
     SQL
   end
 

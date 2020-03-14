@@ -17,8 +17,7 @@ class CreateRestaurantPromotionsTrigger < ActiveRecord::Migration[6.0]
 
       DROP TRIGGER IF EXISTS restaurant_promotion_trigger ON restaurant_promotions CASCADE;
       CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger
-        AFTER INSERT
-        ON restaurant_promotions
+        AFTER UPDATE OR INSERT ON restaurant_promotions
         DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW
         EXECUTE PROCEDURE check_has_promotions_exist();

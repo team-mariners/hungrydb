@@ -1,22 +1,22 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from '../../utilities/Modal';
-import FoodCategoryForm from './FoodCategoryForm';
-import { getProcessedFoodCategory, getErrorMessage } from '../../helpers/FormHelpers';
+import MenuSectionForm from './MenuSectionForm';
+import { getProcessedMenuSection, getErrorMessage } from '../../helpers/FormHelpers';
 
-const NewFoodCategory = (props) => {
+const NewMenuSection = (props) => {
     const initialValues = {
-        categoryName: ""
+        sectionName: ""
     };
 
-    const createCategory = (values) => {
+    const createSection = (values) => {
         console.log(values);
-        const data = getProcessedFoodCategory(values);
+        const data = getProcessedMenuSection(values);
        
-        axios.post('/food_categories', data)
+        axios.post('/menu_sections', data)
         .then(result => {
             console.log(result);
-            props.onNewCategoryCreated(result.data);
+            props.onNewMenuSectionCreated(result.data);
         }).catch(error => {
             props.alerts.showFailureAlert(getErrorMessage(error));
         }).finally(() => {
@@ -26,13 +26,13 @@ const NewFoodCategory = (props) => {
 
     return (
         <Modal size="sm" {...props}>
-            <h2>New Food Category</h2>
-            <FoodCategoryForm 
+            <h2>New Menu Section</h2>
+            <MenuSectionForm 
                 buttonName="Create"
                 initialValues={initialValues}
-                handleSubmit={createCategory}/>
+                handleSubmit={createSection}/>
         </Modal>
     )
 };
 
-export default NewFoodCategory;
+export default NewMenuSection;

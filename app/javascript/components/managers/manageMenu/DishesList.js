@@ -17,8 +17,8 @@ const DishesList = (props) => {
 
     let listTitle = "All Dishes";
 
-    if (!!props.currFoodCategory) {
-        listTitle = props.currFoodCategory.name;
+    if (!!props.currMenuSection) {
+        listTitle = props.currMenuSection.ms_name;
     }
 
     return (

@@ -30,29 +30,36 @@ class Menu extends React.Component {
                 <h3>This restaurant is not selling anything at the moment.</h3>
             )
         } else {
-            let menu = this.state.menu.map((item) => {
-                return (
-                    <div className='restaurant-media'>
-                        <Media>
-                            <img
-                                width={120}
-                                height={120}
-                                className="align-self-center mr-3"
-                                src={ placeholderPic }
-                                alt="Generic placeholder"
-                            />
-                            <Media.Body>
-                                <h5 />
-                                <h3>{ item.f_name }</h3>
-                                <h5>${ item.price }</h5>
-                            </Media.Body>
-                        </Media>
-                    </div>
-                )
-            })
+            // menu is an object, not array as keys are strings instead of array indices so no map()
+            let menuObject = this.state.menu
+            let menuArray = []
+            for (let key in menuObject) {
+                if (menuObject.hasOwnProperty(key)) {
+                    for (let item of menuObject[key]) {
+                        menuArray.push(
+                            <div className='restaurant-media'>
+                                <Media>
+                                    <img
+                                        width={120}
+                                        height={120}
+                                        className="align-self-center mr-3"
+                                        src={placeholderPic}
+                                        alt="Generic placeholder"
+                                    />
+                                    <Media.Body>
+                                        <h5 />
+                                        <h3>{item.f_name}</h3>
+                                        <h5>${item.price}</h5>
+                                    </Media.Body>
+                                </Media>
+                            </div>
+                        )
+                    }
+                }
+            }
             return (
                 <div className='restaurants-container'>
-                    {menu}
+                    {menuArray}
                 </div>
             )
         }

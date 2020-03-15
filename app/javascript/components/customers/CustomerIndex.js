@@ -27,10 +27,14 @@ class Index extends React.Component {
                 <CustomerNavBar />
                 {/* <h6>{JSON.stringify(props.info)}</h6> */}
                 <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
+
                 <Route exact path="/customer/order"
                     render={() => <Restaurants onChooseRestaurant={ this.handleChooseRestaurant }/>} />
-                <Route exact path={ "/customer/order/:rid/menu" }
-                    render={() => <Menu restaurant_id={ this.state.chosen_restaurant }/>} />
+
+                <Route exact path={ "/customer/order/:rid/menu" }>
+                    <Menu restaurant_id={this.state.chosen_restaurant}/>
+                </Route>
+                
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
                 <Route exact path="/customer/promotions" render={() => <PromosPage />} />

@@ -1,27 +1,26 @@
-import React from 'react'
-import Media from 'react-bootstrap/Media'
-import placeholderPic from '../../../../assets/images/krusty-krab.png'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import React from 'react';
+import Media from 'react-bootstrap/Media';
+import placeholderPic from '../../../../assets/images/krusty-krab.png';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 class RestaurantSelection extends React.Component {
     constructor(props) {
-        console.log(props)
-        super(props)
-        this.restaurant = this.props.res
-        this.menu_url = "/customer/order/" + this.restaurant.id + "/menu"
+        console.log(props);
+        super(props);
+        this.restaurant = this.props.res;
+        this.menu_url = "/customer/order/" + this.restaurant.id + "/menu";
     }
 
     selectRestaurant() {
-
         // Pass restaurant_id state up through Restaurant to OrderPage
-        console.log("Selected restaurant ID " + this.restaurant.id)
-        this.props.onChooseRestaurant(this.restaurant.id, this.menu_url)
+        console.log("Selected restaurant ID " + this.restaurant.id);
+        this.props.onChooseRestaurant(this.restaurant.id);
     }
 
     render() {
         return (
             <div className='restaurant-media' onClick={() => this.selectRestaurant()}>
-                <Link to={this.menu_url} >
+                <Link to={this.menu_url} className='restaurant-media-link' >
                     <Media>
                         <img
                             width={120}
@@ -43,4 +42,4 @@ class RestaurantSelection extends React.Component {
     }
 }
 
-export default RestaurantSelection
+export default RestaurantSelection;

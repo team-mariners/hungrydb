@@ -13,11 +13,12 @@
     justify-content: center;
 }
 
-.menu-media {
+.menu-media-button {
     background-color: $greyblue;
     border: solid;
     border-color: $greyviolet;
-    justify-content: space-around;
+    color: $black;
+    text-align: left;
     margin-top: 30px;
     width: 700px;
 }

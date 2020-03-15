@@ -11,9 +11,9 @@ class LastReview extends React.Component {
             .then(res => res.json())
             .then(
                 (response) => {
-                    retrieved_last_review = response.last_review[0]
-                    this.setState({ lastOrder: retrieved_last_review })
-                    console.log("Last Review: " + retrieved_last_review)
+                    retrieved_last_review = response.last_review[0];
+                    this.setState({ lastOrder: retrieved_last_review });
+                    console.log("Last Review: " + retrieved_last_review);
                 }
             )
             .catch(error => {

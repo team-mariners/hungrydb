@@ -1,24 +1,23 @@
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CustomerNavBar from './CustomerNavBar'
-import Dashboard from './dashboard/CustomerDashboard'
-import Menu from './order/Menu'
-import OrderHistory from './orderhistory/OrderHistory'
-import ReviewHistory from './reviews/ReviewHistory'
-import PromosPage from './promotions/PromosPage'
-import Restaurants from './order/Restaurants'
+import Dashboard from './dashboard/CustomerDashboard';
+import Menu from './order/Menu';
+import OrderHistory from './orderhistory/OrderHistory';
+import ReviewHistory from './reviews/ReviewHistory';
+import PromosPage from './promotions/PromosPage';
+import Restaurants from './order/Restaurants';
 
 class Index extends React.Component {
     constructor(props) {
-        super(props)
-        this.handleChooseRestaurant = this.handleChooseRestaurant.bind(this)
-        this.state = { chosen_restaurant: null }
+        super(props);
+        this.handleChooseRestaurant = this.handleChooseRestaurant.bind(this);
+        this.state = { chosen_restaurant: null };
     }
 
     // State passed upward from RestaurantSelection to Restaurants to this
-    handleChooseRestaurant(restaurant, url) {
-        this.setState({ chosen_restaurant: restaurant }
-        )
+    handleChooseRestaurant(restaurant) {
+        this.setState({ chosen_restaurant: restaurant });
     }
 
     render() {
@@ -43,4 +42,4 @@ class Index extends React.Component {
     }
 }
 
-export default Index
+export default Index;

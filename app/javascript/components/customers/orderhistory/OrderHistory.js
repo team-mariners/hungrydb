@@ -1,5 +1,5 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 
 class OrderHistory extends React.Component {
     constructor(props) {
@@ -11,12 +11,12 @@ class OrderHistory extends React.Component {
         axios.get('/api/v1/customer/customer.json')
             .then(
                 (response) => {
-                    const retrieved_orders = response.data.orders
-                    this.setState({ orders: retrieved_orders })
-                    console.log("Order History: " + retrieved_orders)
+                    const retrieved_orders = response.data.orders;
+                    this.setState({ orders: retrieved_orders });
+                    console.log("Order History: " + retrieved_orders);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -43,4 +43,4 @@ class OrderHistory extends React.Component {
     }
 }
 
-export default OrderHistory
+export default OrderHistory;

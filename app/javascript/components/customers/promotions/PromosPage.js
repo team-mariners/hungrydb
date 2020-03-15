@@ -1,5 +1,5 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 
 class PromosPage extends React.Component {
     constructor(props) {
@@ -11,12 +11,12 @@ class PromosPage extends React.Component {
         axios.get('/api/v1/customer/customer.json')
             .then(
                 (response) => {
-                    const retrieved_promos = response.data.promos
-                    this.setState({ promotions: retrieved_promos })
-                    console.log("Promotions: " + retrieved_promos)
+                    const retrieved_promos = response.data.promos;
+                    this.setState({ promotions: retrieved_promos });
+                    console.log("Promotions: " + retrieved_promos);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -43,4 +43,4 @@ class PromosPage extends React.Component {
     }
 }
 
-export default PromosPage
+export default PromosPage;

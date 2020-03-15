@@ -10,22 +10,22 @@ class Menu extends React.Component {
         this.state = { menu: null };
     }
 
-    componentDidMount() {
+
+
+    render() {
         let menu_url = '/api/v1/restaurants/' + this.props.restaurant_id + '/menu.json'
         axios.get(menu_url)
             .then(
                 (response) => {
                     const retrieved_menu = response.data.menu
                     this.setState({ menu: retrieved_menu })
-                    console.log("Menu: " + retrieved_menu)
+                    console.log(this.state.menu)
                 })
             .catch(error => {
                 console.log(error)
             })
-    }
 
-    render() {
-        if (!this.state.menu) {
+        if (this.state.menu === null) {
             return (
                 <h3>This restaurant is not selling anything at the moment.</h3>
             )
@@ -43,7 +43,7 @@ class Menu extends React.Component {
                             />
                             <Media.Body>
                                 <h5 />
-                                <h3>{ item.name }</h3>
+                                <h3>{ item.f_name }</h3>
                                 <h5>${ item.price }</h5>
                             </Media.Body>
                         </Media>

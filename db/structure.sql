@@ -9,6 +9,56 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: promo_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.promo_type AS ENUM (
+    'fds',
+    'restaurant'
+);
+
+
+--
+-- Name: check_has_promotions_exist(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.check_has_promotions_exist() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      DECLARE 
+        exist integer; 
+      BEGIN
+        SELECT DISTINCT 1 INTO exist
+          FROM has_promotions
+          WHERE restaurant_promotion_id = NEW.promotion_id;
+        IF exist IS NULL THEN
+          RAISE exception 'Must insert a tuple into has_promotions upon inserting into restaurant_promotions';
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
+--
+-- Name: check_promotions_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.check_promotions_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF NOT (
+          EXISTS (SELECT 1 FROM fds_promotions WHERE promotion_id = NEW.id)
+          OR EXISTS (SELECT 1 FROM restaurant_promotions WHERE promotion_id = NEW.id)
+        ) THEN
+          RAISE EXCEPTION 'Must insert a tuple into the corresponding subtable of promotions';
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -92,6 +142,17 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
+-- Name: fds_promotions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fds_promotions (
+    promotion_id bigint NOT NULL,
+    p_type public.promo_type DEFAULT 'fds'::public.promo_type NOT NULL,
+    CONSTRAINT fds_promotions_p_type CHECK ((p_type = 'fds'::public.promo_type))
+);
+
+
+--
 -- Name: foods; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -127,6 +188,16 @@ CREATE SEQUENCE public.foods_id_seq
 --
 
 ALTER SEQUENCE public.foods_id_seq OWNED BY public.foods.id;
+
+
+--
+-- Name: has_promotions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.has_promotions (
+    restaurant_id bigint NOT NULL,
+    restaurant_promotion_id bigint NOT NULL
+);
 
 
 --
@@ -188,6 +259,58 @@ CREATE SEQUENCE public.menu_sections_url_id_seq
 --
 
 ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url_id;
+
+
+--
+-- Name: promotions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.promotions (
+    id bigint NOT NULL,
+    p_name character varying(300) NOT NULL,
+    p_type public.promo_type NOT NULL,
+    promocode character varying(200) NOT NULL,
+    num_redeemed integer DEFAULT 0 NOT NULL,
+    max_redeem integer NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    percentage integer NOT NULL,
+    CONSTRAINT promotions_end_date CHECK ((end_date > start_date)),
+    CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
+    CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
+    CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-14 13:10:07.290174'::timestamp without time zone))
+);
+
+
+--
+-- Name: promotions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.promotions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: promotions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.promotions_id_seq OWNED BY public.promotions.id;
+
+
+--
+-- Name: restaurant_promotions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.restaurant_promotions (
+    promotion_id bigint NOT NULL,
+    p_type public.promo_type DEFAULT 'restaurant'::public.promo_type NOT NULL,
+    CONSTRAINT restaurant_promotions_p_type CHECK ((p_type = 'restaurant'::public.promo_type))
+);
 
 
 --
@@ -343,6 +466,13 @@ ALTER TABLE ONLY public.menu_sections ALTER COLUMN url_id SET DEFAULT nextval('p
 
 
 --
+-- Name: promotions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions ALTER COLUMN id SET DEFAULT nextval('public.promotions_id_seq'::regclass);
+
+
+--
 -- Name: restaurants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -388,6 +518,14 @@ ALTER TABLE ONLY public.customers
 
 
 --
+-- Name: fds_promotions fds_promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fds_promotions
+    ADD CONSTRAINT fds_promotions_pkey PRIMARY KEY (promotion_id);
+
+
+--
 -- Name: foods foods_f_name_restaurant_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -401,6 +539,14 @@ ALTER TABLE ONLY public.foods
 
 ALTER TABLE ONLY public.foods
     ADD CONSTRAINT foods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: has_promotions has_promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.has_promotions
+    ADD CONSTRAINT has_promotions_pkey PRIMARY KEY (restaurant_id, restaurant_promotion_id);
 
 
 --
@@ -425,6 +571,46 @@ ALTER TABLE ONLY public.menu_sections
 
 ALTER TABLE ONLY public.menu_sections
     ADD CONSTRAINT menu_sections_url_id_key UNIQUE (url_id);
+
+
+--
+-- Name: promotions promotions_id_p_type_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_id_p_type_key UNIQUE (id, p_type);
+
+
+--
+-- Name: promotions promotions_p_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_p_name_key UNIQUE (p_name);
+
+
+--
+-- Name: promotions promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: promotions promotions_promocode_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_promocode_key UNIQUE (promocode);
+
+
+--
+-- Name: restaurant_promotions restaurant_promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.restaurant_promotions
+    ADD CONSTRAINT restaurant_promotions_pkey PRIMARY KEY (promotion_id);
 
 
 --
@@ -525,6 +711,28 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 
 
 --
+-- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_promotions_constraint();
+
+
+--
+-- Name: restaurant_promotions restaurant_promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_has_promotions_exist();
+
+
+--
+-- Name: fds_promotions fds_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fds_promotions
+    ADD CONSTRAINT fds_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+
+
+--
 -- Name: managers fk_rails_1306270b4d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -573,11 +781,35 @@ ALTER TABLE ONLY public.foods
 
 
 --
+-- Name: has_promotions has_promotions_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.has_promotions
+    ADD CONSTRAINT has_promotions_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: has_promotions has_promotions_restaurant_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.has_promotions
+    ADD CONSTRAINT has_promotions_restaurant_promotion_id_fkey FOREIGN KEY (restaurant_promotion_id) REFERENCES public.restaurant_promotions(promotion_id) ON DELETE CASCADE;
+
+
+--
 -- Name: menu_sections menu_sections_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.menu_sections
     ADD CONSTRAINT menu_sections_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: restaurant_promotions restaurant_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.restaurant_promotions
+    ADD CONSTRAINT restaurant_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -602,6 +834,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200223110049'),
 ('20200225011425'),
 ('20200312022449'),
-('20200312032412');
+('20200312032412'),
+('20200314013024'),
+('20200314021748'),
+('20200314022934'),
+('20200314023756'),
+('20200314032347'),
+('20200314052139');
 
 

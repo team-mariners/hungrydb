@@ -11,6 +11,7 @@ class CreatePromotions < ActiveRecord::Migration[6.0]
 
     execute "CREATE TABLE promotions (
       id bigint NOT NULL DEFAULT nextval('promotions_id_seq'),
+      p_name varchar(300) UNIQUE NOT NULL,
       p_type promo_type NOT NULL,
       promocode varchar(200) UNIQUE NOT NULL,
       num_redeemed integer NOT NULL DEFAULT 0

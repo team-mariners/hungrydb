@@ -281,18 +281,19 @@ ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url
 
 CREATE TABLE public.promotions (
     id bigint NOT NULL,
+    p_name character varying(300) NOT NULL,
     p_type public.promo_type NOT NULL,
     promocode character varying(200) NOT NULL,
     num_redeemed integer DEFAULT 0 NOT NULL,
     max_redeem integer NOT NULL,
-    start_date date NOT NULL,
-    end_date date NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
     percentage integer NOT NULL,
     CONSTRAINT promotions_end_date CHECK ((end_date > start_date)),
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15'::date))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15 17:38:56.752682'::timestamp without time zone))
 );
 
 
@@ -592,6 +593,14 @@ ALTER TABLE ONLY public.menu_sections
 
 ALTER TABLE ONLY public.promotions
     ADD CONSTRAINT promotions_id_p_type_key UNIQUE (id, p_type);
+
+
+--
+-- Name: promotions promotions_p_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_p_name_key UNIQUE (p_name);
 
 
 --

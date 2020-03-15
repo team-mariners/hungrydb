@@ -10,9 +10,7 @@ class Menu extends React.Component {
         this.state = { menu: null };
     }
 
-
-
-    render() {
+    componentDidMount() {
         let menu_url = '/api/v1/restaurants/' + this.props.restaurant_id + '/menu.json'
         axios.get(menu_url)
             .then(
@@ -24,6 +22,10 @@ class Menu extends React.Component {
             .catch(error => {
                 console.log(error)
             })
+    }
+
+    render() {
+
 
         if (this.state.menu === null) {
             return (

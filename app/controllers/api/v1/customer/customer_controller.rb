@@ -10,7 +10,7 @@ class Api::V1::Customer::CustomerController < Api::V1::BaseController
     review_query = nil
     last_review_query = nil
     eligiblepromos_query = %w[HARDCODEDPROMO1 HARDCODEDPROMO2] # Limit with SQL
-    respond_with 'customer': helpers.get_customer,
+    respond_with 'customer': helpers.retrieve_customer,
                   orders: order_query, reviews: review_query,
                   last_order: last_order_query, last_review: last_review_query,
                   promos: eligiblepromos_query

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api::V1::Customer::CustomerHelper
-  def get_customer
+  def retrieve_customer
     current_customer_query = "SELECT *
                               FROM Customers
                               WHERE user_id = #{current_user.id}

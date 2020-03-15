@@ -57,6 +57,7 @@ const FoodModal = (props) => {
                     <FormControl type="text" placeholder="Quantity of food" className="mr-sm-2" style={{width: 180}} />
                     <Button variant="primary">Add To Cart</Button>
                 </Form>
+                <div><br/></div>
             </section>
         </div>
     )

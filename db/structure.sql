@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
 -- Name: promo_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -57,6 +71,7 @@ CREATE FUNCTION public.check_promotions_constraint() RETURNS trigger
         RETURN NULL;
       END;
       $$;
+
 
 SET default_tablespace = '';
 
@@ -266,19 +281,18 @@ ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url
 
 CREATE TABLE public.promotions (
     id bigint NOT NULL,
-    p_name character varying(300) NOT NULL,
     p_type public.promo_type NOT NULL,
     promocode character varying(200) NOT NULL,
     num_redeemed integer DEFAULT 0 NOT NULL,
     max_redeem integer NOT NULL,
-    start_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
     percentage integer NOT NULL,
     CONSTRAINT promotions_end_date CHECK ((end_date > start_date)),
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-14 13:10:07.290174'::timestamp without time zone))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15'::date))
 );
 
 
@@ -581,14 +595,6 @@ ALTER TABLE ONLY public.promotions
 
 
 --
--- Name: promotions promotions_p_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.promotions
-    ADD CONSTRAINT promotions_p_name_key UNIQUE (p_name);
-
-
---
 -- Name: promotions promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -713,22 +719,22 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 -- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_promotions_constraint();
+CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_promotions_constraint();
 
 
 --
 -- Name: restaurant_promotions restaurant_promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_has_promotions_exist();
+CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_has_promotions_exist();
 
 
 --
--- Name: fds_promotions fds_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fds_promotions fds_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fds_promotions
-    ADD CONSTRAINT fds_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT fds_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -804,11 +810,11 @@ ALTER TABLE ONLY public.menu_sections
 
 
 --
--- Name: restaurant_promotions restaurant_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: restaurant_promotions restaurant_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.restaurant_promotions
-    ADD CONSTRAINT restaurant_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT restaurant_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --

@@ -70,6 +70,9 @@ Rails.application.routes.draw do
         get '/:id/menu', to: 'restaurants#menu'
       end
 
+      namespace :promotions do
+        resources :fds_promotions, only: %[index]
+      end
     end
   end
 

@@ -189,3 +189,43 @@ test_food_5 = ActiveRecord::Base.connection.exec_query(
     WHERE f_name = 'milo dinosaur'
     AND restaurant_id = #{test_restaurant_1["id"]}"
 ).to_a[0]
+
+# ------------------------------------------------ Promotions ---------------------------------------------------------
+ActiveRecord::Base.connection.begin_db_transaction
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Promotions(p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('restaurant', 'RES10', 1, '2020/3/15'::timestamp, '2020/12/30'::timestamp, 10);"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Promotions(p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('fds', 'FDS20', 3, '2020/3/15'::timestamp, '2020/12/30'::timestamp, 10);"
+)
+
+test_promo_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Promotions
+    WHERE promocode = 'RES10'"
+).to_a[0]
+
+test_promo_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Promotions
+    WHERE promocode = 'FDS20'"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO restaurant_promotions(promotion_id, p_type)
+    VALUES (#{test_promo_1['id']}, '#{test_promo_1['p_type']}');"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO has_promotions(restaurant_id, restaurant_promotion_id)
+    VALUES (#{test_restaurant_1['id']}, #{test_promo_1['id']});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO fds_promotions(promotion_id, p_type)
+    VALUES (#{test_promo_2['id']}, '#{test_promo_2['p_type']}');"
+)
+
+ActiveRecord::Base.connection.commit_db_transaction

@@ -8,10 +8,10 @@ class PromosPage extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/customer/customer.json')
+        axios.get('/api/v1/promotions/fds_promotions.json')
             .then(
                 (response) => {
-                    const retrieved_promos = response.data.promos;
+                    const retrieved_promos = response.data.fds_promos;
                     this.setState({ promotions: retrieved_promos });
                     console.log("Promotions: " + retrieved_promos);
             })
@@ -29,7 +29,7 @@ class PromosPage extends React.Component {
             let promos = this.state.promotions.map((promo) => {
                 return (
                     <React.Fragment>
-                        <h3>{promo}</h3>
+                        <h3>{promo.promocode}</h3>
                     </React.Fragment>
                 )
             })

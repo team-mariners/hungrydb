@@ -42,12 +42,27 @@ testManager = User.create(
     roles: 'customer,manager'
 )
 
+testManager2 = User.create(
+    username: 'manager2',
+    password: '12345678',
+    email: 'manager2@example.com',
+    roles: 'customer,manager'
+)
+
 Customer.create(
     user_id: testManager.id
 )
 
+Customer.create(
+    user_id: testManager2.id
+)
+
 Manager.create(
     user_id: testManager.id
+)
+
+Manager.create(
+    user_id: testManager2.id
 )
 
 # Test administrator
@@ -68,10 +83,16 @@ Admin.create(
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------
 test_manager_1 = Manager.find(1)
+test_manager_2 = Manager.find(2)
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
     VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', #{test_manager_1.id});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
+    VALUES (\'Bannered Mare\', 5, \'Whiterun\', #{test_manager_2.id});"
 )
 
 test_restaurant_1 = ActiveRecord::Base.connection.exec_query(

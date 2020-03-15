@@ -7,11 +7,11 @@ class LastOrder extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer.json')
+        fetch('/api/v1/customer/customer.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    const retrieved_last_order = response[0].last_order[0]
+                    const retrieved_last_order = response.last_order[0]
                     this.setState({ lastOrder: retrieved_last_order })
                     console.log("Last Order: " + retrieved_last_order)
                 }

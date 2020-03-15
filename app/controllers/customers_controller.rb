@@ -9,6 +9,8 @@ class CustomersController < UsersController
 
   def index; end
 
+  def order; end
+
   def history; end
 
   def reviews; end

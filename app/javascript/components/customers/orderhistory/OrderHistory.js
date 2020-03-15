@@ -4,14 +4,14 @@ import axios from 'axios'
 class OrderHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {orders: []};
+        this.state = {orders: null};
     }
 
     componentDidMount() {
-        axios.get('/api/v1/customer.json')
+        axios.get('/api/v1/customer/customer.json')
             .then(
                 (response) => {
-                    const retrieved_orders = response.data[0].orders
+                    const retrieved_orders = response.data.orders
                     this.setState({ orders: retrieved_orders })
                     console.log("Order History: " + retrieved_orders)
             })

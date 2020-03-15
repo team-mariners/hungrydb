@@ -43,6 +43,8 @@ Rails.application.routes.draw do
 
     scope '/customer' do
       get 'home', to: 'customers#index'
+      get 'order', to: 'customers#order', as: :customer_order_path
+      get 'order/:rid/menu', to: 'customers#order'
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
@@ -57,8 +59,17 @@ Rails.application.routes.draw do
   # JSON API
   namespace :api do
     namespace :v1 do
-      resources :customer, only: %i[index create destroy update]
-      # [:index, :create, :destroy, :update]
+      
+      namespace :customer do
+        resources :customer, only: %i[index create destroy update]
+        # [:index, :create, :destroy, :update]
+      end
+      
+      namespace :restaurants do
+        resources :restaurants, only: %i[index]
+        get '/:id/menu', to: 'restaurants#menu'
+      end
+
     end
   end
 

@@ -2,9 +2,11 @@ import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CustomerNavBar from './CustomerNavBar'
 import Dashboard from './dashboard/CustomerDashboard'
+import Menu from './order/Menu'
 import OrderHistory from './orderhistory/OrderHistory'
 import ReviewHistory from './reviews/ReviewHistory'
 import PromosPage from './promotions/PromosPage'
+import OrderPage from './order/OrderPage'
 
 const Index = (props) => {
     console.log(props);
@@ -13,6 +15,8 @@ const Index = (props) => {
             <CustomerNavBar/>
             {/* <h6>{JSON.stringify(props.info)}</h6> */}
             <Route exact path="/" render={() => <Dashboard currentUser={props.info}/>}/>
+            <Route exact path="/customer/order" render={() => <OrderPage />}/>
+            <Route exact path="/customer/order/:rid/menu" render={() => <Menu />}/>
             <Route exact path="/customer/history" render={() => <OrderHistory />}/>
             <Route exact path="/customer/reviews" render={() => <ReviewHistory />}/>
             <Route exact path="/customer/promotions" render={() => <PromosPage />}/>

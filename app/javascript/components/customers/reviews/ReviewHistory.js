@@ -4,14 +4,14 @@ import axios from 'axios'
 class ReviewHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {reviews: []};
+        this.state = {reviews: null};
     }
 
     componentDidMount() {
         axios.get('/api/v1/customer.json')
             .then(
                 (response) => {
-                    const retrieved_reviews = response.data[0].reviews
+                    const retrieved_reviews = response.data.reviews
                     this.setState({ reviews: retrieved_reviews })
                     console.log("Review History: " + retrieved_reviews)
             })

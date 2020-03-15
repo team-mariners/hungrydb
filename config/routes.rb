@@ -59,19 +59,19 @@ Rails.application.routes.draw do
   # JSON API
   namespace :api do
     namespace :v1 do
-      
+
       namespace :customer do
         resources :customer, only: %i[index create destroy update]
         # [:index, :create, :destroy, :update]
       end
-      
+
       namespace :restaurants do
         resources :restaurants, only: %i[index]
         get '/:id/menu', to: 'restaurants#menu'
       end
 
       namespace :promotions do
-        resources :fds_promotions, only: %[index]
+        resources :promotions, only: %[index]
       end
     end
   end

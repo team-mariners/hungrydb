@@ -2,10 +2,10 @@
 
 module Api::V1::Restaurants::RestaurantsHelper
   def retrieve_restaurants
-		restaurants_query = "SELECT *
+    restaurants_query = "SELECT *
                         FROM Restaurants
                         ORDER BY name"
-		ActiveRecord::Base.connection.execute(restaurants_query)
+    ActiveRecord::Base.connection.execute(restaurants_query)
   end
 
   def retrieve_menu_sections(rid)
@@ -16,12 +16,12 @@ module Api::V1::Restaurants::RestaurantsHelper
   end
 
   def retrieve_section_food(rid, ms_id)
-		sec_food_query = "SELECT DISTINCT F.f_name, F.price
+    sec_food_query = "SELECT DISTINCT F.f_name, F.price
                      FROM menu_sections M INNER JOIN Foods F
                      ON M.restaurant_id = #{rid} and M.url_id = #{ms_id}
                         and F.ms_url_id = M.url_id
                         and F.num_orders < F.daily_limit
                      ORDER BY F.f_name"
-		ActiveRecord::Base.connection.execute(sec_food_query)
+    ActiveRecord::Base.connection.execute(sec_food_query)
   end
 end

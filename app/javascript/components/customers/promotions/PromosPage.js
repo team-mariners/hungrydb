@@ -20,6 +20,16 @@ class PromosPage extends React.Component {
                         restaurant_promos: retrieved_res_promos
                     });
                     console.log(response.data);
+        this.state = {promotions: null};
+    }
+
+    componentDidMount() {
+        axios.get('/api/v1/promotions/fds_promotions.json')
+            .then(
+                (response) => {
+                    const retrieved_promos = response.data.fds_promos;
+                    this.setState({ promotions: retrieved_promos });
+                    console.log("Promotions: " + retrieved_promos);
             })
             .catch(error => {
                 console.log(error);
@@ -35,6 +45,9 @@ class PromosPage extends React.Component {
             let fds_promos = this.state.fds_promos.map((fpromo) => {
                 return (
                     <PromoItem promo={fpromo}/>
+                    <React.Fragment>
+                        <h3>{promo.promocode}</h3>
+                    </React.Fragment>
                 )
             })
 

@@ -24,12 +24,32 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: payment_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.payment_type AS ENUM (
+    'cash',
+    'credit_card'
+);
+
+
+--
 -- Name: promo_type; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.promo_type AS ENUM (
     'fds',
     'restaurant'
+);
+
+
+--
+-- Name: status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.status_type AS ENUM (
+    'in_progress',
+    'complete'
 );
 
 
@@ -167,7 +187,8 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.comprises (
     oid bigint NOT NULL,
     food_id bigint NOT NULL,
-    quantity bigint
+    quantity bigint NOT NULL,
+    CONSTRAINT quantity_not_zero CHECK ((quantity > 0))
 );
 
 
@@ -214,11 +235,11 @@ CREATE TABLE public.delivers (
     oid bigint NOT NULL,
     rider_id bigint NOT NULL,
     customer_location character varying(500) NOT NULL,
-    order_time time without time zone,
+    order_time time without time zone NOT NULL,
     depart_to_restaurant_time time without time zone,
-    depert_to_customer_time time without time zone,
-    arrive_at_customer_time time without time zone,
-    arrive_at_restaurant_time time without time zone
+    arrive_at_restaurant_time time without time zone,
+    depart_to_customer_time time without time zone,
+    arrive_at_customer_time time without time zone
 );
 
 
@@ -343,19 +364,31 @@ ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url
 
 
 --
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
 -- Name: orders; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.orders (
-    oid bigint NOT NULL,
-    customer_id bigint,
-    promo_id bigint,
-    restaurant_id bigint,
-    point_offset bigint,
-    payment_method character varying(20),
-    delivery_fee bigint,
-    date_time timestamp without time zone,
-    status character varying(20)
+    oid bigint DEFAULT nextval('public.orders_id_seq'::regclass) NOT NULL,
+    customer_id bigint NOT NULL,
+    promo_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    point_offset bigint DEFAULT 0 NOT NULL,
+    payment_method public.payment_type NOT NULL,
+    delivery_fee numeric DEFAULT 0 NOT NULL,
+    date_time timestamp without time zone NOT NULL,
+    status public.status_type DEFAULT 'in_progress'::public.status_type NOT NULL
 );
 
 
@@ -377,7 +410,7 @@ CREATE TABLE public.promotions (
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-16 13:32:28.550824'::timestamp without time zone))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-16 16:52:17.297266'::timestamp without time zone))
 );
 
 
@@ -450,8 +483,9 @@ ALTER SEQUENCE public.restaurants_id_seq OWNED BY public.restaurants.id;
 CREATE TABLE public.reviews (
     oid bigint NOT NULL,
     rider_id bigint,
-    delivery_rating integer,
-    food_review character varying(1000)
+    rider_rating integer,
+    food_review character varying(1000),
+    CONSTRAINT rider_rating_bounds CHECK (((rider_rating > 0) AND (rider_rating <= 5)))
 );
 
 

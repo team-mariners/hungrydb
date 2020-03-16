@@ -3,7 +3,9 @@ class CreateReviews < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE Reviews (
       oid bigint,
       rider_id bigint,
-      delivery_rating integer,
+      rider_rating integer
+        CONSTRAINT rider_rating_bounds
+        CHECK (rider_rating > 0 and rider_rating <= 5),
       food_review varchar(1000),
       PRIMARY KEY (oid),
       FOREIGN KEY (oid) REFERENCES Orders

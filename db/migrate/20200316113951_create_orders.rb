@@ -18,13 +18,13 @@ class CreateOrders < ActiveRecord::Migration[6.0]
       restaurant_id bigint NOT NULL,
       point_offset bigint NOT NULL DEFAULT 0,
       payment_method payment_type NOT NULL,
-      delivery_fee bigint NOT NULL DEFAULT 0,
+      delivery_fee numeric NOT NULL DEFAULT 0,
       date_time timestamp NOT NULL,
-      status status_type NOT NULL DEFAULT in_progress,
+      status status_type NOT NULL DEFAULT 'in_progress',
       PRIMARY KEY (oid),
       FOREIGN KEY (customer_id) REFERENCES Customers(user_id),
       FOREIGN KEY (promo_id) REFERENCES Promotions,
-      FOREIGN KEY (restaurant_id) REFERENCES Restaurants,
+      FOREIGN KEY (restaurant_id) REFERENCES Restaurants
     );"
   end
 

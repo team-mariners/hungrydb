@@ -9,7 +9,7 @@ class Api::V1::Customer::CustomerController < Api::V1::BaseController
     # Use SQL to get last created_at
     review_query = nil
     last_review_query = nil
-    eligiblepromos_query = %w[HARDCODEDPROMO1 HARDCODEDPROMO2] # Limit with SQL
+    eligiblepromos_query = helpers.retrieve_two_promos # Limit with SQL
     respond_with 'customer': helpers.retrieve_customer,
                   orders: order_query,
                   reviews: review_query,

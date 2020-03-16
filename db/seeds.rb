@@ -42,12 +42,27 @@ testManager = User.create(
     roles: 'customer,manager'
 )
 
+testManager2 = User.create(
+    username: 'manager2',
+    password: '12345678',
+    email: 'manager2@example.com',
+    roles: 'customer,manager'
+)
+
 Customer.create(
     user_id: testManager.id
 )
 
+Customer.create(
+    user_id: testManager2.id
+)
+
 Manager.create(
     user_id: testManager.id
+)
+
+Manager.create(
+    user_id: testManager2.id
 )
 
 # Test administrator
@@ -68,10 +83,16 @@ Admin.create(
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------
 test_manager_1 = Manager.find(1)
+test_manager_2 = Manager.find(2)
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
     VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', #{test_manager_1.id});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
+    VALUES (\'Bannered Mare\', 5, \'Whiterun\', #{test_manager_2.id});"
 )
 
 test_restaurant_1 = ActiveRecord::Base.connection.exec_query(
@@ -168,3 +189,43 @@ test_food_5 = ActiveRecord::Base.connection.exec_query(
     WHERE f_name = 'milo dinosaur'
     AND restaurant_id = #{test_restaurant_1["id"]}"
 ).to_a[0]
+
+# ------------------------------------------------ Promotions ---------------------------------------------------------
+ActiveRecord::Base.connection.begin_db_transaction
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('restaurant test', 'restaurant', 'RES10', 1, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 10);"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('fds test', 'fds', 'FDS20', 3, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 20);"
+)
+
+test_promo_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Promotions
+    WHERE promocode = 'RES10'"
+).to_a[0]
+
+test_promo_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Promotions
+    WHERE promocode = 'FDS20'"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO restaurant_promotions(promotion_id, p_type)
+    VALUES (#{test_promo_1['id']}, '#{test_promo_1['p_type']}');"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO has_promotions(restaurant_id, restaurant_promotion_id)
+    VALUES (#{test_restaurant_1['id']}, #{test_promo_1['id']});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO fds_promotions(promotion_id, p_type)
+    VALUES (#{test_promo_2['id']}, '#{test_promo_2['p_type']}');"
+)
+
+ActiveRecord::Base.connection.commit_db_transaction

@@ -1,6 +1,6 @@
-import React from 'react'
-import CustomerSummary from './CustomerSummary'
-import CustomerBenefits from './CustomerBenefits'
+import React from 'react';
+import CustomerSummary from './CustomerSummary';
+import CustomerBenefits from './CustomerBenefits';
 
 const Dashboard = (props) => {
     return (
@@ -11,4 +11,4 @@ const Dashboard = (props) => {
     )
 }
 
-export default Dashboard
+export default Dashboard;

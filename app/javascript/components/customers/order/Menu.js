@@ -28,7 +28,7 @@ class Menu extends React.Component {
     }
 
     render() {
-        if (this.menu === null) {
+        if (this.state.menu === null) {
             return (
                 <h3>This restaurant is not selling anything at the moment.</h3>
             )

@@ -11,7 +11,8 @@ module Api::V1::Promotions::PromotionsHelper
 
   def retrieve_restaurants_id_name()
     res_id_query = "SELECT DISTINCT id, name
-                   FROM Restaurants"
+                   FROM Restaurants
+                   ORDER BY name"
     ActiveRecord::Base.connection.execute(res_id_query)
   end
 

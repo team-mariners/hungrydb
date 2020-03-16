@@ -194,13 +194,13 @@ test_food_5 = ActiveRecord::Base.connection.exec_query(
 ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO Promotions(p_type, promocode, max_redeem, start_date, end_date, percentage)
-    VALUES ('restaurant', 'RES10', 1, '2020/3/15'::timestamp, '2020/12/30'::timestamp, 10);"
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('restaurant test', 'restaurant', 'RES10', 1, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 10);"
 )
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO Promotions(p_type, promocode, max_redeem, start_date, end_date, percentage)
-    VALUES ('fds', 'FDS20', 3, '2020/3/15'::timestamp, '2020/12/30'::timestamp, 10);"
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('fds test', 'fds', 'FDS20', 3, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 20);"
 )
 
 test_promo_1 = ActiveRecord::Base.connection.exec_query(

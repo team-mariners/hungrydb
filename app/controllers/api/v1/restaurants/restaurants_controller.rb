@@ -12,7 +12,8 @@ class Api::V1::Restaurants::RestaurantsController < Api::V1::BaseController
 
     menu_sections.each do |section|
       menu_hash[section['ms_name']] = helpers.retrieve_section_food(
-                                        params[:id], section['url_id'])
+                                        params[:id], section['url_id']
+                                      )
     end
 
     render json: { 'menu': menu_hash }

@@ -292,7 +292,7 @@ CREATE TABLE public.promotions (
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15'::date))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15 17:38:56.752682'::timestamp without time zone))
 );
 
 

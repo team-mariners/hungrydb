@@ -1,7 +1,7 @@
 class CreateDelivers < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TABLE Delivers (
-      oid bigint UNIQUE NOT NULL
+      oid bigint UNIQUE NOT NULL,
       rider_id bigint,
       customer_location varchar(500) NOT NULL,
       order_time time,

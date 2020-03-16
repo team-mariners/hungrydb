@@ -4,7 +4,7 @@ class CreateReviews < ActiveRecord::Migration[6.0]
       oid bigint,
       rider_id bigint,
       delivery_rating integer,
-      food_review varchar(1000)
+      food_review varchar(1000),
       PRIMARY KEY (oid),
       FOREIGN KEY (oid) REFERENCES Orders
         ON DELETE CASCADE,

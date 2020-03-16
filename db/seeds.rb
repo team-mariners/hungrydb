@@ -229,3 +229,5 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 ActiveRecord::Base.connection.commit_db_transaction
+
+# ------------------------------------------------ Orders ---------------------------------------------------------

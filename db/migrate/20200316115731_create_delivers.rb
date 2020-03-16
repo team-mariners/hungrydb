@@ -4,7 +4,7 @@ class CreateDelivers < ActiveRecord::Migration[6.0]
       oid bigint UNIQUE NOT NULL,
       rider_id bigint,
       customer_location varchar(500) NOT NULL,
-      order_time time,
+      order_time time NOT NULL,
       depart_to_restaurant_time time,
       depert_to_customer_time time,
       arrive_at_customer_time time,

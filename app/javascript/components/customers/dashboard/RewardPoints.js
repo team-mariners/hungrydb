@@ -7,13 +7,13 @@ class RewardPoints extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer.json')
+        fetch('/api/v1/customer/customer.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    const retrieved_points = response[0].customer[0].rewardPoints
-                    this.setState({ rewardPoints: retrieved_points})
-                    console.log("Points: " + retrieved_points)
+                    const retrieved_points = response.customer[0].rewardPoints;
+                    this.setState({ rewardPoints: retrieved_points});
+                    console.log("Points: " + retrieved_points);
                 }
             )
             .catch(error => {

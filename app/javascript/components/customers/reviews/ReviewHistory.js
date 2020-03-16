@@ -1,22 +1,22 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 
 class ReviewHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {reviews: []};
+        this.state = {reviews: null};
     }
 
     componentDidMount() {
         axios.get('/api/v1/customer.json')
             .then(
                 (response) => {
-                    const retrieved_reviews = response.data[0].reviews
-                    this.setState({ reviews: retrieved_reviews })
-                    console.log("Review History: " + retrieved_reviews)
+                    const retrieved_reviews = response.data.reviews;
+                    this.setState({ reviews: retrieved_reviews });
+                    console.log("Review History: " + retrieved_reviews);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -43,4 +43,4 @@ class ReviewHistory extends React.Component {
     }
 }
 
-export default ReviewHistory
+export default ReviewHistory;

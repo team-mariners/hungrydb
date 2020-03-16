@@ -7,13 +7,13 @@ class LastReview extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer.json')
+        fetch('/api/v1/customer/customer.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    retrieved_last_review = response[0].last_review[0]
-                    this.setState({ lastOrder: retrieved_last_review })
-                    console.log("Last Review: " + retrieved_last_review)
+                    retrieved_last_review = response.last_review[0];
+                    this.setState({ lastOrder: retrieved_last_review });
+                    console.log("Last Review: " + retrieved_last_review);
                 }
             )
             .catch(error => {

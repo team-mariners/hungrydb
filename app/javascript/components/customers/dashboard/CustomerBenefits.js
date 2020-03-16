@@ -1,6 +1,6 @@
-import React from 'react'
-import RewardPoints from './RewardPoints'
-import EligiblePromos from './EligiblePromos'
+import React from 'react';
+import RewardPoints from './RewardPoints';
+import EligiblePromos from './EligiblePromos';
 
 const CustomerBenefits = (props) => {
     return (
@@ -15,4 +15,4 @@ const CustomerBenefits = (props) => {
     )
 }
 
-export default CustomerBenefits
+export default CustomerBenefits;

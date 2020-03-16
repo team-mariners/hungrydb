@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 class EligiblePromos extends React.Component {
     constructor(props) {
@@ -7,13 +7,13 @@ class EligiblePromos extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer.json')
+        fetch('/api/v1/customer/customer.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    const retrieved_promos = response[0].promos
-                    this.setState({ promotions: retrieved_promos })
-                    console.log("Promos:" + retrieved_promos)
+                    const retrieved_promos = response.promos;
+                    this.setState({ promotions: retrieved_promos });
+                    console.log("Promos:" + retrieved_promos);
                 }
             )
             .catch(error => {
@@ -45,4 +45,4 @@ class EligiblePromos extends React.Component {
     }
 }
 
-export default EligiblePromos
+export default EligiblePromos;

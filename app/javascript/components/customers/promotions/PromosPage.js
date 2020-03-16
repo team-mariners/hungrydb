@@ -1,22 +1,22 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 
 class PromosPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {promotions: []};
+        this.state = {promotions: null};
     }
 
     componentDidMount() {
-        axios.get('/api/v1/customer.json')
+        axios.get('/api/v1/promotions/fds_promotions.json')
             .then(
                 (response) => {
-                    const retrieved_promos = response.data[0].promos
-                    this.setState({ promotions: retrieved_promos })
-                    console.log("Promotions: " + retrieved_promos)
+                    const retrieved_promos = response.data.fds_promos;
+                    this.setState({ promotions: retrieved_promos });
+                    console.log("Promotions: " + retrieved_promos);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -29,7 +29,7 @@ class PromosPage extends React.Component {
             let promos = this.state.promotions.map((promo) => {
                 return (
                     <React.Fragment>
-                        <h3>{promo}</h3>
+                        <h3>{promo.promocode}</h3>
                     </React.Fragment>
                 )
             })
@@ -43,4 +43,4 @@ class PromosPage extends React.Component {
     }
 }
 
-export default PromosPage
+export default PromosPage;

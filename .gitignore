@@ -32,3 +32,4 @@ yarn-debug.log*
 
 # Ignore database configuration
 /config/database.yml
+/db/structure.sql

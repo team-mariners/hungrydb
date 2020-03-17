@@ -50,7 +50,7 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    resources :restaurants, except: [:new, :edit, :show, :destroy]
+    resources :restaurants, except: %i[new, edit, show, destroy]
     get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
 
     resources :foods, except: [:new, :edit, :show, :destroy]        

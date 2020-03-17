@@ -1,16 +1,21 @@
 import React from 'react';
 import axios from 'axios';
-import ReviewItem from './ReviewItem';
+import ReviewItem from '../reviews/ReviewItem';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { withRouter } from 'react-router-dom';
 
-class ReviewHistory extends React.Component {
+class RestaurantReviews extends React.Component {
     constructor(props) {
         super(props);
+        // this.props.match.params.rid get :rid from URL in Route that encloses this class
+        // Need to wrap this class in withRouter to use match
+        console.log("Menu props res ID " + this.props.match.params.rid);
+        this.restaurant_id = this.props.match.params.rid;
         this.state = {reviews: null};
     }
 
     componentDidMount() {
-        axios.get('/api/v1/reviews/reviews.json')
+        axios.get("/api/v1/restaurants/" + this.restaurant_id + "/reviews.json")
             .then(
                 (response) => {
                     const retrieved_reviews = response.data.reviews;
@@ -46,4 +51,4 @@ class ReviewHistory extends React.Component {
     }
 }
 
-export default ReviewHistory;
+export default withRouter(RestaurantReviews);

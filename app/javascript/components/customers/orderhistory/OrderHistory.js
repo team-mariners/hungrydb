@@ -36,7 +36,7 @@ class OrderHistory extends React.Component {
             return (
                 <React.Fragment>
                     <div><br/></div>
-                    <ListGroup style={{ width: "80%", marginLeft: "auto", marginRight: "auto" }}>
+                    <ListGroup style={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}>
                         {orders}
                     </ListGroup>
                     <div><br/></div>

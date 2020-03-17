@@ -19,6 +19,22 @@ class Api::V1::Restaurants::RestaurantsController < Api::V1::BaseController
     render json: { 'menu': menu_hash }
   end
 
+  def reviews
+    restaurant_reviews_array = []
+    reviews = helpers.retrieve_restaurant_reviews(params[:id]).to_a
+
+    reviews.each do |review|
+      review_oid = review['oid']
+      review['customer_name'] = helpers.retrieve_review_customer(review_oid)
+      review['restaurant_name'] = helpers.retrieve_review_restaurant(review_oid)
+      review['foods'] = helpers.retrieve_review_foods(review_oid)
+      review['rider_name'] = helpers.retrieve_review_rider(review['rider_id'])
+      restaurant_reviews_array.append(review)
+    end
+
+    render json: { 'reviews': restaurant_reviews_array }
+  end
+
   private
 
   def restaurant_id_param

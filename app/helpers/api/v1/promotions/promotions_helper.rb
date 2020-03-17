@@ -22,6 +22,8 @@ module Api::V1::Promotions::PromotionsHelper
                        FROM Has_Promotions H INNER JOIN Promotions P
                             ON H.restaurant_id = #{rid}
                                and H.restaurant_promotion_id = P.id
+                               and CURRENT_TIMESTAMP >= P.start_date
+                               and CURRENT_TIMESTAMP <= P.end_date
                        ORDER BY P.promocode"
     ActiveRecord::Base.connection.execute(res_promos_query)
   end

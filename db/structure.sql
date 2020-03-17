@@ -94,6 +94,46 @@ CREATE FUNCTION public.check_promotions_constraint() RETURNS trigger
 
 
 --
+-- Name: comprises_delete_orders_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.comprises_delete_orders_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF (
+          EXISTS (SELECT 1
+                  FROM Orders O
+                  WHERE O.oid = OLD.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must also delete Order with its final remaining Comprises record being deleted';
+        END IF;
+        RETURN OLD;
+      END;
+      $$;
+
+
+--
+-- Name: delivers_delete_orders_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.delivers_delete_orders_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF (
+          EXISTS (SELECT 1
+                  FROM Orders O
+                  WHERE O.oid = OLD.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must also delete Order related to Delivers record being deleted';
+        END IF;
+        RETURN OLD;
+      END;
+      $$;
+
+
+--
 -- Name: orders_comprises_total_participation(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -236,10 +276,10 @@ CREATE TABLE public.delivers (
     rider_id bigint NOT NULL,
     customer_location character varying(500) NOT NULL,
     order_time time without time zone NOT NULL,
-    depart_to_restaurant_time time without time zone,
-    arrive_at_restaurant_time time without time zone,
-    depart_to_customer_time time without time zone,
-    arrive_at_customer_time time without time zone
+    depart_to_restaurant_time timestamp without time zone,
+    arrive_at_restaurant_time timestamp without time zone,
+    depart_to_customer_time timestamp without time zone,
+    arrive_at_customer_time timestamp without time zone
 );
 
 
@@ -410,7 +450,7 @@ CREATE TABLE public.promotions (
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-16 16:52:17.297266'::timestamp without time zone))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-17 07:34:25.952947'::timestamp without time zone))
 );
 
 
@@ -895,6 +935,20 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 
 
 --
+-- Name: comprises comprises_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+
+
+--
+-- Name: delivers delivers_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+
+
+--
 -- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1116,6 +1170,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316122828'),
 ('20200316125810'),
 ('20200316131147'),
-('20200316132202');
+('20200316132202'),
+('20200317070245'),
+('20200317072650');
 
 

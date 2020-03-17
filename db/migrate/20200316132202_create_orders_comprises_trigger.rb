@@ -25,7 +25,7 @@ class CreateOrdersComprisesTrigger < ActiveRecord::Migration[6.0]
 
   def down
     execute <<-SQL
-      DROP TRIGGER orders_comprises_total_participation ON Orders CASCADE;
+      DROP TRIGGER orders_comprises_trigger ON Orders CASCADE;
       DROP FUNCTION orders_comprises_total_participation() CASCADE;
     SQL
   end

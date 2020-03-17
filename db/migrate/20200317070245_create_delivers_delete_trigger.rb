@@ -1,7 +1,7 @@
 class CreateDeliversDeleteTrigger < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
-      CREATE OR REPLACE FUNCTION delivers_delete_orders_constraint() RETURNS TRIGGER AS $$    
+      CREATE OR REPLACE FUNCTION delivers_delete_orders_constraint() RETURNS TRIGGER AS $$
       BEGIN
         IF (
           EXISTS (SELECT 1

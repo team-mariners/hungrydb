@@ -2,7 +2,7 @@ class CreateComprisesDeleteTrigger < ActiveRecord::Migration[6.0]
   # When deleting last Orders-Foods Comprises entry, the related Order must also be deleted from Orders
   def up
     execute <<-SQL
-      CREATE OR REPLACE FUNCTION comprises_delete_orders_constraint() RETURNS TRIGGER AS $$    
+      CREATE OR REPLACE FUNCTION comprises_delete_orders_constraint() RETURNS TRIGGER AS $$
       BEGIN
         IF (
           EXISTS (SELECT 1

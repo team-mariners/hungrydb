@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOrders < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TYPE payment_type AS ENUM ('cash', 'credit_card');"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePromotions < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TYPE promo_type AS ENUM ('fds', 'restaurant');"

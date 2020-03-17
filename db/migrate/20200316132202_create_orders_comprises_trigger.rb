@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class CreateOrdersComprisesTrigger < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
-      CREATE OR REPLACE FUNCTION orders_comprises_total_participation() RETURNS TRIGGER AS $$    
+      CREATE OR REPLACE FUNCTION orders_comprises_total_participation() RETURNS TRIGGER AS $$
       BEGIN
         IF NOT (
           EXISTS (SELECT 1

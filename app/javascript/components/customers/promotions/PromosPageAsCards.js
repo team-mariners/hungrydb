@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import PromoItem from './PromoItem';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
 
 class PromosPage extends React.Component {
     constructor(props) {
@@ -55,10 +56,13 @@ class PromosPage extends React.Component {
                     resPromosArray.push(
                         <div className='promo-page-container'>
                             <div><br/></div>
+                            
+                            <Card style={{ width: '18rem' }}>
                             <h3>{rname} Promotions:</h3>
-                            <ListGroup style={{ width: 500, marginLeft: "auto", marginRight: "auto" }}>
+                            <ListGroup fluid style={{ width: 280, marginLeft: "auto", marginRight: "auto" }}>
                                {currResPromos}
                             </ListGroup>
+                            </Card>
                             <div><br/></div>
                         </div>
                     )
@@ -67,10 +71,12 @@ class PromosPage extends React.Component {
             return (
                 <div className='promo-page-container'>
                     <div><br/></div>
+                    <Card style={{ width: '18rem' }}>
                     <h3>App-Wide Promotions:</h3>
-                    <ListGroup fluid style={{ width: 500, marginLeft: "auto", marginRight: "auto" }}>
+                    <ListGroup fluid style={{ width: 280, marginLeft: "auto", marginRight: "auto" }}>
                         {fds_promos}
                     </ListGroup>
+                    </Card>
                     <div><br/></div>
                     {resPromosArray}
                     <div><br/><br/></div>

@@ -24,4 +24,12 @@ module Api::V1::Restaurants::RestaurantsHelper
                      ORDER BY F.f_name"
     ActiveRecord::Base.connection.execute(sec_food_query)
   end
+
+  def retrieve_restaurant_name(rid)
+    restaurant_name_query = "SELECT name
+                            FROM Restaurants
+                            WHERE id = #{rid}
+                            LIMIT 1"
+    ActiveRecord::Base.connection.execute(restaurant_name_query)[0]['name']
+  end
 end

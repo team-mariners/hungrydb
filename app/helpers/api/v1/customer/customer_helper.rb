@@ -9,6 +9,15 @@ module Api::V1::Customer::CustomerHelper
     Customer.find_by_sql(current_customer_query)
   end
 
+  def retrieve_last_order
+    last_order_query = "SELECT *
+                       FROM Orders
+                       WHERE customer_id = #{current_user.id}
+                       ORDER BY date_time DESC
+                       LIMIT 1"
+    ActiveRecord::Base.connection.execute(last_order_query)
+  end
+
   def retrieve_two_promos
     two_promos_query = "SELECT *
                        FROM Promotions P INNER JOIN Fds_Promotions F

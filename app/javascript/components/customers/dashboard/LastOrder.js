@@ -1,4 +1,6 @@
 import React from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
+import OrderHistoryItem from '../orderhistory/OrderHistoryItem';
 
 class LastOrder extends React.Component {
     constructor(props) {
@@ -7,13 +9,13 @@ class LastOrder extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer/customer.json')
+        fetch('/api/v1/orders/orders.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    const retrieved_last_order = response.last_order[0];
+                    const retrieved_last_order = response.orders[0];
                     this.setState({ lastOrder: retrieved_last_order });
-                    console.log("Last Order: " + retrieved_last_order);
+                    console.log(retrieved_last_order);
                 }
             )
             .catch(error => {
@@ -30,7 +32,9 @@ class LastOrder extends React.Component {
             return (
                 <React.Fragment>
                     <h3>Previous Order:</h3>
-                    <h4>{this.state.lastOrder}</h4>
+                    <ListGroup style={{ width: 350, marginLeft: "auto", marginRight: "auto" }}>
+                        <OrderHistoryItem order={this.state.lastOrder} />
+                    </ListGroup>
                     <a href="customer/history">See more orders</a>
                 </React.Fragment>
             )

@@ -25,4 +25,20 @@ module Api::V1::Promotions::PromotionsHelper
                        ORDER BY P.promocode"
     ActiveRecord::Base.connection.execute(res_promos_query)
   end
+
+  def retrieve_promo_code(pid)
+    promo_discount_query = "SELECT promocode
+                           FROM Promotions
+                           WHERE id = #{pid}
+                           LIMIT 1"
+    ActiveRecord::Base.connection.execute(promo_discount_query)[0]['promocode']
+  end
+
+  def retrieve_promo_discount(pid)
+    promo_discount_query = "SELECT percentage
+                           FROM Promotions
+                           WHERE id = #{pid}
+                           LIMIT 1"
+    ActiveRecord::Base.connection.execute(promo_discount_query)[0]['percentage']
+  end
 end

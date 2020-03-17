@@ -77,6 +77,10 @@ Rails.application.routes.draw do
       namespace :orders do
         resources :orders, only: %i[index create destroy update]
       end
+
+      namespace :reviews do
+        resources :reviews, only: %i[index create destroy update]
+      end
     end
   end
 

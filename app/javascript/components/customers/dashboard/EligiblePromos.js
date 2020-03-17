@@ -15,7 +15,7 @@ class EligiblePromos extends React.Component {
                 (response) => {
                     const retrieved_promos = response.promos;
                     this.setState({ promotions: retrieved_promos });
-                    console.log("Promos:" + retrieved_promos);
+                    console.log(retrieved_promos);
                 }
             )
             .catch(error => {
@@ -37,7 +37,7 @@ class EligiblePromos extends React.Component {
             return (
                 <div>
                     <h3>Promotions:</h3>
-                    <ListGroup fluid style={{ width: 350, marginLeft: "auto", marginRight: "auto" }}>
+                    <ListGroup style={{ width: 350, marginLeft: "auto", marginRight: "auto" }}>
                         {promos}
                     </ListGroup>
                     <a href="customer/promotions">See more promotions</a>

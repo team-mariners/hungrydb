@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import ListGroup from 'react-bootstrap/ListGroup';
+import OrderHistoryItem from './OrderHistoryItem'
 
 class OrderHistory extends React.Component {
     constructor(props) {
@@ -8,7 +10,7 @@ class OrderHistory extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/customer/customer.json')
+        axios.get('/api/v1/orders/orders.json')
             .then(
                 (response) => {
                     const retrieved_orders = response.data.orders;
@@ -28,15 +30,16 @@ class OrderHistory extends React.Component {
         } else {
             let orders = this.state.orders.map((order) => {
                 return (
-                    <React.Fragment>
-                        <h3>{order}</h3>
-                    </React.Fragment>
+                    <OrderHistoryItem order={order} />
                 )
             })
             return (
                 <React.Fragment>
-                    <h3>Your Orders:</h3>
-                    {orders}
+                    <div><br/></div>
+                    <ListGroup style={{ width: "80%", marginLeft: "auto", marginRight: "auto" }}>
+                        {orders}
+                    </ListGroup>
+                    <div><br/></div>
                 </React.Fragment>
             )
         }

@@ -11,7 +11,7 @@ class RestaurantReviews extends React.Component {
         // Need to wrap this class in withRouter to use match
         console.log("Menu props res ID " + this.props.match.params.rid);
         this.restaurant_id = this.props.match.params.rid;
-        this.state = {reviews: null};
+        this.state = { reviews: null };
     }
 
     componentDidMount() {
@@ -21,30 +21,34 @@ class RestaurantReviews extends React.Component {
                     const retrieved_reviews = response.data.reviews;
                     this.setState({ reviews: retrieved_reviews });
                     console.log(retrieved_reviews);
-            })
+                })
             .catch(error => {
                 console.log(error);
             })
     }
 
     render() {
-        if (this.state.reviews === null) {
+        if (this.state.reviews == null) {
             return (
-                <h3>You have not made any reviews.</h3>
+                <h3>No reviews yet.</h3>
             )
         } else {
+            let rev = this.state.reviews;
             let reviews = this.state.reviews.map((review) => {
                 return (
-                    <ReviewItem review={review} />
+                    <ReviewItem review={review} nameShown={"customer"} />
                 )
             })
+            let display = rev[0] == undefined ? "No reviews yet." : "Reviews for " + rev[0].restaurant_name;
             return (
                 <React.Fragment>
-                    <div><br/></div>
+                    <div><br /></div>
+                    <h3 id='restaurant-reviews-title'>{display}</h3>
+                    <div><br /></div>
                     <ListGroup style={{ width: "80%", marginLeft: "auto", marginRight: "auto" }}>
                         {reviews}
                     </ListGroup>
-                    <div><br/></div>
+                    <div><br /></div>
                 </React.Fragment>
             )
         }

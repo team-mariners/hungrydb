@@ -30,7 +30,7 @@ class ReviewHistory extends React.Component {
         } else {
             let reviews = this.state.reviews.map((review) => {
                 return (
-                    <ReviewItem review={review} />
+                    <ReviewItem review={review} nameShown={"restaurant"} />
                 )
             })
             return (

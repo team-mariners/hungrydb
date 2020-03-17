@@ -6,7 +6,7 @@ class Api::V1::Promotions::PromotionsController < Api::V1::BaseController
     restaurants = helpers.retrieve_restaurants_id_name().to_a
     
     restaurants.each do |res|
-      # Hash of { rname => array of promotions }
+      # Create hash of { rname => array of promotions }
       res_promos_hash[res['name']] = helpers.retrieve_restaurant_promos(res['id'])
     end
 

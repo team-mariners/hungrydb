@@ -71,7 +71,11 @@ Rails.application.routes.draw do
       end
 
       namespace :promotions do
-        resources :promotions, only: %[index]
+        resources :promotions, only: %i[index]
+      end
+
+      namespace :orders do
+        resources :orders, only: %i[index create destroy update]
       end
     end
   end

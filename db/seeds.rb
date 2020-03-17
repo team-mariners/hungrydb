@@ -261,6 +261,11 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Comprises(oid, food_id, quantity)
+    VALUES (#{test_order_1['oid']}, #{test_food_4['id']}, 1);"
+)
+
+ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Reviews(oid, rider_id, rider_rating, food_review)
     VALUES (#{test_order_1['oid']}, #{testRider.id}, 4,
             'Delicious! But where''s the L A M B S A U C E');"

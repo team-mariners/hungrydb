@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFoods < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE SEQUENCE foods_id_seq

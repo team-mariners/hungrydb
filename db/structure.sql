@@ -24,12 +24,32 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: payment_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.payment_type AS ENUM (
+    'cash',
+    'credit_card'
+);
+
+
+--
 -- Name: promo_type; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.promo_type AS ENUM (
     'fds',
     'restaurant'
+);
+
+
+--
+-- Name: status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.status_type AS ENUM (
+    'in_progress',
+    'complete'
 );
 
 
@@ -67,6 +87,86 @@ CREATE FUNCTION public.check_promotions_constraint() RETURNS trigger
           OR EXISTS (SELECT 1 FROM restaurant_promotions WHERE promotion_id = NEW.id)
         ) THEN
           RAISE EXCEPTION 'Must insert a tuple into the corresponding subtable of promotions';
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
+--
+-- Name: comprises_delete_orders_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.comprises_delete_orders_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF (
+          EXISTS (SELECT 1
+                  FROM Orders O
+                  WHERE O.oid = OLD.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must also delete Order with its final remaining Comprises record being deleted';
+        END IF;
+        RETURN OLD;
+      END;
+      $$;
+
+
+--
+-- Name: delivers_delete_orders_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.delivers_delete_orders_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF (
+          EXISTS (SELECT 1
+                  FROM Orders O
+                  WHERE O.oid = OLD.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must also delete Order related to Delivers record being deleted';
+        END IF;
+        RETURN OLD;
+      END;
+      $$;
+
+
+--
+-- Name: orders_comprises_total_participation(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.orders_comprises_total_participation() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF NOT (
+          EXISTS (SELECT 1
+                  FROM Comprises C
+                  WHERE C.oid = NEW.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must insert a tuple for current Order into Comprises table';
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
+--
+-- Name: orders_delivers_total_participation(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$    
+      BEGIN
+        IF NOT (
+          EXISTS (SELECT 1
+                  FROM Delivers D
+                  WHERE D.oid = NEW.oid)
+        ) THEN
+          RAISE EXCEPTION 'Must insert a tuple for current Order into Delivers table';
         END IF;
         RETURN NULL;
       END;
@@ -121,6 +221,18 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: comprises; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comprises (
+    oid bigint NOT NULL,
+    food_id bigint NOT NULL,
+    quantity bigint NOT NULL,
+    CONSTRAINT quantity_not_zero CHECK ((quantity > 0))
+);
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -153,6 +265,22 @@ CREATE SEQUENCE public.customers_id_seq
 --
 
 ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
+
+
+--
+-- Name: delivers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivers (
+    oid bigint NOT NULL,
+    rider_id bigint NOT NULL,
+    customer_location character varying(500) NOT NULL,
+    order_time time without time zone NOT NULL,
+    depart_to_restaurant_time timestamp without time zone,
+    arrive_at_restaurant_time timestamp without time zone,
+    depart_to_customer_time timestamp without time zone,
+    arrive_at_customer_time timestamp without time zone
+);
 
 
 --
@@ -276,23 +404,53 @@ ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url
 
 
 --
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.orders (
+    oid bigint DEFAULT nextval('public.orders_id_seq'::regclass) NOT NULL,
+    customer_id bigint NOT NULL,
+    promo_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    point_offset bigint DEFAULT 0 NOT NULL,
+    payment_method public.payment_type NOT NULL,
+    delivery_fee numeric DEFAULT 0 NOT NULL,
+    date_time timestamp without time zone NOT NULL,
+    status public.status_type DEFAULT 'in_progress'::public.status_type NOT NULL
+);
+
+
+--
 -- Name: promotions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.promotions (
     id bigint NOT NULL,
+    p_name character varying(300) NOT NULL,
     p_type public.promo_type NOT NULL,
     promocode character varying(200) NOT NULL,
     num_redeemed integer DEFAULT 0 NOT NULL,
     max_redeem integer NOT NULL,
-    start_date date NOT NULL,
-    end_date date NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
     percentage integer NOT NULL,
     CONSTRAINT promotions_end_date CHECK ((end_date > start_date)),
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-15 17:38:56.752682'::timestamp without time zone))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-17 07:34:25.952947'::timestamp without time zone))
 );
 
 
@@ -356,6 +514,19 @@ CREATE SEQUENCE public.restaurants_id_seq
 --
 
 ALTER SEQUENCE public.restaurants_id_seq OWNED BY public.restaurants.id;
+
+
+--
+-- Name: reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reviews (
+    oid bigint NOT NULL,
+    rider_id bigint,
+    rider_rating integer,
+    food_review character varying(1000),
+    CONSTRAINT rider_rating_bounds CHECK (((rider_rating > 0) AND (rider_rating <= 5)))
+);
 
 
 --
@@ -523,11 +694,35 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: comprises comprises_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comprises
+    ADD CONSTRAINT comprises_pkey PRIMARY KEY (oid, food_id);
+
+
+--
 -- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivers delivers_oid_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivers
+    ADD CONSTRAINT delivers_oid_key UNIQUE (oid);
+
+
+--
+-- Name: delivers delivers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivers
+    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid, rider_id);
 
 
 --
@@ -587,11 +782,27 @@ ALTER TABLE ONLY public.menu_sections
 
 
 --
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (oid);
+
+
+--
 -- Name: promotions promotions_id_p_type_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.promotions
     ADD CONSTRAINT promotions_id_p_type_key UNIQUE (id, p_type);
+
+
+--
+-- Name: promotions promotions_p_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_p_name_key UNIQUE (p_name);
 
 
 --
@@ -640,6 +851,14 @@ ALTER TABLE ONLY public.restaurants
 
 ALTER TABLE ONLY public.restaurants
     ADD CONSTRAINT restaurants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_pkey PRIMARY KEY (oid);
 
 
 --
@@ -716,6 +935,34 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 
 
 --
+-- Name: comprises comprises_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+
+
+--
+-- Name: delivers delivers_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+
+
+--
+-- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_comprises_total_participation();
+
+
+--
+-- Name: orders orders_delivers_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_delivers_total_participation();
+
+
+--
 -- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -727,6 +974,38 @@ CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.pro
 --
 
 CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_has_promotions_exist();
+
+
+--
+-- Name: comprises comprises_food_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comprises
+    ADD CONSTRAINT comprises_food_id_fkey FOREIGN KEY (food_id) REFERENCES public.foods(id);
+
+
+--
+-- Name: comprises comprises_oid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comprises
+    ADD CONSTRAINT comprises_oid_fkey FOREIGN KEY (oid) REFERENCES public.orders(oid);
+
+
+--
+-- Name: delivers delivers_oid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivers
+    ADD CONSTRAINT delivers_oid_fkey FOREIGN KEY (oid) REFERENCES public.orders(oid) ON DELETE CASCADE;
+
+
+--
+-- Name: delivers delivers_rider_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivers
+    ADD CONSTRAINT delivers_rider_id_fkey FOREIGN KEY (rider_id) REFERENCES public.riders(user_id);
 
 
 --
@@ -810,6 +1089,30 @@ ALTER TABLE ONLY public.menu_sections
 
 
 --
+-- Name: orders orders_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customers(user_id);
+
+
+--
+-- Name: orders orders_promo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_promo_id_fkey FOREIGN KEY (promo_id) REFERENCES public.promotions(id);
+
+
+--
+-- Name: orders orders_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: restaurant_promotions restaurant_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -823,6 +1126,22 @@ ALTER TABLE ONLY public.restaurant_promotions
 
 ALTER TABLE ONLY public.restaurants
     ADD CONSTRAINT restaurants_manager_id_fkey FOREIGN KEY (manager_id) REFERENCES public.managers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: reviews reviews_oid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_oid_fkey FOREIGN KEY (oid) REFERENCES public.orders(oid) ON DELETE CASCADE;
+
+
+--
+-- Name: reviews reviews_rider_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_rider_id_fkey FOREIGN KEY (rider_id) REFERENCES public.riders(user_id);
 
 
 --
@@ -845,6 +1164,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200314022934'),
 ('20200314023756'),
 ('20200314032347'),
-('20200314052139');
+('20200314052139'),
+('20200316113951'),
+('20200316115731'),
+('20200316122828'),
+('20200316125810'),
+('20200316131147'),
+('20200316132202'),
+('20200317070245'),
+('20200317072650');
 
 

@@ -1,9 +1,11 @@
 import React from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
+import PromoItem from '../promotions/PromoItem';
 
 class EligiblePromos extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {promotions: []};
+        this.state = {promotions: null};
     }
 
     componentDidMount() {
@@ -13,7 +15,7 @@ class EligiblePromos extends React.Component {
                 (response) => {
                     const retrieved_promos = response.promos;
                     this.setState({ promotions: retrieved_promos });
-                    console.log("Promos:" + retrieved_promos);
+                    console.log(retrieved_promos);
                 }
             )
             .catch(error => {
@@ -29,15 +31,15 @@ class EligiblePromos extends React.Component {
         } else {
             let promos = this.state.promotions.map((promo) => {
                 return (
-                    <React.Fragment>
-                        <h3>{promo}</h3>
-                    </React.Fragment>
+                    <PromoItem promo={promo}/>
                 )
             })
             return (
                 <div>
                     <h3>Promotions:</h3>
-                    {promos}
+                    <ListGroup style={{ width: 350, marginLeft: "auto", marginRight: "auto" }}>
+                        {promos}
+                    </ListGroup>
                     <a href="customer/promotions">See more promotions</a>
                 </div>
             )

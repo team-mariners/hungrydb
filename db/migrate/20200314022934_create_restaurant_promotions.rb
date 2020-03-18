@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRestaurantPromotions < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TABLE restaurant_promotions (

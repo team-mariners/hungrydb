@@ -49,7 +49,10 @@ Rails.application.routes.draw do
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
     end
-    
+
+    resources :restaurants, except: %i[new edit show destroy]
+    get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
+
     resources :foods, except: [:new, :edit, :show, :destroy]        
     resources :menu_sections, except: [:new, :edit, :show]
 
@@ -68,10 +71,19 @@ Rails.application.routes.draw do
       namespace :restaurants do
         resources :restaurants, only: %i[index]
         get '/:id/menu', to: 'restaurants#menu'
+        get '/:id/reviews', to: 'restaurants#reviews'
       end
 
       namespace :promotions do
-        resources :promotions, only: %[index]
+        resources :promotions, only: %i[index]
+      end
+
+      namespace :orders do
+        resources :orders, only: %i[index create destroy update]
+      end
+
+      namespace :reviews do
+        resources :reviews, only: %i[index create destroy update]
       end
     end
   end

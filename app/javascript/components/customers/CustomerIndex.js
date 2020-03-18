@@ -7,6 +7,7 @@ import OrderHistory from './orderhistory/OrderHistory';
 import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
+import RestaurantReviews from './order/RestaurantReviews';
 
 class Index extends React.Component {
     constructor(props) {
@@ -33,6 +34,8 @@ class Index extends React.Component {
                 <Route exact path={ "/customer/order/:rid/menu" }>
                     <Menu restaurant_id={this.state.chosen_restaurant}/>
                 </Route>
+
+                <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews/>} />
                 
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />

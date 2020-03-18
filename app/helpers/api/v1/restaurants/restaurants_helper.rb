@@ -24,4 +24,20 @@ module Api::V1::Restaurants::RestaurantsHelper
                      ORDER BY F.f_name"
     ActiveRecord::Base.connection.execute(sec_food_query)
   end
+
+  def retrieve_restaurant_name(rid)
+    restaurant_name_query = "SELECT name
+                            FROM Restaurants
+                            WHERE id = #{rid}
+                            LIMIT 1"
+    ActiveRecord::Base.connection.execute(restaurant_name_query)[0]['name']
+  end
+
+  def retrieve_restaurant_reviews(rid)
+    curr_res_review_query = "SELECT R.oid, R.rider_id, R.rider_rating, R.food_review
+                            FROM Reviews R INNER JOIN Orders O
+                                 ON R.oid = O.oid and O.restaurant_id = #{rid}
+                            ORDER BY O.date_time"
+    ActiveRecord::Base.connection.execute(curr_res_review_query)
+  end
 end

@@ -28,7 +28,7 @@ class Menu extends React.Component {
     }
 
     render() {
-        if (this.menu === null) {
+        if (this.state.menu == null) {
             return (
                 <h3>This restaurant is not selling anything at the moment.</h3>
             )
@@ -40,29 +40,35 @@ class Menu extends React.Component {
             for (let section in menuObject) {
                 if (menuObject.hasOwnProperty(section)) {
                     let food_array = menuObject[section];
-                    
+
                     menuArray.push(
                         // Section Header
                         <div className='menu-section-header'>
-                            <br/><br/>
-                            <h2>{ section }</h2>
+                            <br /><br />
+                            <h2>{section}</h2>
                         </div>
                     )
 
                     for (let food of food_array) {
                         menuArray.push(
-                            <MenuItem food={food}/>
+                            <MenuItem food={food} />
                         )
                     }
                 }
             }
-            menuArray.push(<div><br/><br/><br/><br/></div>);
+            menuArray.push(<div><br /><br /><br /><br /></div>);
 
-            return (
-                <div className='menu-container'>
-                    {menuArray}
-                </div>
-            )
+            if (Object.keys(menuObject).length == 0) {
+                return (
+                    <h3>This restaurant is not selling anything at the moment.</h3>
+                )
+            } else {
+                return (
+                    <div className='menu-container'>
+                        {menuArray}
+                    </div>
+                )
+            }
         }
     }
 }

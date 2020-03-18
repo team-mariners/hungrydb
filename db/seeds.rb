@@ -195,12 +195,12 @@ ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
-    VALUES ('restaurant test', 'restaurant', 'RES10', 1, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 10);"
+    VALUES ('restaurant test', 'restaurant', 'RES10', 1, 'now', '2020/12/30'::timestamp, 10);"
 )
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
-    VALUES ('fds test', 'fds', 'FDS20', 3, '2020/3/16'::timestamp, '2020/12/30'::timestamp, 20);"
+    VALUES ('fds test', 'fds', 'FDS20', 3, 'now', '2020/12/30'::timestamp, 20);"
 )
 
 test_promo_1 = ActiveRecord::Base.connection.exec_query(
@@ -226,6 +226,49 @@ ActiveRecord::Base.connection.exec_query(
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO fds_promotions(promotion_id, p_type)
     VALUES (#{test_promo_2['id']}, '#{test_promo_2['p_type']}');"
+)
+
+ActiveRecord::Base.connection.commit_db_transaction
+
+# ------------------------------------------- Orders/Reviews ---------------------------------------------------------
+ActiveRecord::Base.connection.begin_db_transaction
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
+                        payment_method, delivery_fee, date_time, status)
+    VALUES (1, 1, 1, 3, 'cash', 2.5, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+)
+
+test_order_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT oid FROM Orders
+    WHERE status = 'complete'
+    LIMIT 1"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Delivers(oid, rider_id, customer_location, order_time,
+                          depart_to_restaurant_time, arrive_at_restaurant_time,
+                          depart_to_customer_time, arrive_at_customer_time)
+    VALUES (#{test_order_1['oid']}, #{testRider.id}, 'Somewhere in Singapore ¯\_(ツ)_/¯',
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '5 min',
+            CURRENT_TIMESTAMP + INTERVAL '10 min', CURRENT_TIMESTAMP + INTERVAL '15 min',
+            CURRENT_TIMESTAMP + INTERVAL '1 hour');"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Comprises(oid, food_id, quantity)
+    VALUES (#{test_order_1['oid']}, #{test_food_2['id']}, 2);"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Comprises(oid, food_id, quantity)
+    VALUES (#{test_order_1['oid']}, #{test_food_4['id']}, 1);"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Reviews(oid, rider_id, rider_rating, food_review)
+    VALUES (#{test_order_1['oid']}, #{testRider.id}, 4,
+            'Delicious! But where''s the L A M B S A U C E');"
 )
 
 ActiveRecord::Base.connection.commit_db_transaction

@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import ReviewItem from '../reviews/ReviewItem';
 
 class LastReview extends React.Component {
     constructor(props) {
@@ -7,17 +8,17 @@ class LastReview extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/customer/customer.json')
+        fetch('/api/v1/reviews/reviews.json')
             .then(res => res.json())
             .then(
                 (response) => {
-                    retrieved_last_review = response.last_review[0];
-                    this.setState({ lastOrder: retrieved_last_review });
-                    console.log("Last Review: " + retrieved_last_review);
+                    let retrieved_last_review = response.reviews[0];
+                    this.setState({ lastReview: retrieved_last_review });
+                    console.log(retrieved_last_review);
                 }
             )
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -30,7 +31,7 @@ class LastReview extends React.Component {
             return (
                 <React.Fragment>
                     <h3>Previous Review:</h3>
-                    <h4>{this.state.lastOrder}</h4>
+                    <ReviewItem review={this.state.lastReview} nameShown={"restaurant"}/>
                     <a href="customer/reviews">See more reviews</a>
                 </React.Fragment>
             )

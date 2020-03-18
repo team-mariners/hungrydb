@@ -10,10 +10,10 @@ const CustomerNavBar = () => {
     return (
         <AppBar isLoggedIn={true}>
             <Nav.Link as={NavLink} to="/customer/order" style={navLinkstyle}>ORDER</Nav.Link>
+            <Nav.Link as={NavLink} to="/customer/cart" style={navLinkstyle}>CART</Nav.Link>
             <Nav.Link as={NavLink} to="/customer/history" style={navLinkstyle}>History</Nav.Link>
             <Nav.Link as={NavLink} to="/customer/reviews" style={navLinkstyle}>Reviews</Nav.Link>
             <Nav.Link as={NavLink} to="/customer/promotions" style={navLinkstyle}>Promotions</Nav.Link>
-            <Nav.Link as={NavLink} to="/customer/cart" style={navLinkstyle}>Cart</Nav.Link>
         </AppBar>
     )
 }

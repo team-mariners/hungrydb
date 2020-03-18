@@ -9,6 +9,7 @@ class RestaurantSelection extends React.Component {
         super(props);
         this.restaurant = this.props.res;
         this.menu_url = "/customer/order/" + this.restaurant.id + "/menu";
+        this.review_url = "/restaurants/" + this.restaurant.id + "/reviews";
     }
 
     selectRestaurant() {
@@ -19,25 +20,28 @@ class RestaurantSelection extends React.Component {
 
     render() {
         return (
-            <div className='restaurant-media' onClick={() => this.selectRestaurant()}>
-                <Link to={this.menu_url} className='restaurant-media-link' >
-                    <Media>
-                        <img
-                            width={120}
-                            height={120}
-                            className="align-self-center mr-3"
-                            src={placeholderPic}
-                            alt="Generic placeholder"
-                        />
-                        <Media.Body>
-                            <h5 />
-                            <h3>{this.restaurant.name}</h3>
-                            <p>{this.restaurant.address}</p>
-                            <h5>Min Order: {this.restaurant.min_order_cost}</h5>
-                        </Media.Body>
-                    </Media>
-                </Link>
-            </div>
+            <React.Fragment>
+                <div className='restaurant-media' onClick={() => this.selectRestaurant()}>
+                    <Link to={this.menu_url} className='restaurant-media-link' >
+                        <Media>
+                            <img
+                                width={130}
+                                height={130}
+                                className="align-self-center mr-3"
+                                src={placeholderPic}
+                                alt="Generic placeholder"
+                            />
+                            <Media.Body>
+                                <h5 />
+                                <h3>{this.restaurant.name}</h3>
+                                <p>{this.restaurant.address}</p>
+                                <h5>Min Order: {this.restaurant.min_order_cost}</h5>
+                            </Media.Body>
+                        </Media>
+                    </Link>
+                </div>
+                <a href={this.review_url}>See Reviews</a>
+            </React.Fragment>
         )
     }
 }

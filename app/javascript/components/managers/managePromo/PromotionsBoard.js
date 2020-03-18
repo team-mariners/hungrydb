@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import PromotionTabs from './PromotionsTabs';
 import PromotionsList from './PromotionsList';
 
-const Promotions = (props) => {
+const PromotionsBoard = (props) => {
     return (
         <Card>
             <Card.Header>
@@ -14,4 +14,4 @@ const Promotions = (props) => {
     )
 };
 
-export default Promotions;
+export default PromotionsBoard;

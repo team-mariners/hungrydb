@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Promotions from './managePromo/Promotions';
+import PromotionsBoard from './managePromo/PromotionsBoard';
 import ToolBar from './managePromo/ToolBar';
 
 const ManagePromo = () => {
@@ -21,7 +21,7 @@ const ManagePromo = () => {
         <div className="p-3">
             <h1>Promotions</h1>
             <ToolBar/>
-            <Promotions promotions={promotions}/>
+            <PromotionsBoard promotions={promotions}/>
         </div>
     )
 };

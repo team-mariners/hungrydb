@@ -4,10 +4,12 @@ module UsersHelper
   end
 
   def user_has_role?(userid, role)
-    user = User.find_by(id: userid)
-    rolelist = user.roles.split(',')
+    user_role = ActiveRecord::Base.connection.exec_query(
+      "SELECT roles FROM users
+      WHERE id = #{user.id}"
+    ).to_a[0]
 
-    if rolelist.include?(role)
+    if (role == user_role)
       return true
     else
       return false
@@ -26,12 +28,15 @@ module UsersHelper
   end
 
   def get_user_id(username)
-    user = User.find_by(username: username)
+    userid = ActiveRecord::Base.connection.exec_query(
+      "SELECT id FROM users
+      WHERE username = #{username}"
+    ).to_a[0]
 
-    if user == nil
+    if userid == nil
       return false
     else
-      return user.id
+      return userid
     end
   end
 
@@ -50,9 +55,10 @@ module UsersHelper
     elsif !is_valid_role?(role)
       return false
     else
-      return role.capitalize.constantize.find_by(
-        user_id: userid
-      )
+      return ActiveRecord::Base.connection.exec_query(
+        "SELECT * FROM #{role}
+        WHERE user_id = #{userid}"
+      ).to_a[0]
     end
   end
 end

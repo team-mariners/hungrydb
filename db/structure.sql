@@ -99,7 +99,7 @@ CREATE FUNCTION public.check_promotions_constraint() RETURNS trigger
 
 CREATE FUNCTION public.comprises_delete_orders_constraint() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$    
+    AS $$
       BEGIN
         IF (
           EXISTS (SELECT 1
@@ -119,7 +119,7 @@ CREATE FUNCTION public.comprises_delete_orders_constraint() RETURNS trigger
 
 CREATE FUNCTION public.delivers_delete_orders_constraint() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$    
+    AS $$
       BEGIN
         IF (
           EXISTS (SELECT 1
@@ -139,7 +139,7 @@ CREATE FUNCTION public.delivers_delete_orders_constraint() RETURNS trigger
 
 CREATE FUNCTION public.orders_comprises_total_participation() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$    
+    AS $$
       BEGIN
         IF NOT (
           EXISTS (SELECT 1
@@ -159,7 +159,7 @@ CREATE FUNCTION public.orders_comprises_total_participation() RETURNS trigger
 
 CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$    
+    AS $$
       BEGIN
         IF NOT (
           EXISTS (SELECT 1
@@ -450,7 +450,7 @@ CREATE TABLE public.promotions (
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-17 07:34:25.952947'::timestamp without time zone))
+    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-18 11:35:41.689732'::timestamp without time zone))
 );
 
 

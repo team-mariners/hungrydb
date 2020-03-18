@@ -7,7 +7,7 @@ const PromotionsBoard = (props) => {
     return (
         <Card>
             <Card.Header>
-                <PromotionTabs />
+                <PromotionTabs {...props}/>
             </Card.Header>
             <PromotionsList {...props}/>
         </Card>

@@ -230,6 +230,32 @@ ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.commit_db_transaction
 
+# Past promotions
+ActiveRecord::Base.connection.begin_db_transaction
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    VALUES ('Chinese New Year', 'restaurant', 'CNY20', 50, '2020/2/12 00:00', '2020/2/15 00:00', 20);"
+)
+
+test_promo_3 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Promotions
+    WHERE promocode = 'CNY20'"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO restaurant_promotions(promotion_id, p_type)
+    VALUES (#{test_promo_3['id']}, '#{test_promo_3['p_type']}');"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO has_promotions(restaurant_id, restaurant_promotion_id)
+    VALUES (#{test_restaurant_1['id']}, #{test_promo_3['id']});"
+)
+
+ActiveRecord::Base.connection.commit_db_transaction
+
+
 # ------------------------------------------- Orders/Reviews ---------------------------------------------------------
 ActiveRecord::Base.connection.begin_db_transaction
 

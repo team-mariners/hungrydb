@@ -1,9 +1,12 @@
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 
-const PromotionTabs = () => {
+const PromotionTabs = (props) => {
     return (
-        <Nav variant="tabs" defaultActiveKey="ongoing">
+        <Nav variant="tabs"
+            defaultActiveKey={props.promotionsType}
+            onSelect={selectedKey => props.setPromotionsType(selectedKey)}
+        >
             <Nav.Item>
                 <Nav.Link eventKey="ongoing">Ongoing</Nav.Link>
             </Nav.Item>

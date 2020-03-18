@@ -12,6 +12,8 @@ module ApplicationHelper
   end
 
   def format_date_time(date_time)
-    return date_time.strftime("%F, %H:%M")
+    converted_date_time = date_time.in_time_zone
+
+    return converted_date_time.strftime("%F, %H:%M")
   end
 end

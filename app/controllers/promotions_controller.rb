@@ -26,7 +26,7 @@ class PromotionsController < ApplicationController
   end    
 
   def format_promotion_row(row)
-    row["start_date"] = helpers.format_date_time(row["start_date"])
-    row["end_date"] = helpers.format_date_time(row["end_date"])
+    row["start_date"] = row["start_date"].in_time_zone
+    row["end_date"] = row["end_date"].in_time_zone
   end
 end

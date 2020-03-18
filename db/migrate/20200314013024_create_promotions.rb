@@ -22,9 +22,7 @@ class CreatePromotions < ActiveRecord::Migration[6.0]
       max_redeem integer NOT NULL
         CONSTRAINT promotions_max_redeem
         CHECK(max_redeem >= 0),
-      start_date timestamp without time zone NOT NULL
-        CONSTRAINT promotions_start_date
-        CHECK(start_date >= 'now'),
+      start_date timestamp without time zone NOT NULL,
       end_date timestamp without time zone NOT NULL
         CONSTRAINT promotions_end_date
         CHECK(end_date > start_date),

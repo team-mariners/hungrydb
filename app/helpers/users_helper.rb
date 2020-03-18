@@ -6,10 +6,12 @@ module UsersHelper
   def user_has_role?(userid, role)
     user_role = ActiveRecord::Base.connection.exec_query(
       "SELECT roles FROM users
-      WHERE id = #{user.id}"
-    ).to_a[0]
+      WHERE id = #{userid}"
+    ).first
 
-    if (role == user_role)
+    if (user_role == nil)
+      return false
+    elsif (role == user_role['roles'])
       return true
     else
       return false
@@ -31,12 +33,12 @@ module UsersHelper
     userid = ActiveRecord::Base.connection.exec_query(
       "SELECT id FROM users
       WHERE username = #{username}"
-    ).to_a[0]
+    ).first
 
     if userid == nil
       return false
     else
-      return userid
+      return userid['id']
     end
   end
 
@@ -56,7 +58,7 @@ module UsersHelper
       return false
     else
       return ActiveRecord::Base.connection.exec_query(
-        "SELECT * FROM #{role}
+        "SELECT * FROM #{role}s
         WHERE user_id = #{userid}"
       ).to_a[0]
     end

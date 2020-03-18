@@ -23,10 +23,15 @@ module AdminsHelper
         current_role = ActiveRecord::Base.connection.exec_query(
             "SELECT roles FROM users
             WHERE id = #{userid};"
-        ).to_a[0]
+        ).first
+
+        if current_role == nil
+            return false
+        end
 
         ActiveRecord::Base.connection.exec_query(
-            "INSERT INTO #{role}s(id) VALUES (#{userid});"
+            "INSERT INTO #{role}s(user_id, created_at, updated_at) VALUES
+            (#{userid}, 'now', 'now');"
         )
 
         ActiveRecord::Base.connection.exec_query(
@@ -35,8 +40,8 @@ module AdminsHelper
         )
 
         ActiveRecord::Base.connection.exec_query(
-            "DELETE FROM #{current_role}s
-            WHERE id = #{userid};"
+            "DELETE FROM #{current_role['roles']}s
+            WHERE user_id = #{userid};"
         )
 
         return true
@@ -46,42 +51,42 @@ module AdminsHelper
     def get_users_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM users"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_admins_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM admins"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_managers_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM managers"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_riders_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM riders"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_customers_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM customers"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_restaurants_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM restaurants"
-        ).to_a[0]
+        ).first['count']
     end
 
     def get_food_count
         return ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) FROM foods"
-        ).to_a[0]
+        ).first['count']
     end
 end

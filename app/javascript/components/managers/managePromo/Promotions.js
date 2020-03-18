@@ -3,13 +3,13 @@ import Card from 'react-bootstrap/Card';
 import PromotionTabs from './PromotionsTabs';
 import PromotionsList from './PromotionsList';
 
-const Promotions = () => {
+const Promotions = (props) => {
     return (
         <Card>
             <Card.Header>
                 <PromotionTabs />
             </Card.Header>
-            <PromotionsList />
+            <PromotionsList {...props}/>
         </Card>
     )
 };

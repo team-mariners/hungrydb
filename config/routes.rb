@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
     resources :foods, except: [:new, :edit, :show, :destroy]        
     resources :menu_sections, except: [:new, :edit, :show]
+    resources :promotions, except: [:new, :edit, :show]
 
     put '/foods/deactivate/:id', to: 'foods#deactivate'
   end

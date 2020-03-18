@@ -2,9 +2,11 @@
 if params.has_key?(:id)
     rolesUsername = get_user_name(params[:id])
     rolesUserrole = get_user_role(params[:id])
+    rolesAvailable = get_role_list
 else
     rolesUsername = nil
     rolesUserrole = nil
+    rolesAvailable = nil
 end
 
 react_component(
@@ -14,6 +16,7 @@ react_component(
     statistics: get_statistics,
     params: params,
     rolesUsername: rolesUsername,
-    rolesUserrole: rolesUserrole
+    rolesUserrole: rolesUserrole,
+    rolesAvailable: rolesAvailable
 )
 %>

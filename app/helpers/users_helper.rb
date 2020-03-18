@@ -11,9 +11,13 @@ module UsersHelper
     end
   end
 
-  def is_valid_role?(role)
+  def get_role_list
     # This list has to be updated manually if new roles are introduced
-    rolelist = ["customer", "rider", "manager", "admin"]
+    return ["customer", "rider", "manager", "admin"]
+  end
+
+  def is_valid_role?(role)
+    rolelist = get_role_list
 
     if rolelist.include?(role)
       return true

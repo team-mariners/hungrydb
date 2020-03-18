@@ -35,10 +35,55 @@ const Roles = (props) => {
         formik.setSubmitting(false);
     }
 
+    const handleRole = (values, formik) => {
+        console.log(values);
+
+        formik.setSubmitting(false);
+    }
+
     const displayUserRoleEdit = () => {
         if (props.userid != null) {
+            const roles = props.rolesAvailable.filter((value, index, arr) => {
+                return value != props.userrole;
+            })
+            const options = roles.map((value) => {
+                return (<option>{value}</option>);
+            })
+
             return (
-                <p>User "{props.username}" with userid {props.userid} currently has the role: {props.userrole}</p>
+                <React.Fragment>
+                    <p>User "{props.username}" with userid {props.userid} currently has the role: {props.userrole}</p>
+                    <Formik
+                        validationSchema={validation}
+                        initialValues={initialVals}
+                        onSubmit={handleRole}
+                    >
+                        {({
+                            handleSubmit,
+                            handleChange,
+                            values,
+                            errors,
+                            touched,
+                            isSubmitting
+                        }) => (
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group as={Row} controlId="formRole">
+                                <Form.Label column sm={2}>
+                                    Select new role:
+                                </Form.Label>
+                                <Col sm={3}>
+                                    <Form.Control name="role" as="select">
+                                        {options}
+                                    </Form.Control>
+                                </Col>
+                                <Button variant="primary" type="submit" disabled={isSubmitting} sm={1}>
+                                    Go
+                                </Button>
+                            </Form.Group>
+                        </Form>
+                    )}
+                    </Formik>
+                </React.Fragment>
             )
         } else {
             return;
@@ -62,7 +107,7 @@ const Roles = (props) => {
                     isSubmitting
                 }) => (
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group as ={Row} controlId="formUsername">
+                    <Form.Group as={Row} controlId="formUsername">
                         <Form.Label column sm={2}>
                             Enter a username:
                         </Form.Label>
@@ -81,10 +126,10 @@ const Roles = (props) => {
                             Go
                         </Button>
                     </Form.Group>
-                    {displayUserRoleEdit()}
                 </Form>
             )}
             </Formik>
+            {displayUserRoleEdit()}
 
         </React.Fragment>
     )

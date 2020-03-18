@@ -4,7 +4,7 @@ import Promotion from './Promotion';
 
 const PromotionsList = () => {
     return (
-        <ListGroup>
+        <ListGroup variant="flush">
             <ListGroup.Item>
                 <Promotion/>
             </ListGroup.Item>

@@ -13,73 +13,80 @@ module AdminsHelper
         return output
     end
 
-    def give_role(userid, role)
+    def set_role(userid, role)
         if user_has_role?(userid, role)
             return false
         elsif !is_valid_role?(role)
             return false
         end
 
-        user = User.find_by(id: userid)
+        current_role = ActiveRecord::Base.connection.exec_query(
+            "SELECT roles FROM users
+            WHERE id = #{userid};"
+        ).first
 
-        rolelist = user.roles.split(",")
-        rolelist.push(role)
-        roles = rolelist.sort.join(",")
-
-        role.capitalize.constantize.create(
-            user_id: user.id
-        )
-        user.roles = roles
-        user.save
-        return true
-    end
-
-    def remove_role(userid, role)
-        if !user_has_role?(userid, role)
-            return false
-        elsif !is_valid_role?(role)
+        if current_role == nil
             return false
         end
 
-        user = User.find_by(id: userid)
+        ActiveRecord::Base.connection.exec_query(
+            "INSERT INTO #{role}s(user_id, created_at, updated_at) VALUES
+            (#{userid}, 'now', 'now');"
+        )
 
-        rolelist = user.roles.split(",")
-        rolelist.delete(role)
-        roles = rolelist.join(",")
+        ActiveRecord::Base.connection.exec_query(
+            "UPDATE users SET roles = '#{role}'
+            WHERE id = #{userid};"
+        )
 
-        user.roles = roles
-        user.save
-        record = role.capitalize.constantize.find_by(user_id: user.id)
-        record.destroy
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM #{current_role['roles']}s
+            WHERE user_id = #{userid};"
+        )
+
         return true
     end
 
     protected
     def get_users_count
-        return User.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM users"
+        ).first['count']
     end
 
     def get_admins_count
-        return Admin.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM admins"
+        ).first['count']
     end
 
     def get_managers_count
-        return Manager.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM managers"
+        ).first['count']
     end
 
     def get_riders_count
-        return Rider.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM riders"
+        ).first['count']
     end
 
     def get_customers_count
-        return Customer.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM customers"
+        ).first['count']
     end
 
     def get_restaurants_count
-        return Restaurant.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM restaurants"
+        ).first['count']
     end
 
     def get_food_count
-        return Food.all.count
+        return ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM foods"
+        ).first['count']
     end
 end

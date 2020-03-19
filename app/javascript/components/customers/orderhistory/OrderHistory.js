@@ -1,22 +1,24 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
+import ListGroup from 'react-bootstrap/ListGroup';
+import OrderHistoryItem from './OrderHistoryItem'
 
 class OrderHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {orders: []};
+        this.state = {orders: null};
     }
 
     componentDidMount() {
-        axios.get('/api/v1/customer.json')
+        axios.get('/api/v1/orders/orders.json')
             .then(
                 (response) => {
-                    const retrieved_orders = response.data[0].orders
-                    this.setState({ orders: retrieved_orders })
-                    console.log("Order History: " + retrieved_orders)
+                    const retrieved_orders = response.data.orders;
+                    this.setState({ orders: retrieved_orders });
+                    console.log("Order History: " + retrieved_orders);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
     }
 
@@ -28,19 +30,20 @@ class OrderHistory extends React.Component {
         } else {
             let orders = this.state.orders.map((order) => {
                 return (
-                    <React.Fragment>
-                        <h3>{order}</h3>
-                    </React.Fragment>
+                    <OrderHistoryItem order={order} />
                 )
             })
             return (
                 <React.Fragment>
-                    <h3>Your Orders:</h3>
-                    {orders}
+                    <div><br/></div>
+                    <ListGroup style={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}>
+                        {orders}
+                    </ListGroup>
+                    <div><br/></div>
                 </React.Fragment>
             )
         }
     }
 }
 
-export default OrderHistory
+export default OrderHistory;

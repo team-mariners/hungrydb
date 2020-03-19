@@ -11,32 +11,31 @@ import { Typeahead } from 'react-bootstrap-typeahead';
  * initialValues: initialvalues of the form.
  * handleSubmit: function which handles submission of the form.
  * buttonName: name of the submit button
- * foodCategories: an array of all the foodCategories created by the user.
+ * menuSections: an array of all the menuSections created by the user.
  */
 const DishForm = (props) => {
     const schema = yup.object({
         dishName: yup.string().max(100).required(),
-        price: yup.number().min(0).required().test(
+        price: yup.number().min(0).test(
             'Two Decimal Places Test',
             'Price cannot have more than 2 decimal places',
             value => {
-                const remainder = value * 100 - Math.floor(value * 100);
-                const isMaxTwoDp = remainder === 0;
+                if (value == undefined) {
+                    return false;
+                }
+
+                const isMaxTwoDp = value.toString().match(/^[1-9]\d*\.?\d{0,2}$/) !== null;
                 return isMaxTwoDp;
             }
-        ),
+        ).required(),
         dailyLimit: yup.number().integer().min(0).required(),
-        foodCategory: yup.object().required()
+        menuSection: yup.object().required()
     });
 
     console.log(props.initialValues);
 
     const initialValues = { ...props.initialValues };
-    initialValues.foodCategory = null;
-
-    // useEffect(() => {
-    //     initialValues.foodCategory = props.initialValues.foodCategory
-    // }, [])
+    initialValues.menuSection = null;
 
     return (
         <Formik
@@ -105,25 +104,25 @@ const DishForm = (props) => {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Dish Category</Form.Label>
+                            <Form.Label>Menu section</Form.Label>
                             {/* Update the condition of the conditional rendering of the feedback component if you are
                                 changing the invalid condition of Typeahead too! */}
                             <Typeahead
-                                id="food-category-typeahead"
-                                name="foodCategory"
-                                labelKey="name"
-                                options={props.foodCategories}
-                                selected={!!values.foodCategory ? [values.foodCategory] : []}
-                                isInvalid={touched.foodCategory && !!errors.foodCategory}
-                                onChange={(selected) => setFieldValue('foodCategory', selected[0])}
-                                onBlur={() => {setFieldTouched('foodCategory', true)}}
+                                id="menu-section-typeahead"
+                                name="menuSection"
+                                labelKey="ms_name"
+                                options={props.menuSections}
+                                selected={!!values.menuSection ? [values.menuSection] : []}
+                                isInvalid={touched.menuSection && !!errors.menuSection}
+                                onChange={(selected) => setFieldValue('menuSection', selected[0])}
+                                onBlur={() => {setFieldTouched('menuSection', true)}}
                             />
                             <Form.Text className='text-muted'>
-                                Dish category is required and need to be created first.
+                                Menu section is required and need to be created first.
                             </Form.Text>
                             <Form.Text className='text-danger'
-                                style={touched.foodCategory && !!errors.foodCategory ? {} : { display: "none" }}>
-                                Dish category is invalid.
+                                style={touched.menuSection && !!errors.menuSection ? {} : { display: "none" }}>
+                                Menu section is invalid.
                             </Form.Text>
                         </Form.Group>
 

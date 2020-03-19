@@ -36,27 +36,55 @@ Rails.application.routes.draw do
       get 'stats', to: 'managers#index'
       get 'reviews', to: 'managers#index'
       get 'manage_menu', to: 'managers#index'
-      get 'manage_menu/food_category/:id', to: 'managers#index'
+      get 'manage_menu/menu_sections/:id', to: 'managers#index'
       get 'manage_promo', to: 'managers#index'
       get 'manage_info', to: 'managers#index'
     end
 
     scope '/customer' do
       get 'home', to: 'customers#index'
+      get 'order', to: 'customers#order', as: :customer_order_path
+      get 'order/:rid/menu', to: 'customers#order'
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
     end
-    
-    resources :foods, except: [:new, :edit, :show]
-    resources :food_categories, except: [:new, :edit, :show]
+
+    resources :restaurants, except: %i[new edit show destroy]
+    get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
+
+    resources :foods, except: [:new, :edit, :show, :destroy]        
+    resources :menu_sections, except: [:new, :edit, :show]
+
+    put '/foods/deactivate/:id', to: 'foods#deactivate'
   end
 
   # JSON API
   namespace :api do
     namespace :v1 do
-      resources :customer, only: %i[index create destroy update]
-      # [:index, :create, :destroy, :update]
+
+      namespace :customer do
+        resources :customer, only: %i[index create destroy update]
+        # [:index, :create, :destroy, :update]
+      end
+
+      namespace :restaurants do
+        resources :restaurants, only: %i[index]
+        get '/:id/menu', to: 'restaurants#menu'
+        get '/:id/reviews', to: 'restaurants#reviews'
+      end
+
+      namespace :promotions do
+        resources :promotions, only: %i[index]
+      end
+
+      namespace :orders do
+        resources :orders, only: %i[index create destroy update]
+      end
+
+      namespace :reviews do
+        resources :reviews, only: %i[index create destroy update]
+      end
     end
   end
 

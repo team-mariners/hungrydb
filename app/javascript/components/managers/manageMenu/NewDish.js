@@ -19,7 +19,7 @@ const NewDish = (props) => {
         dishName: "",
         price: "",
         dailyLimit: "",
-        foodCategory: null
+        menuSection: null
     };
 
     const handleSubmit = (values) => {
@@ -27,7 +27,7 @@ const NewDish = (props) => {
         const data = getProcessedDishValues(values);
        
         console.log(data);
-        axios.post('/foods',data)
+        axios.post('/foods', data)
             .then((result) => {                
                 console.log(result);
                 props.onDishCreated(result.data);

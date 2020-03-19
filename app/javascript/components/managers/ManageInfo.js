@@ -19,20 +19,13 @@ const ManageInfo = (props) => {
 
                     <tr>
                         <td><b>Minimum Order Cost</b></td>
-                        <td>: $ {parseFloat(props.info.restaurant.minOrderCost).toFixed(2)}</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>Tags</b></td>
-                        <td>: </td>
+                        <td>: $ {parseFloat(props.info.restaurant.min_order_cost).toFixed(2)}</td>
                     </tr>
                 </tbody>
             </Table>
 
-            <Button>Edit Tags</Button>
-
             <footer className="text-muted mt-3">
-                To edit other restaurant information, kindly contact the administrator =D
+                To edit restaurant information, kindly contact the administrator =D
             </footer>
         </div>
     )

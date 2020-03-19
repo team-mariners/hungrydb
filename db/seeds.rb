@@ -6,79 +6,39 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-# Test customer
-testCustomer = User.create(
-    username: 'customer',
-    password: '12345678',
-    email: 'customer@example.com',
-    roles: 'customer'
+# Create test users with multiple roles
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO users(username, encrypted_password, email, roles, created_at, updated_at) VALUES
+    ('customer', '#{Devise::Encryptor.digest(User, "12345678")}', 'customer@example.com', 'customer', 'now', 'now'),
+    ('rider', '#{Devise::Encryptor.digest(User, "12345678")}', 'rider@example.com', 'rider', 'now', 'now'),
+    ('manager', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager@example.com', 'manager', 'now', 'now'),
+    ('manager2', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager2@example.com', 'manager', 'now', 'now'),
+    ('admin', '#{Devise::Encryptor.digest(User, "12345678")}', 'admin@example.com', 'admin', 'now', 'now');"
 )
 
-Customer.create(
-    user_id: testCustomer.id
+# Users with customer role
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO customers(user_id, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now');"
 )
 
-# Test rider
-testRider = User.create(
-    username: 'rider',
-    password: '12345678',
-    email: 'rider@example.com',
-    roles: 'customer,rider'
+# Users with rider role
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO riders(user_id, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'rider'), 'now', 'now');"
 )
 
-Customer.create(
-    user_id: testRider.id
+# Users with manager role
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO managers(user_id, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'manager'), 'now', 'now'),
+    ((SELECT id FROM users WHERE username = 'manager2'), 'now', 'now');"
 )
 
-Rider.create(
-    user_id: testRider.id
-)
-
-# Test restaurant manager
-testManager = User.create(
-    username: 'manager',
-    password: '12345678',
-    email: 'manager@example.com',
-    roles: 'customer,manager'
-)
-
-testManager2 = User.create(
-    username: 'manager2',
-    password: '12345678',
-    email: 'manager2@example.com',
-    roles: 'customer,manager'
-)
-
-Customer.create(
-    user_id: testManager.id
-)
-
-Customer.create(
-    user_id: testManager2.id
-)
-
-Manager.create(
-    user_id: testManager.id
-)
-
-Manager.create(
-    user_id: testManager2.id
-)
-
-# Test administrator
-testAdmin = User.create(
-    username: 'admin',
-    password: '12345678',
-    email: 'admin@example.com',
-    roles: 'customer,admin'
-)
-
-Customer.create(
-    user_id: testAdmin.id
-)
-
-Admin.create(
-    user_id: testAdmin.id
+# Users with admin role
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO admins(user_id, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'admin'), 'now', 'now');"
 )
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------
@@ -137,7 +97,7 @@ test_menu_section_3 = ActiveRecord::Base.connection.exec_query(
 # --------------------------------------------------- Foods ---------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
-    VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"    
+    VALUES ('nasi pataya', 500, 4.5, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"
 )
 
 test_food_1 = ActiveRecord::Base.connection.exec_query(
@@ -148,7 +108,7 @@ test_food_1 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
-    VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"    
+    VALUES ('maggi goreng', 130, 3.2, #{test_restaurant_1["id"]}, #{test_menu_section_1["url_id"]})"
 )
 
 test_food_2 = ActiveRecord::Base.connection.exec_query(
@@ -159,7 +119,7 @@ test_food_2 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
-    VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"    
+    VALUES ('roti prata', 110, 1.2, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"
 )
 
 test_food_3 = ActiveRecord::Base.connection.exec_query(
@@ -170,7 +130,7 @@ test_food_3 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
-    VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"    
+    VALUES ('cheese fries', 200, 3, #{test_restaurant_1["id"]}, #{test_menu_section_2["url_id"]})"
 )
 
 test_food_4 = ActiveRecord::Base.connection.exec_query(
@@ -181,7 +141,7 @@ test_food_4 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO foods(f_name, daily_limit, price, restaurant_id, ms_url_id)
-    VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, #{test_menu_section_3["url_id"]})"    
+    VALUES ('milo dinosaur', 250, 2.10, #{test_restaurant_1["id"]}, #{test_menu_section_3["url_id"]})"
 )
 
 test_food_5 = ActiveRecord::Base.connection.exec_query(
@@ -249,7 +209,7 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time,
                           depart_to_restaurant_time, arrive_at_restaurant_time,
                           depart_to_customer_time, arrive_at_customer_time)
-    VALUES (#{test_order_1['oid']}, #{testRider.id}, 'Somewhere in Singapore ¯\_(ツ)_/¯',
+    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '5 min',
             CURRENT_TIMESTAMP + INTERVAL '10 min', CURRENT_TIMESTAMP + INTERVAL '15 min',
             CURRENT_TIMESTAMP + INTERVAL '1 hour');"
@@ -267,7 +227,7 @@ ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Reviews(oid, rider_id, rider_rating, food_review)
-    VALUES (#{test_order_1['oid']}, #{testRider.id}, 4,
+    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 4,
             'Delicious! But where''s the L A M B S A U C E');"
 )
 

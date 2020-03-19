@@ -14,13 +14,13 @@ const ManagePromo = () => {
 
     // ComponentDidMount: Fetch all promotions of this restaurant
     useEffect(() => {
-        axios.get('/promotions')
+        axios.get('/api/v1/promotions/index_restaurant')
         .then(result => {
             console.log(result)
 
             result.data.forEach(element => {
-                element.start_date = moment.parseZone(element.start_date);
-                element.end_date = moment.parseZone(element.end_date);
+                element.start_datetime = moment.parseZone(element.start_datetime);
+                element.end_datetime = moment.parseZone(element.end_datetime);
             });
 
             setPromotionsAndVisiblePromotions(promotionsType, result.data);
@@ -45,11 +45,11 @@ const ManagePromo = () => {
 
         if (type === 'ongoing') {
             result = promotions.filter(promotion => {
-                return promotion.end_date.isAfter(moment());
+                return promotion.end_datetime.isAfter(moment());
             })
         } else if (type === 'closed') {
             result = promotions.filter(promotion => {
-                return promotion.end_date.isBefore(moment());
+                return promotion.end_datetime.isBefore(moment());
             })
         }
 

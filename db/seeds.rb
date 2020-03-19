@@ -194,12 +194,12 @@ test_food_5 = ActiveRecord::Base.connection.exec_query(
 ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
     VALUES ('restaurant test', 'restaurant', 'RES10', 1, 'now', '2020/12/30'::timestamp, 10);"
 )
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
     VALUES ('fds test', 'fds', 'FDS20', 3, 'now', '2020/12/30'::timestamp, 20);"
 )
 
@@ -234,7 +234,7 @@ ActiveRecord::Base.connection.commit_db_transaction
 ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_date, end_date, percentage)
+    "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
     VALUES ('Chinese New Year', 'restaurant', 'CNY20', 50, '2020/2/12 00:00', '2020/2/15 00:00', 20);"
 )
 

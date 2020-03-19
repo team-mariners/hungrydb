@@ -1,11 +1,12 @@
 import React from 'react';
 import Modal from '../../utilities/Modal';
 import PromotionForm from './PromotionForm';
+import { getProcessedPromotion } from '../../helpers/FormHelpers';
 
 const NewPromotion = (props) => {
     const initialValues = {
         promoName: '',
-        promoCode: '',
+        promocode: '',
         startDateTime: '',
         endDateTime: '',
         percentage: '',
@@ -14,6 +15,8 @@ const NewPromotion = (props) => {
 
     const createPromo = (values) => {
         console.log(values);
+        const data = getProcessedPromotion(values);
+        console.log(data);
     };
 
     return (

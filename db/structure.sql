@@ -429,10 +429,10 @@ CREATE TABLE public.promotions (
     promocode character varying(200) NOT NULL,
     num_redeemed integer DEFAULT 0 NOT NULL,
     max_redeem integer NOT NULL,
-    start_date timestamp with time zone NOT NULL,
-    end_date timestamp with time zone NOT NULL,
+    start_datetime timestamp with time zone NOT NULL,
+    end_datetime timestamp with time zone NOT NULL,
     percentage integer NOT NULL,
-    CONSTRAINT promotions_end_date CHECK ((end_date > start_date)),
+    CONSTRAINT promotions_end_date CHECK ((end_datetime > start_datetime)),
     CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100)))

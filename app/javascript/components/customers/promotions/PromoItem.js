@@ -8,7 +8,7 @@ const PromoItem = (props) => {
                 <h4>{ props.promo.promocode }</h4>
                 <h5>{ props.promo.p_name }</h5>
                 <h5>{ props.promo.percentage }% off</h5>
-                <h5>Ends: { props.promo.end_date.toString().split("T")[0] }</h5>
+                <h5>Ends: { props.promo.end_datetime.toString().split("T")[0] }</h5>
             </ListGroup.Item>
     )
 }

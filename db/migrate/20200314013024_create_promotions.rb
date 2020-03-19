@@ -22,10 +22,10 @@ class CreatePromotions < ActiveRecord::Migration[6.0]
       max_redeem integer NOT NULL
         CONSTRAINT promotions_max_redeem
         CHECK(max_redeem >= 0),
-      start_date timestamp with time zone NOT NULL,
-      end_date timestamp with time zone NOT NULL
+      start_datetime timestamp with time zone NOT NULL,
+      end_datetime timestamp with time zone NOT NULL
         CONSTRAINT promotions_end_date
-        CHECK(end_date > start_date),
+        CHECK(end_datetime > start_datetime),
       percentage integer NOT NULL
         CHECK((percentage >= 0) AND (percentage <= 100)),
       PRIMARY KEY (id),

@@ -11,8 +11,8 @@ const Promotion = (props) => {
             <CardLeftSide>
                 <p><b>Name: </b>{props.promotion.p_name}</p>
                 <p><b>Promo code: </b>{props.promotion.promocode}</p>
-                <p><b>Start date & time: </b>{props.promotion.start_date.format()}</p>
-                <p><b>End date & time: </b>{props.promotion.end_date.format()}</p>
+                <p><b>Start date & time: </b>{props.promotion.start_datetime.format()}</p>
+                <p><b>End date & time: </b>{props.promotion.end_datetime.format()}</p>
             </CardLeftSide>
 
             <CardRightSide>

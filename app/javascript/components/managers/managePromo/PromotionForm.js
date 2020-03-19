@@ -1,6 +1,5 @@
 import React from 'react';
 import { Formik } from 'formik';
-import moment from 'moment-timezone';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import DateTime from 'react-datetime';
@@ -9,7 +8,7 @@ import * as yup from 'yup';
 const PromotionForm = (props) => {
     const schema = yup.object({
         promoName: yup.string().max(300).required(),
-        promoCode: yup.string().max(200).required(),
+        promocode: yup.string().max(200).required(),
         startDateTime: yup.date().min(new Date()).required(),
         endDateTime: yup.date().min(yup.ref('startDateTime')).required(),
         percentage: yup.number().integer().min(0).max(100).required(),
@@ -49,10 +48,10 @@ const PromotionForm = (props) => {
                     <Form.Label>Promo Code</Form.Label>
                     <Form.Control
                         type="text"
-                        name="promoCode"
-                        value={values.promoCode}
+                        name="promocode"
+                        value={values.promocode}
                         onChange={handleChange}
-                        isInvalid={touched.promoCode && !!errors.promoCode}/>
+                        isInvalid={touched.promocode && !!errors.promocode}/>
                 <Form.Text className="text-muted">
                         Required and maximum 200 characters
                 </Form.Text>

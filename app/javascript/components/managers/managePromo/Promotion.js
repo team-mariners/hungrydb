@@ -6,6 +6,12 @@ import CardFooter from '../../utilities/CustomCard/CardFooter';
 import Button from 'react-bootstrap/Button';
 
 const Promotion = (props) => {
+    let editButton = <Button >Edit</Button>;
+
+    if (props.promotionsType === 'closed') {
+        editButton = null;
+    }
+
     return (
         <CustomCard>
             <CardLeftSide>
@@ -22,7 +28,7 @@ const Promotion = (props) => {
             </CardRightSide>
 
             <CardFooter>
-                <Button >Edit</Button>
+                {editButton}
             </CardFooter>
         </CustomCard>
     )

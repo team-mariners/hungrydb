@@ -6,7 +6,7 @@ const PromotionsList = (props) => {
     const promotions = props.promotions.map(promotion => {
         return (
             <ListGroup.Item key={promotion.id}>
-                <Promotion promotion={promotion}/>
+                <Promotion promotion={promotion} {...props}/>
             </ListGroup.Item>
         )
     });

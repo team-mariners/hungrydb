@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
       get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
+      post 'updaterole', to: 'admins#updaterole'
     end
 
     scope '/manager' do

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'roles/:id', to: 'admins#index'
       get 'statistics', to: 'admins#index'
 
+      get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
       post 'updaterole', to: 'admins#updaterole'
     end

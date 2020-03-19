@@ -4,6 +4,7 @@ import axios from 'axios';
 import PromotionsBoard from './managePromo/PromotionsBoard';
 import ToolBar from './managePromo/ToolBar';
 import NewPromotion from './managePromo/NewPromotion';
+import EditPromotion from './managePromo/EditPromotion';
 
 const ManagePromo = (props) => {
     const [promotions, setPromotions] = useState([]);
@@ -11,6 +12,8 @@ const ManagePromo = (props) => {
     const [promotionsType, setPromotionsType] = useState('ongoing');
 
     const [isNewPromoVisible, setIsNewPromoVisible] = useState(false);
+    const [isEditPromoVisible, setIsEditPromoVisibile] = useState(false);
+    const [promotion, setPromotion] = useState(null); // For edit dish
 
     // ComponentDidMount: Fetch all promotions of this restaurant
     useEffect(() => {
@@ -61,12 +64,17 @@ const ManagePromo = (props) => {
         setVisiblePromotions(result);
     };
 
+    const showEditPromo = (promotion) => {
+        setPromotion(promotion);
+        setIsEditPromoVisibile(true);
+    };
+
     const handlePromoCreated = (newPromo) => {
         momentiseDateTime(newPromo);
         const newPromotions = [...promotions, newPromo];       
         setPromotionsAndVisiblePromotions(newPromotions);
         props.alerts.showSuccessAlert("New promotion created! =D");
-    };
+    };    
 
     return (
         <div className="p-3">
@@ -76,12 +84,17 @@ const ManagePromo = (props) => {
             <PromotionsBoard
                 promotions={visibilePromotions}
                 promotionsType={promotionsType}
-                setPromotionsType={setPromotionsType}/>
+                setPromotionsType={setPromotionsType}
+                showEditPromo={showEditPromo}/>
             <NewPromotion
                 show={isNewPromoVisible}
                 onClose={() => setIsNewPromoVisible(false)}
                 onPromoCreated={handlePromoCreated}
                 {...props}/>
+            <EditPromotion
+                show={isEditPromoVisible}
+                onClose={() => setIsEditPromoVisibile(false)}
+                promotion={promotion}/>
         </div>
     )
 };

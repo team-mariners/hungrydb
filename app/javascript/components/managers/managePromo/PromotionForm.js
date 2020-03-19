@@ -4,16 +4,25 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import DateTime from 'react-datetime';
 import * as yup from 'yup';
+import moment from 'moment-timezone';
 
 const PromotionForm = (props) => {
     const schema = yup.object({
         promoName: yup.string().max(300).required(),
         promocode: yup.string().max(200).required(),
-        startDateTime: yup.date().min(new Date()).required(),
+        startDateTime: yup.date().required(),
         endDateTime: yup.date().min(yup.ref('startDateTime')).required(),
         percentage: yup.number().integer().min(0).max(100).required(),
         maxRedeem: yup.number().integer().min(0).required(),
     });
+
+    const isDisableStartDate = props.isEdit === true && moment.isMoment(props.initialValues.startDateTime)
+        && props.initialValues.startDateTime.isBefore(moment());
+
+    // Enable minimum startDateTime check if the startDateTime field is not disabled
+    if (!isDisableStartDate) {                
+        schema.fields.startDateTime = schema.fields.startDateTime.min(new Date());
+    }
 
     return (
         <Formik
@@ -65,8 +74,10 @@ const PromotionForm = (props) => {
                             onBlur: handleBlur,
                             className: touched.startDateTime && submitCount > 0 && !!errors.startDateTime 
                                 ? "form-control is-invalid"
-                                : "form-control" 
+                                : "form-control",
+                            disabled: isDisableStartDate
                         }}                                 
+                        value={values.startDateTime}
                         onChange={(moment) => setFieldValue('startDateTime', moment)}/>
                     <Form.Text className="text-muted">
                         Required and cannot be in the past.
@@ -81,8 +92,9 @@ const PromotionForm = (props) => {
                             onBlur: handleBlur,
                             className: touched.endDateTime && submitCount > 0 && !!errors.endDateTime 
                                 ? "form-control is-invalid"
-                                : "form-control" 
+                                : "form-control"                             
                         }}                           
+                        value={values.endDateTime}
                         onChange={(moment) => setFieldValue('endDateTime', moment)}/>
                     <Form.Text className="text-muted">
                         Required

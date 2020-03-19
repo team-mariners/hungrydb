@@ -6,7 +6,7 @@ import CardFooter from '../../utilities/CustomCard/CardFooter';
 import Button from 'react-bootstrap/Button';
 
 const Promotion = (props) => {
-    let editButton = <Button >Edit</Button>;
+    let editButton = <Button onClick={() => props.showEditPromo(props.promotion)}>Edit</Button>;
 
     if (props.promotionsType === 'closed') {
         editButton = null;

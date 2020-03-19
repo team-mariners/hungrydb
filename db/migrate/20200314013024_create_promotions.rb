@@ -21,13 +21,11 @@ class CreatePromotions < ActiveRecord::Migration[6.0]
         CHECK((num_redeemed >= 0) AND (num_redeemed <= max_redeem)),
       max_redeem integer NOT NULL
         CONSTRAINT promotions_max_redeem
-        CHECK(max_redeem >= 0),
-      start_date timestamp without time zone NOT NULL
-        CONSTRAINT promotions_start_date
-        CHECK(start_date >= 'now'),
-      end_date timestamp without time zone NOT NULL
+        CHECK((max_redeem >= 0) AND (max_redeem >= num_redeemed)),
+      start_datetime timestamp with time zone NOT NULL,
+      end_datetime timestamp with time zone NOT NULL
         CONSTRAINT promotions_end_date
-        CHECK(end_date > start_date),
+        CHECK(end_datetime > start_datetime),
       percentage integer NOT NULL
         CHECK((percentage >= 0) AND (percentage <= 100)),
       PRIMARY KEY (id),

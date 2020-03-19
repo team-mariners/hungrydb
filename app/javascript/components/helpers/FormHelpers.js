@@ -17,6 +17,20 @@ const getProcessedMenuSection = (values) => {
     }
 };
 
+const getProcessedPromotion = (values) => {
+    return {
+        promotion : {
+            p_name: values.promoName.trim(),
+            promocode: values.promocode.trim(),
+            percentage: parseInt(values.percentage),
+            max_redeem: parseInt(values.maxRedeem),
+            start_datetime: values.startDateTime.format(),
+            end_datetime: values.endDateTime.format()
+        }
+    }
+}
+
+
 const getErrorMessage = (error) => {
     if (error.response != undefined) {
         return error.response.data.errors;
@@ -25,4 +39,4 @@ const getErrorMessage = (error) => {
     }
 }
 
-export { getProcessedDishValues, getProcessedMenuSection, getErrorMessage };
+export { getProcessedDishValues, getProcessedMenuSection, getProcessedPromotion, getErrorMessage };

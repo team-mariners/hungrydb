@@ -57,6 +57,7 @@ Rails.application.routes.draw do
 
     resources :foods, except: [:new, :edit, :show, :destroy]
     resources :menu_sections, except: [:new, :edit, :show]
+    resources :promotions, except: [:new, :edit, :show]
 
     put '/foods/deactivate/:id', to: 'foods#deactivate'
   end
@@ -77,7 +78,8 @@ Rails.application.routes.draw do
       end
 
       namespace :promotions do
-        resources :promotions, only: %i[index]
+        resources :promotions, only: %i[index create update]
+        get '/index_restaurant', to: 'promotions#index_restaurant'        
       end
 
       namespace :orders do

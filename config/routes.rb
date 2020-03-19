@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'roles/:id', to: 'admins#index'
       get 'statistics', to: 'admins#index'
 
+      get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
     end
 
@@ -53,7 +54,7 @@ Rails.application.routes.draw do
     resources :restaurants, except: %i[new edit show destroy]
     get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
 
-    resources :foods, except: [:new, :edit, :show, :destroy]        
+    resources :foods, except: [:new, :edit, :show, :destroy]
     resources :menu_sections, except: [:new, :edit, :show]
 
     put '/foods/deactivate/:id', to: 'foods#deactivate'

@@ -9,86 +9,120 @@ import axios from 'axios';
 
 const Roles = (props) => {
     const validation = Yup.object({
-        identifier: Yup.string()
+        username: Yup.string()
             .matches(/^\w+$/)
-            .required()
+            .required(),
+        role: Yup.string()
+            .matches(/^\w+$/)
     });
 
     const initialVals = {
-        identifier: (props.username == null) ? '' : props.username
+        username: (props.username == null) ? '' : props.username
     };
 
-    const handleUsername = (values, formik) => {
-        axios.post('/admin/getuserid', {
-            username: values.identifier
-        }).then((response) => {
-            if (response.data == false) {
-                const message = "This user does not exist!";
-                console.log(message);
-            } else {
-                window.location.assign('/admin/roles/' + response.data);
-            }
-        }).catch((error) => {
-            console.log(error);
-        });
+    const handleSubmit = (values, formik) => {
+        if (values.hasOwnProperty("role") && values.role != '') {
+            axios.post('/admin/updaterole', {
+                userid: props.userid,
+                oldrole: props.userrole,
+                newrole: values.role
+            }).then((response) => {
+                if (response.data == false) {
+                    const message = "Could not update the user's role!";
+                    console.log(message);
+                } else {
+                    window.location.assign('/admin/roles');
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        } else {
+            axios.post('/admin/getuserid', {
+                username: values.username
+            }).then((response) => {
+                if (response.data == false) {
+                    const message = "This user does not exist!";
+                    console.log(message);
+                } else {
+                    window.location.assign('/admin/roles/' + response.data);
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
         formik.setSubmitting(false);
     }
 
-    const handleRole = (values, formik) => {
-        console.log(values);
+    const displayUsername = (formik) => {return (
+        <Form onSubmit={formik.handleSubmit}>
+            <Form.Group as={Row} controlId="formUsername">
+                <Form.Label column sm={2}>
+                    Enter a username:
+                </Form.Label>
+                <Col sm={3}>
+                    <Form.Control
+                        type="text"
+                        name="username"
+                        value={formik.values.username}
+                        onChange={formik.handleChange}
+                        isInvalid={formik.touched.identifier && !!formik.errors.identifier}
+                        disabled={props.userid != null}
+                    />
+                </Col>
+                <Form.Control.Feedback type="invalid">Username is invalid.</Form.Control.Feedback>
+            </Form.Group>
+        </Form>
+    )}
 
-        formik.setSubmitting(false);
-    }
-
-    const displayUserRoleEdit = () => {
+    const displayNewRole = (formik) => {
         if (props.userid != null) {
             const roles = props.rolesAvailable.filter((value, index, arr) => {
                 return value != props.userrole;
             })
+            roles.unshift("");
             const options = roles.map((value) => {
-                return (<option>{value}</option>);
+                return (<option value={value}>{value}</option>);
             })
 
             return (
-                <React.Fragment>
-                    <p>User "{props.username}" with userid {props.userid} currently has the role: {props.userrole}</p>
-                    <Formik
-                        validationSchema={validation}
-                        initialValues={initialVals}
-                        onSubmit={handleRole}
-                    >
-                        {({
-                            handleSubmit,
-                            handleChange,
-                            values,
-                            errors,
-                            touched,
-                            isSubmitting
-                        }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group as={Row} controlId="formRole">
-                                <Form.Label column sm={2}>
-                                    Select new role:
-                                </Form.Label>
-                                <Col sm={3}>
-                                    <Form.Control name="role" as="select">
-                                        {options}
-                                    </Form.Control>
-                                </Col>
-                                <Button variant="primary" type="submit" disabled={isSubmitting} sm={1}>
-                                    Go
-                                </Button>
-                            </Form.Group>
-                        </Form>
-                    )}
-                    </Formik>
-                </React.Fragment>
+            <Form.Group as={Row} controlId="formRole">
+                <Form.Label column sm={2}>
+                    Select new role:
+                </Form.Label>
+                <Col sm={3}>
+                    <Form.Control name="role" value={formik.values.role} onChange={formik.handleChange} as="select">
+                        {options}
+                    </Form.Control>
+                </Col>
+            </Form.Group>
             )
         } else {
             return;
         }
     }
+
+    const displaySubmitButton = (formik) => {
+        return (
+            <React.Fragment>
+                <Button variant="primary" type="submit" disabled={formik.isSubmitting} sm={1}>
+                    Go
+                </Button>
+                <span sm={1}>&nbsp;&nbsp;</span>
+                <Button variant="secondary" sm={1} href="/admin/roles">
+                    Cancel
+                </Button>
+            </React.Fragment>
+        )
+    }
+
+    const displayForm = (formik) => {return (
+        <Form onSubmit={formik.handleSubmit}>
+            {displayUsername(formik)}
+            {displayNewRole(formik)}
+            {displaySubmitButton(formik)}
+        </Form>
+    )}
 
     return (
         <React.Fragment>
@@ -96,41 +130,10 @@ const Roles = (props) => {
             <Formik
                 validationSchema={validation}
                 initialValues={initialVals}
-                onSubmit={handleUsername}
+                onSubmit={handleSubmit}
             >
-                {({
-                    handleSubmit,
-                    handleChange,
-                    values,
-                    errors,
-                    touched,
-                    isSubmitting
-                }) => (
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group as={Row} controlId="formUsername">
-                        <Form.Label column sm={2}>
-                            Enter a username:
-                        </Form.Label>
-                        <Col sm={3}>
-                            <Form.Control
-                                type="text"
-                                name="identifier"
-                                value={values.identifier}
-                                onChange={handleChange}
-                                isInvalid={touched.identifier && !!errors.identifier}
-                            />
-                        </Col>
-                        <Form.Control.Feedback type="invalid">Username is invalid.</Form.Control.Feedback>
-
-                        <Button variant="primary" type="submit" disabled={isSubmitting} sm={1}>
-                            Go
-                        </Button>
-                    </Form.Group>
-                </Form>
-            )}
+                {(props) => displayForm(props)}
             </Formik>
-            {displayUserRoleEdit()}
-
         </React.Fragment>
     )
 };

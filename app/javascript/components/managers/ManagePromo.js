@@ -5,7 +5,7 @@ import PromotionsBoard from './managePromo/PromotionsBoard';
 import ToolBar from './managePromo/ToolBar';
 import NewPromotion from './managePromo/NewPromotion';
 
-const ManagePromo = () => {
+const ManagePromo = (props) => {
     const [promotions, setPromotions] = useState([]);
     const [visibilePromotions, setVisiblePromotions] = useState([]);
     const [promotionsType, setPromotionsType] = useState('ongoing');
@@ -18,36 +18,40 @@ const ManagePromo = () => {
         .then(result => {
             console.log(result)
 
-            result.data.forEach(element => {
-                element.start_datetime = moment.parseZone(element.start_datetime);
-                element.end_datetime = moment.parseZone(element.end_datetime);
+            result.data.forEach(promotion => {
+                momentiseDateTime(promotion);
             });
 
-            setPromotionsAndVisiblePromotions(promotionsType, result.data);
+            setPromotionsAndVisiblePromotions(result.data);
             console.log(result.data);
         }).catch(error => {
             console.log(error);
         });
     }, []);
 
-    const handleSetPromotionsType = (type) => {
-        setPromotionsType(type);
-        filterAndSetVisiblePromotions(type, promotions);
-    };
+    // Handle change in promotions type (view)
+    useEffect(() => {
+        filterAndSetVisiblePromotions(promotions);
+    }, [promotionsType]);
 
-    const setPromotionsAndVisiblePromotions = (type, promotions) => {
-        setPromotions(promotions);
-        filterAndSetVisiblePromotions(type, promotions);
+    const momentiseDateTime = (promotion) => {
+        promotion.start_datetime = moment.parseZone(promotion.start_datetime);
+        promotion.end_datetime = moment.parseZone(promotion.end_datetime);
     }
 
-    const filterAndSetVisiblePromotions = (type, promotions) => {
+    const setPromotionsAndVisiblePromotions = (promotions) => {
+        setPromotions(promotions);
+        filterAndSetVisiblePromotions(promotions);
+    };
+
+    const filterAndSetVisiblePromotions = (promotions) => {
         let result = [];
 
-        if (type === 'ongoing') {
+        if (promotionsType === 'ongoing') {
             result = promotions.filter(promotion => {
                 return promotion.end_datetime.isAfter(moment());
             })
-        } else if (type === 'closed') {
+        } else if (promotionsType === 'closed') {
             result = promotions.filter(promotion => {
                 return promotion.end_datetime.isBefore(moment());
             })
@@ -55,7 +59,14 @@ const ManagePromo = () => {
 
         console.log(result);
         setVisiblePromotions(result);
-    }
+    };
+
+    const handlePromoCreated = (newPromo) => {
+        momentiseDateTime(newPromo);
+        const newPromotions = [...promotions, newPromo];       
+        setPromotionsAndVisiblePromotions(newPromotions);
+        props.alerts.showSuccessAlert("New promotion created! =D");
+    };
 
     return (
         <div className="p-3">
@@ -65,10 +76,12 @@ const ManagePromo = () => {
             <PromotionsBoard
                 promotions={visibilePromotions}
                 promotionsType={promotionsType}
-                setPromotionsType={handleSetPromotionsType}/>
+                setPromotionsType={setPromotionsType}/>
             <NewPromotion
                 show={isNewPromoVisible}
-                onClose={() => setIsNewPromoVisible(false)}/>
+                onClose={() => setIsNewPromoVisible(false)}
+                onPromoCreated={handlePromoCreated}
+                {...props}/>
         </div>
     )
 };

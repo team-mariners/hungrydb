@@ -20,10 +20,10 @@ const getProcessedMenuSection = (values) => {
 const getProcessedPromotion = (values) => {
     return {
         promotion : {
-            p_name: values.promoName,
-            promocode: values.promocode,
-            percentage: values.percentage,
-            max_redeem: values.maxRedeem,
+            p_name: values.promoName.trim(),
+            promocode: values.promocode.trim(),
+            percentage: values.percentage.trim(),
+            max_redeem: values.maxRedeem.trim(),
             start_datetime: values.startDateTime.format(),
             end_datetime: values.endDateTime.format()
         }

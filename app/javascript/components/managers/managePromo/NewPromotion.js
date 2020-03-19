@@ -1,7 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import PromotionForm from './PromotionForm';
-import { getProcessedPromotion } from '../../helpers/FormHelpers';
+import { getProcessedPromotion, getErrorMessage } from '../../helpers/FormHelpers';
 
 const NewPromotion = (props) => {
     const initialValues = {
@@ -17,6 +18,16 @@ const NewPromotion = (props) => {
         console.log(values);
         const data = getProcessedPromotion(values);
         console.log(data);
+
+        axios.post('/api/v1/promotions/promotions', data)        
+        .then(result => {
+            console.log(result);
+            props.onPromoCreated(result.data);            
+        }).catch(error => {
+            props.alerts.showFailureAlert(getErrorMessage(error));
+        }).finally(() => {
+            props.onClose();
+        })
     };
 
     return (

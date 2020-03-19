@@ -47,7 +47,8 @@ const PromotionForm = (props) => {
                         name="promoName"
                         value={values.promoName}
                         onChange={handleChange}
-                        isInvalid={touched.promoName && !!errors.promoName}/>
+                        isInvalid={touched.promoName && !!errors.promoName}
+                        disabled={props.isEdit}/>
                     <Form.Text className="text-muted">
                         Required and maximum 300 characters
                     </Form.Text>                    
@@ -60,7 +61,8 @@ const PromotionForm = (props) => {
                         name="promocode"
                         value={values.promocode}
                         onChange={handleChange}
-                        isInvalid={touched.promocode && !!errors.promocode}/>
+                        isInvalid={touched.promocode && !!errors.promocode}
+                        disabled={props.isEdit}/>
                 <Form.Text className="text-muted">
                         Required and maximum 200 characters
                 </Form.Text>
@@ -80,7 +82,7 @@ const PromotionForm = (props) => {
                         value={values.startDateTime}
                         onChange={(moment) => setFieldValue('startDateTime', moment)}/>
                     <Form.Text className="text-muted">
-                        Required and cannot be in the past.
+                        Required and cannot be in the past
                     </Form.Text>
                 </Form.Group>
 
@@ -97,7 +99,7 @@ const PromotionForm = (props) => {
                         value={values.endDateTime}
                         onChange={(moment) => setFieldValue('endDateTime', moment)}/>
                     <Form.Text className="text-muted">
-                        Required
+                        Required and cannot be before start date and time 
                     </Form.Text>
                 </Form.Group>
 
@@ -108,7 +110,8 @@ const PromotionForm = (props) => {
                         name="percentage"
                         value={values.percentage}
                         onChange={handleChange}
-                        isInvalid={touched.percentage && !!errors.percentage}/>
+                        isInvalid={touched.percentage && !!errors.percentage}
+                        disabled={props.isEdit}/>
                     <Form.Text className="text-muted">
                         Required and can only be integer, e.g. 10
                     </Form.Text>

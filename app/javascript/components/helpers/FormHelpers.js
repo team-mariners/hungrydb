@@ -22,8 +22,8 @@ const getProcessedPromotion = (values) => {
         promotion : {
             p_name: values.promoName.trim(),
             promocode: values.promocode.trim(),
-            percentage: values.percentage.trim(),
-            max_redeem: values.maxRedeem.trim(),
+            percentage: parseInt(values.percentage),
+            max_redeem: parseInt(values.maxRedeem),
             start_datetime: values.startDateTime.format(),
             end_datetime: values.endDateTime.format()
         }

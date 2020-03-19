@@ -433,7 +433,7 @@ CREATE TABLE public.promotions (
     end_datetime timestamp with time zone NOT NULL,
     percentage integer NOT NULL,
     CONSTRAINT promotions_end_date CHECK ((end_datetime > start_datetime)),
-    CONSTRAINT promotions_max_redeem CHECK ((max_redeem >= 0)),
+    CONSTRAINT promotions_max_redeem CHECK (((max_redeem >= 0) AND (max_redeem >= num_redeemed))),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
     CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100)))
 );

@@ -41,6 +41,9 @@ class Api::V1::Promotions::PromotionsController < Api::V1::BaseController
     write(:create)
   end
 
+  def update
+    write(:update)
+  end
 
   private 
 
@@ -51,44 +54,72 @@ class Api::V1::Promotions::PromotionsController < Api::V1::BaseController
     begin
       if type == :create
         promotion = write_create(filtered_params)
+      else type == :update        
+        promotion = write_update(filtered_params)
       end
     
       render json: promotion
     rescue ActiveRecord::RecordNotUnique
       render json: {errors: "Promotion name or promocode already exists!"}, status: 500
     rescue => error
-      render json: {errors: error.message}, status: 500
+      if error.message.include? "promotions_max_redeem"
+        render json: {errors: "Maximum redeem cannot be lesser than number redeemed!"}, status: 500
+      else
+        render json: {errors: error.message}, status: 500
+      end
     end
   end
 
+  # Create a promotion in the database
   def write_create(filtered_params)
     ActiveRecord::Base.connection.begin_db_transaction
 
     ActiveRecord::Base.connection.exec_query(
-        "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
-        VALUES ('#{filtered_params['p_name']}', 'restaurant', '#{filtered_params['promocode']}',
-          #{filtered_params['max_redeem']}, '#{filtered_params['start_datetime']}', '#{filtered_params['end_datetime']}'
-          , #{filtered_params['percentage']});"
+      "INSERT INTO promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
+      VALUES ('#{filtered_params['p_name']}', 'restaurant', '#{filtered_params['promocode']}',
+      #{filtered_params['max_redeem']}, '#{filtered_params['start_datetime']}', '#{filtered_params['end_datetime']}'
+      , #{filtered_params['percentage']});"
     )
 
     new_promo = ActiveRecord::Base.connection.exec_query(
-        "SELECT * FROM Promotions
-        WHERE promocode = '#{filtered_params['promocode']}'"
+      "SELECT * FROM promotions
+      WHERE promocode = '#{filtered_params['promocode']}'"
     ).to_a[0]
 
     ActiveRecord::Base.connection.exec_query(
-        "INSERT INTO restaurant_promotions(promotion_id, p_type)
-        VALUES (#{new_promo['id']}, 'restaurant');"
+      "INSERT INTO restaurant_promotions(promotion_id, p_type)
+      VALUES (#{new_promo['id']}, 'restaurant');"
     )
 
     ActiveRecord::Base.connection.exec_query(
-        "INSERT INTO has_promotions(restaurant_id, restaurant_promotion_id)
-        VALUES (#{@restaurant['id']}, #{new_promo['id']});"
+      "INSERT INTO has_promotions(restaurant_id, restaurant_promotion_id)
+      VALUES (#{@restaurant['id']}, #{new_promo['id']});"
     )
 
     ActiveRecord::Base.connection.commit_db_transaction
 
     return new_promo
+  end
+
+  # Update a promotion in the database
+  def write_update(filtered_params)
+    ActiveRecord::Base.connection.begin_db_transaction
+
+    ActiveRecord::Base.connection.exec_query(
+      "UPDATE promotions
+      SET start_datetime = '#{filtered_params['start_datetime']}', end_datetime = '#{filtered_params['end_datetime']}',
+        max_redeem = #{filtered_params['max_redeem']}
+      WHERE id = #{params[:id]};"
+    )
+
+    edited_promo = ActiveRecord::Base.connection.exec_query(
+      "SELECT * FROM promotions
+      WHERE id = #{params[:id]}"
+    ).to_a[0]
+
+    ActiveRecord::Base.connection.commit_db_transaction
+
+    return edited_promo
   end
 
   def promotions_params

@@ -76,7 +76,7 @@ Rails.application.routes.draw do
       end
 
       namespace :promotions do
-        resources :promotions, only: %i[index create]
+        resources :promotions, only: %i[index create update]
         get '/index_restaurant', to: 'promotions#index_restaurant'        
       end
 

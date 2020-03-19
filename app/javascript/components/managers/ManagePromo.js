@@ -71,10 +71,22 @@ const ManagePromo = (props) => {
 
     const handlePromoCreated = (newPromo) => {
         momentiseDateTime(newPromo);
+
         const newPromotions = [...promotions, newPromo];       
         setPromotionsAndVisiblePromotions(newPromotions);
         props.alerts.showSuccessAlert("New promotion created! =D");
     };    
+
+    const handlePromoEdited = (editedPromo) => {
+        momentiseDateTime(editedPromo);
+
+        const editedPromotions = [...promotions];
+        const index = editedPromotions.findIndex(promotion => promotion.id === editedPromo.id);
+        editedPromotions.splice(index, 1, editedPromo);
+
+        setPromotionsAndVisiblePromotions(editedPromotions);
+        props.alerts.showSuccessAlert("Promotion edited! =D");
+    };
 
     return (
         <div className="p-3">
@@ -94,7 +106,9 @@ const ManagePromo = (props) => {
             <EditPromotion
                 show={isEditPromoVisible}
                 onClose={() => setIsEditPromoVisibile(false)}
-                promotion={promotion}/>
+                promotion={promotion}
+                onPromoEdited={handlePromoEdited}
+                {...props}/>
         </div>
     )
 };

@@ -79,6 +79,7 @@ const PromotionForm = (props) => {
                                 : "form-control",
                             disabled: isDisableStartDate
                         }}                                 
+                        dateFormat='MMMM Do YYYY,'
                         value={values.startDateTime}
                         onChange={(moment) => setFieldValue('startDateTime', moment)}/>
                     <Form.Text className="text-muted">
@@ -96,6 +97,7 @@ const PromotionForm = (props) => {
                                 ? "form-control is-invalid"
                                 : "form-control"                             
                         }}                           
+                        dateFormat='MMMM Do YYYY,'
                         value={values.endDateTime}
                         onChange={(moment) => setFieldValue('endDateTime', moment)}/>
                     <Form.Text className="text-muted">

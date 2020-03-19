@@ -8,6 +8,9 @@ import * as Yup from 'yup';
 import axios from 'axios';
 
 const Roles = (props) => {
+    const [manager, showManager] = useState(false);
+    const [rider, showRider] = useState(false);
+
     const validation = Yup.object({
         username: Yup.string()
             .matches(/^\w+$/)
@@ -54,6 +57,19 @@ const Roles = (props) => {
         formik.setSubmitting(false);
     }
 
+    const handleChange = (event) => {
+        if (event.target.value == "manager") {
+            showRider(false);
+            showManager(true);
+        } else if (event.target.value == "rider") {
+            showManager(false);
+            showRider(true);
+        } else {
+            showManager(false);
+            showRider(false);
+        }
+    }
+
     const displayUsername = (formik) => {return (
         <Form onSubmit={formik.handleSubmit}>
             <Form.Group as={Row} controlId="formUsername">
@@ -91,11 +107,25 @@ const Roles = (props) => {
                     Select new role:
                 </Form.Label>
                 <Col sm={3}>
-                    <Form.Control name="role" value={formik.values.role} onChange={formik.handleChange} as="select">
+                    <Form.Control name="role" value={formik.values.role} onChange={handleChange} as="select">
                         {options}
                     </Form.Control>
                 </Col>
             </Form.Group>
+            )
+        } else {
+            return;
+        }
+    }
+
+    const displayRoleSpecific = (formik) => {
+        if (manager) {
+            return (
+                <p>Placeholder for assigning a restaurant</p>
+            )
+        } else if (rider) {
+            return (
+                <p>Placeholder for assigning a rider's schedule</p>
             )
         } else {
             return;
@@ -120,6 +150,7 @@ const Roles = (props) => {
         <Form onSubmit={formik.handleSubmit}>
             {displayUsername(formik)}
             {displayNewRole(formik)}
+            {displayRoleSpecific(formik)}
             {displaySubmitButton(formik)}
         </Form>
     )}

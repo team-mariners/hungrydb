@@ -52,12 +52,17 @@ const ManagePromo = (props) => {
 
         if (promotionsType === 'ongoing') {
             result = promotions.filter(promotion => {
-                return promotion.end_datetime.isAfter(moment());
-            })
+                const now = moment();
+                return promotion.start_datetime.isSameOrBefore(now) && promotion.end_datetime.isAfter(now);
+            });
+        } else if (promotionsType === 'scheduled') {
+            result = promotions.filter(promotion => {
+                return promotion.start_datetime.isAfter(moment());
+            });        
         } else if (promotionsType === 'closed') {
             result = promotions.filter(promotion => {
                 return promotion.end_datetime.isBefore(moment());
-            })
+            });
         }
 
         console.log(result);

@@ -12,6 +12,10 @@ const PromotionTabs = (props) => {
             </Nav.Item>
 
             <Nav.Item>
+                <Nav.Link eventKey="scheduled">Scheduled</Nav.Link>
+            </Nav.Item>
+
+            <Nav.Item>
                 <Nav.Link eventKey="closed">Closed</Nav.Link>
             </Nav.Item>
         </Nav>

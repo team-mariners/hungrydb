@@ -100,7 +100,7 @@ const DishForm = (props) => {
                                 </Form.Text>
                             <Form.Control.Feedback type="invalid">
                                 Daily limit is invalid.
-                                </Form.Control.Feedback>
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group>

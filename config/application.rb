@@ -20,5 +20,8 @@ module Hungrydb
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.active_record.schema_format = :sql
+
+    config.active_record.default_timezone = "Singapore"
+    config.time_zone = "Singapore"
   end
 end

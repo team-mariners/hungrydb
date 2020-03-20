@@ -18,12 +18,12 @@ module Api::V1::Promotions::PromotionsHelper
 
   def retrieve_restaurant_promos(rid)
     res_promos_query = "SELECT P.p_name, P.promocode, P.num_redeemed,
-                               P.max_redeem, P.start_date, P.end_date, P.percentage
+                               P.max_redeem, P.start_datetime, P.end_datetime, P.percentage
                        FROM Has_Promotions H INNER JOIN Promotions P
                             ON H.restaurant_id = #{rid}
                                and H.restaurant_promotion_id = P.id
-                               and CURRENT_TIMESTAMP >= P.start_date
-                               and CURRENT_TIMESTAMP <= P.end_date
+                               and CURRENT_TIMESTAMP >= P.start_datetime
+                               and CURRENT_TIMESTAMP <= P.end_datetime
                        ORDER BY P.promocode"
     ActiveRecord::Base.connection.execute(res_promos_query)
   end

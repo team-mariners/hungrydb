@@ -17,4 +17,17 @@ class AdminsController < UsersController
             render plain: false
         end
     end
+
+    def updaterole
+        if (params.has_key?(:userid) && params.has_key?(:oldrole) && params.has_key?(:newrole))
+            if (helpers.get_user_role(params[:userid]) == params[:oldrole])
+                helpers.set_role(params[:userid], params[:newrole])
+                render plain: true
+            else
+                render plain: false
+            end
+        else
+            render plain: false
+        end
+    end
 end

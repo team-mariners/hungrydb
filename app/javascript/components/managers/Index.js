@@ -53,8 +53,8 @@ const Index = (props) => {
                 <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
                 <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
-                <Route exact path="/manager/manage_promo" render={() => <ManagePromo alerts={alerts}/>}/>
-                <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/>
+                <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
+                <Route exact path="/manager/manage_info" render={() => <ManageInfo {...props}/>}/>
             </Switch>
        </Router>
     )

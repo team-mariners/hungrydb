@@ -146,7 +146,7 @@ const ManageMenu = (props) => {
     }
 
     return (
-        <div className="p-3">
+        <div className="manager-page">
             <h1>Menu</h1>
             <ToolBar
                 showNewDish={() => setIsNewDishVisible(true)}

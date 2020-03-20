@@ -4,7 +4,10 @@ const CustomCard = (props) => {
     const children = [...props.children];
     const footerIndex = children.findIndex(child => child.type.displayName === 'CardFooter');
     const footer = children[footerIndex];
-    children.splice(footerIndex, 1);
+
+    if (footerIndex !== -1) {
+        children.splice(footerIndex, 1);
+    }
 
     return (
         <div style={{opacity: props.disabled ? "0.5": ""}}>

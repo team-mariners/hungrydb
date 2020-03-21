@@ -15,10 +15,16 @@ const DishesList = (props) => {
         )
     })
 
+    let listTitle = "All Dishes";
+
+    if (!!props.currMenuSection) {
+        listTitle = props.currMenuSection.ms_name;
+    }
+
     return (
         <ListGroup className="manageMenu-dishes-List">            
             <Card>
-                <Card.Header>All Dishes</Card.Header>
+                <Card.Header>{listTitle}</Card.Header>
                 <ListGroup variant="flush">
                     {dishes}
                 </ListGroup>

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import DishForm from './DishForm';
-import { getProcessedDishValues } from '../../helpers/FormHelpers';
+import { getProcessedDishValues, getErrorMessage } from '../../helpers/FormHelpers';
 
 const csrfToken = document.querySelector('[name=csrf-token').content;
 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
@@ -18,25 +18,21 @@ const NewDish = (props) => {
     const initialValues = {
         dishName: "",
         price: "",
-        dailyLimit: ""
+        dailyLimit: "",
+        menuSection: null
     };
 
     const handleSubmit = (values) => {
+        console.log(values);
         const data = getProcessedDishValues(values);
        
         console.log(data);
-        axios.post('/foods',data)
+        axios.post('/foods', data)
             .then((result) => {                
                 console.log(result);
                 props.onDishCreated(result.data);
             }).catch((error) => {
-                let message = "";
-                if (error.response != undefined) {
-                    message = error.response.data.errors;
-                } else {
-                    message = error.message;
-                }
-                props.alerts.showFailureAlert(message);
+                props.alerts.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             });
@@ -48,7 +44,8 @@ const NewDish = (props) => {
             <DishForm
                 initialValues={initialValues}
                 handleSubmit={handleSubmit}
-                buttonName="Create"/>
+                buttonName="Create"
+                {...props}/>
         </Modal>
     )
 };

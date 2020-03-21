@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 import NavigationBar from './common/NavigationBar';
 import Dashboard from './Dashboard';
@@ -40,22 +40,23 @@ const Index = (props) => {
         showFailureAlert: showFailureAlert
     }
 
-    console.log(props);
-
     return (
         <Router>
             <NavigationBar/>
             <Alert dismissible variant={alertVariant} show={isAlertVisible} onClose={closeAlert}>
                 {alertMessage}
             </Alert>
-            <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
-            <Route exact path="/manager/orders" render={() => <Orders/>}/>
-            <Route exact path="/manager/stats" render={() => <Stats/>}/>
-            <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
-            <Route exact path="/manager/manage_menu" render={() => <ManageMenu alerts={alerts}/>}/>
-            <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
-            <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/>
-        </Router>
+            <Switch>
+                <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
+                <Route exact path="/manager/orders" render={() => <Orders/>}/>
+                <Route exact path="/manager/stats" render={() => <Stats/>}/>
+                <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
+                <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
+                    render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
+                <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
+                <Route exact path="/manager/manage_info" render={() => <ManageInfo {...props}/>}/>
+            </Switch>
+       </Router>
     )
 };
 

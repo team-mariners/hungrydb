@@ -4,19 +4,20 @@ module UsersHelper
   end
 
   def user_has_role?(userid, role)
-    user = User.find_by(id: userid)
-    rolelist = user.roles.split(',')
-
-    if rolelist.include?(role)
+    if (role == get_user_role(userid))
       return true
     else
       return false
     end
   end
 
-  def is_valid_role?(role)
+  def get_role_list
     # This list has to be updated manually if new roles are introduced
-    rolelist = ["customer", "rider", "manager", "admin"]
+    return ["customer", "rider", "manager", "admin"]
+  end
+
+  def is_valid_role?(role)
+    rolelist = get_role_list
 
     if rolelist.include?(role)
       return true
@@ -26,12 +27,41 @@ module UsersHelper
   end
 
   def get_user_id(username)
-    user = User.find_by(username: username)
+    userid = ActiveRecord::Base.connection.exec_query(
+      "SELECT id FROM users
+      WHERE username = '#{username}';"
+    ).first
 
-    if user == nil
+    if userid == nil
       return false
     else
-      return user.id
+      return userid['id']
+    end
+  end
+
+  def get_user_name(userid)
+    username = ActiveRecord::Base.connection.exec_query(
+      "SELECT username FROM users
+      WHERE id = '#{userid}';"
+    ).first
+
+    if username == nil
+      return false
+    else
+      return username['username']
+    end
+  end
+
+  def get_user_role(userid)
+    user_role = ActiveRecord::Base.connection.exec_query(
+      "SELECT roles FROM users
+      WHERE id = #{userid}"
+    ).first
+
+    if (user_role == nil)
+      return false
+    else
+      return user_role['roles']
     end
   end
 
@@ -50,9 +80,10 @@ module UsersHelper
     elsif !is_valid_role?(role)
       return false
     else
-      return role.capitalize.constantize.find_by(
-        user_id: userid
-      )
+      return ActiveRecord::Base.connection.exec_query(
+        "SELECT * FROM #{role}s
+        WHERE user_id = #{userid};"
+      ).to_a[0]
     end
   end
 end

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Modal from '../../utilities/Modal';
 import DishForm from './DishForm';
-import { getProcessedDishValues } from '../../helpers/FormHelpers';
+import { getProcessedDishValues, getErrorMessage } from '../../helpers/FormHelpers';
 
 const EditDish = (props) => {
     let initialValues = null; 
@@ -10,13 +10,15 @@ const EditDish = (props) => {
         initialValues = {
             dishName: "",
             price: "",
-            dailyLimit: ""
+            dailyLimit: "",
+            menuSection: null
         };
     } else {
         initialValues = {
-            dishName: props.dish.name,
+            dishName: props.dish.f_name,
             price: props.dish.price,
-            dailyLimit: props.dish.dailyLimit
+            dailyLimit: props.dish.daily_limit,
+            menuSection: props.dish.menu_section
         }
     }
 
@@ -28,13 +30,7 @@ const EditDish = (props) => {
                 console.log(result);
                 props.onDishEdited(props.dish.id, result.data);
             }).catch(error => {
-                let message = "";
-                if (error.response != undefined) {
-                    message = error.response.data.errors;
-                } else {
-                    message = error.message;
-                }
-                props.alerts.showFailureAlert(message);
+                props.alerts.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             });
@@ -46,7 +42,8 @@ const EditDish = (props) => {
             <DishForm
                 initialValues={initialValues}
                 handleSubmit={editDish}
-                buttonName="Submit"/>
+                buttonName="Submit"
+                {...props}/>
         </Modal>
     )
 };

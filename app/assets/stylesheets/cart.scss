@@ -1,0 +1,15 @@
+@import "constants";
+
+.cart-table {
+    text-align: center;
+}
+
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cart-amount-due {
+    color: $darkgreen;
+}

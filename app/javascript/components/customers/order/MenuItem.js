@@ -37,7 +37,7 @@ class MenuItem extends React.Component {
                         <Media.Body>
                             <h5 />
                             <h3>{ this.props.food.f_name }</h3>
-                            <h3>${ this.props.food.price }</h3>
+                            <h3>${ parseFloat(this.props.food.price).toFixed(2) }</h3>
                         </Media.Body>
                     </Media>
                 </button>

@@ -80,7 +80,8 @@ Rails.application.routes.draw do
 
       namespace :promotions do
         resources :promotions, only: %i[index create update]
-        get '/index_restaurant', to: 'promotions#index_restaurant'        
+        get '/index_restaurant', to: 'promotions#index_restaurant'
+        get '/:id/promotions', to: 'promotions#single_restaurant_promos'
       end
 
       namespace :orders do

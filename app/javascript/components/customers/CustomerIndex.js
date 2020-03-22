@@ -18,7 +18,7 @@ class Index extends React.Component {
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
-    handleSubmitOrder(newOrder) {
+    handleSubmitOrder(newOrder, picture) {
         let updatedOrders = this.state.orders === null ? {} : this.state.orders;
         if (newOrder.f_name in updatedOrders) {
             updatedOrders[newOrder.f_name]["quantity"] =
@@ -26,6 +26,7 @@ class Index extends React.Component {
                 parseInt(newOrder.quantity);
         } else {
             updatedOrders[newOrder.f_name] = {};
+            updatedOrders[newOrder.f_name]["picture"] = picture;
             updatedOrders[newOrder.f_name]["price"] = newOrder.price;
             updatedOrders[newOrder.f_name]["quantity"] = newOrder.quantity;
         }

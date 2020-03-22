@@ -20,6 +20,7 @@ class FoodModal extends React.Component {
         console.log(this.props);
         this.food = this.props.food;
         this.food["quantity"] = 1;
+        this.remaining_quantity = this.food.daily_limit - this.food.num_orders;
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = { order: this.food };
@@ -54,7 +55,7 @@ class FoodModal extends React.Component {
             alert("Please insert a valid number more than 0");
             e.preventDefault;
         } else {
-            this.props.onSubmitOrder(this.food);
+            this.props.onSubmitOrder(this.food, this.props.picture);
             this.props.onClose();
             alert("Ordered " + this.food.quantity + " " + this.food.f_name);
             this.food.quantity = 1;
@@ -74,16 +75,17 @@ class FoodModal extends React.Component {
                         <img src={this.props.picture} height={200} width={200} />
                         <div><br /></div>
                         <h1>{this.props.food.f_name}</h1>
-                        <h2>${this.props.food.price}</h2>
+                        <h2>${parseFloat(this.props.food.price).toFixed(2)}</h2>
                         <div><br /></div>
 
-                        <h6>({this.props.food.daily_limit - this.props.food.num_orders} left)</h6>
+                        <h6>({this.remaining_quantity} left)</h6>
                         <Form inline onSubmit={this.handleSubmit}>
-                            <FormControl type="number" min="1" defaultValue="1"
+                            <FormControl type="number" min="1" max={this.remaining_quantity}
+                                defaultValue="1"
                                 placeholder="Order Quantity"
                                 className="mr-sm-2" style={{ width: 180 }}
                                 onChange={this.handleQuantityChange} />
-                            <Button type="submit" variant="primary">Add To Cart</Button>
+                            <Button type="submit" variant="success">Add To Cart</Button>
                             {/* Use Button onClick to handle if need to prevent redirection */}
                         </Form>
 

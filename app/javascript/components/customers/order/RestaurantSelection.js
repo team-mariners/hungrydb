@@ -12,16 +12,10 @@ class RestaurantSelection extends React.Component {
         this.review_url = "/restaurants/" + this.restaurant.id + "/reviews";
     }
 
-    selectRestaurant() {
-        // Pass restaurant_id state up through Restaurant to OrderPage
-        console.log("Selected restaurant ID " + this.restaurant.id);
-        this.props.onChooseRestaurant(this.restaurant.id);
-    }
-
     render() {
         return (
             <React.Fragment>
-                <div className='restaurant-media' onClick={() => this.selectRestaurant()}>
+                <div className='restaurant-media'>
                     <Link to={this.menu_url} className='restaurant-media-link' >
                         <Media>
                             <img

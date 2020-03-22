@@ -47,6 +47,7 @@ Rails.application.routes.draw do
       get 'home', to: 'customers#index'
       get 'order', to: 'customers#order', as: :customer_order_path
       get 'order/:rid/menu', to: 'customers#order'
+      get 'cart', to: 'customers#cart'
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'

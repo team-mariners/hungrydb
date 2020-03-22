@@ -23,7 +23,8 @@ class MenuItem extends React.Component {
         return (
             <>
                 <FoodModal show={this.state.showModal} onClose={this.handleHideModal}
-                    food={this.props.food} picture={placeholderPic} />
+                    food={this.props.food} picture={placeholderPic}
+                    onSubmitOrder={this.props.onSubmitOrder} />
                 <button className='menu-media-button' onClick={this.handleShowModal}>
                     <Media>
                         <img

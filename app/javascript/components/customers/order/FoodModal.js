@@ -50,9 +50,15 @@ class FoodModal extends React.Component {
 
     handleSubmit(e) {
         console.log(this.food);
-        this.props.onSubmitOrder(this.food);
-        e.preventDefault();
-        // this.props.onClose();
+        if (!this.food.quantity || parseInt(this.food.quantity) <= 0) {
+            alert("Please insert a valid number more than 0");
+            e.preventDefault;
+        } else {
+            this.props.onSubmitOrder(this.food);
+            this.props.onClose();
+            alert("Ordered " + this.food.quantity + " " + this.food.f_name);
+            this.food.quantity = 0;
+        }
     }
 
     render() {
@@ -73,19 +79,22 @@ class FoodModal extends React.Component {
 
                         <h6>({this.props.food.daily_limit - this.props.food.num_orders} left)</h6>
                         <Form inline onSubmit={this.handleSubmit}>
-                            <FormControl type="number" placeholder="Order Quantity" className="mr-sm-2" style={{ width: 180 }}
+                            <FormControl type="number" min="1" defaultValue="1"
+                                placeholder="Order Quantity"
+                                className="mr-sm-2" style={{ width: 180 }}
                                 onChange={this.handleQuantityChange} />
-                            <Button variant="primary" onClick={this.handleSubmit}>Add To Cart</Button>
+                            <Button variant="primary">Add To Cart</Button>
+                            {/* Use Button onClick to handle if need to prevent redirection */}
                         </Form>
 
                         {/* Input range handle change on an info box originally set to 0
-                    <p>Order Amount:</p>
-                    <input
+                        <p>Order Amount:</p>
+                        <input
                         type="range"
                         defaultValue={0}
                         min={0}
                         max={5}
-                    step={1} /> */}
+                        step={1} /> */}
                         <div><br /><br /></div>
                     </section>
                 </div>

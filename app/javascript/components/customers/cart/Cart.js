@@ -2,9 +2,9 @@ import React from 'react';
 
 const Cart = (props) => {
     console.log(props.orders);
-    console.log(localStorage.getItem('orders'));
+    console.log(sessionStorage.getItem('orders'));
     let orders = props.orders === null
-                    ? JSON.parse(localStorage.getItem('orders'))
+                    ? JSON.parse(sessionStorage.getItem('orders'))
                     : props.orders;
 
     if (orders === null) {

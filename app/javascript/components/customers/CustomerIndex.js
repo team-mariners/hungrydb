@@ -14,7 +14,7 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
-        this.state = { orders: JSON.parse(localStorage.getItem('orders')) };
+        this.state = { orders: JSON.parse(sessionStorage.getItem('orders')) };
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
@@ -33,8 +33,8 @@ class Index extends React.Component {
 
         this.setState({ orders: updatedOrders });
         // Persist order info in local browser storage
-        localStorage.setItem('orders', JSON.stringify(updatedOrders));
-        console.log(localStorage.getItem('orders'));
+        sessionStorage.setItem('orders', JSON.stringify(updatedOrders));
+        console.log(sessionStorage.getItem('orders'));
     }
 
     render() {

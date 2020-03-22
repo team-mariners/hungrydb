@@ -19,7 +19,7 @@ class FoodModal extends React.Component {
         super(props);
         console.log(this.props);
         this.food = this.props.food;
-        this.food["quantity"] = 0;
+        this.food["quantity"] = 1;
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = { order: this.food };
@@ -57,7 +57,7 @@ class FoodModal extends React.Component {
             this.props.onSubmitOrder(this.food);
             this.props.onClose();
             alert("Ordered " + this.food.quantity + " " + this.food.f_name);
-            this.food.quantity = 0;
+            this.food.quantity = 1;
         }
     }
 
@@ -83,7 +83,7 @@ class FoodModal extends React.Component {
                                 placeholder="Order Quantity"
                                 className="mr-sm-2" style={{ width: 180 }}
                                 onChange={this.handleQuantityChange} />
-                            <Button variant="primary">Add To Cart</Button>
+                            <Button type="submit" variant="primary">Add To Cart</Button>
                             {/* Use Button onClick to handle if need to prevent redirection */}
                         </Form>
 

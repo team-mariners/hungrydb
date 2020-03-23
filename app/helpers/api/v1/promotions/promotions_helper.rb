@@ -29,14 +29,23 @@ module Api::V1::Promotions::PromotionsHelper
   end
 
   def retrieve_promo_code(pid)
+    if pid == nil
+      return nil
+    end
+
     promo_discount_query = "SELECT promocode
                            FROM Promotions
                            WHERE id = #{pid}
                            LIMIT 1"
+                           
     ActiveRecord::Base.connection.execute(promo_discount_query)[0]['promocode']
   end
 
   def retrieve_promo_discount(pid)
+    if pid == nil
+      return nil
+    end
+
     promo_discount_query = "SELECT percentage
                            FROM Promotions
                            WHERE id = #{pid}

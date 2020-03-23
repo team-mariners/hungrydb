@@ -10,11 +10,9 @@ class Cart extends React.Component {
         super(props);
         console.log(this.props.orders);
         console.log(sessionStorage.getItem('orders'));
-        this.orders = this.props.orders === null
-            ? JSON.parse(sessionStorage.getItem('orders'))
-            : this.props.orders;
+        this.orders = JSON.parse(sessionStorage.getItem('orders'))
 
-        this.handlePromoChange = this.handlePromoChange.bind(this);
+        this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.checkPromoUsed = this.checkPromoUsed.bind(this);
         this.state = { entered_promo: "", promotions: null };
@@ -40,7 +38,7 @@ class Cart extends React.Component {
         this.amountDue = 0;
     }
 
-    handlePromoChange(e) {
+    handlePromoInsertChange(e) {
         // Set amountDue to 0 for re-render after setState
         this.amountDue = 0;
         console.log(e.target.value.toUpperCase());
@@ -73,6 +71,8 @@ class Cart extends React.Component {
                 return;
             }
         }
+        alert("No such promotion exists!");
+        e.preventDefault();
     }
 
     checkPromoUsed() {
@@ -89,6 +89,9 @@ class Cart extends React.Component {
     }
 
     render() {
+        // Prevent erratic increment of amountDue on re-render
+        this.amountDue = 0;
+
         if (this.orders === null) {
             return <h3>Your cart is empty.</h3>
         } else {
@@ -120,7 +123,7 @@ class Cart extends React.Component {
                     
                     <CartPromoForm
                         handleSubmit={this.handleSubmit}
-                        handlePromoChange={this.handlePromoChange} />
+                        handlePromoInsertChange={this.handlePromoInsertChange} />
                     <div><br /></div>
 
                     <h4>

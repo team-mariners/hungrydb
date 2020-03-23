@@ -7,8 +7,8 @@ const RiderNaviBar = () => {
         <AppBar>
             <Nav className="justify-content-end">
                 <Nav.Link href="/rider" style={{ color: 'white' }}>Home</Nav.Link>
-                <Nav.Link href="/rider" style={{ color: 'white' }}>Job</Nav.Link>
-                <Nav.Link href="/rider" style={{ color: 'white' }}>Orders</Nav.Link>
+                <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link>
+                <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link>
                 <Nav.Link href="/rider" style={{ color: 'white' }}>Profile</Nav.Link>
                 <Nav.Link href="/" style={{ color: 'white' }}>Log out</Nav.Link>
             </Nav>

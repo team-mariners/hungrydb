@@ -4,7 +4,7 @@ import OrdersBoard from './manageOrder/OrdersBoard';
 const ManageOrders = () => {
     return (
         <div className="p-3">
-            <h2>All Orders</h2>
+            <h1>All Orders</h1>
             <OrdersBoard/>
         </div>
     )

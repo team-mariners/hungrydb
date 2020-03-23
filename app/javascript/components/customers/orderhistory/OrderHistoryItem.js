@@ -2,6 +2,10 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 
 const OrderHistoryItem = (props) => {
+    let promocodeAndDiscount = <h6>Promo { props.order.promocode + ": " + props.order.promo_discount }% discount</h6>;
+    if (!props.order.promocode) {
+        promocodeAndDiscount = <h6>No promocode was used</h6>
+    }
 
     return (
             <ListGroup.Item variant="info" style={{color: "black", textAlign: "center"}}>
@@ -10,8 +14,7 @@ const OrderHistoryItem = (props) => {
                 <h5>{ props.order.date_time.toString().split("T")[0] + ", " +
                         props.order.date_time.toString().split("T")[1].split(".")[0] }
                 </h5>
-
-                <h6>Promo { props.order.promocode + ": " + props.order.promo_discount }% discount</h6>
+                {promocodeAndDiscount}
             </ListGroup.Item>
     )
 }

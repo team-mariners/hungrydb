@@ -422,7 +422,7 @@ CREATE SEQUENCE public.orders_id_seq
 CREATE TABLE public.orders (
     oid bigint DEFAULT nextval('public.orders_id_seq'::regclass) NOT NULL,
     customer_id bigint NOT NULL,
-    promo_id bigint NOT NULL,
+    promo_id bigint,
     restaurant_id bigint NOT NULL,
     point_offset bigint DEFAULT 0 NOT NULL,
     payment_method public.payment_type NOT NULL,

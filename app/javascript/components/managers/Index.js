@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 import NavigationBar from './common/NavigationBar';
 import Dashboard from './Dashboard';
-import Orders from './Orders';
+import ManageOrders from './ManageOrders';
 import Stats from './Stats';
 import Reviews from './Reviews';
 import ManageMenu from './ManageMenu';
@@ -48,9 +48,8 @@ const Index = (props) => {
             </Alert>
             <Switch>
                 <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
-                <Route exact path="/manager/orders" render={() => <Orders/>}/>
+                <Route exact path="/manager/orders" render={() => <ManageOrders/>}/>
                 <Route exact path="/manager/stats" render={() => <Stats/>}/>
-                <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
                 <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
                 <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>

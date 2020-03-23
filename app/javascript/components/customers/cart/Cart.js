@@ -10,7 +10,7 @@ class Cart extends React.Component {
         super(props);
         console.log(this.props.orders);
         console.log(sessionStorage.getItem('orders'));
-        this.orders = JSON.parse(sessionStorage.getItem('orders'))
+        this.orders = JSON.parse(sessionStorage.getItem('orders'));
 
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

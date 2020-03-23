@@ -39,7 +39,6 @@ Rails.application.routes.draw do
       get 'manage', to: 'managers#index'
       get 'orders', to: 'managers#index'
       get 'stats', to: 'managers#index'
-      get 'reviews', to: 'managers#index'
       get 'manage_menu', to: 'managers#index'
       get 'manage_menu/menu_sections/:id', to: 'managers#index'
       get 'manage_promo', to: 'managers#index'
@@ -87,6 +86,7 @@ Rails.application.routes.draw do
 
       namespace :orders do
         resources :orders, only: %i[index create destroy update]
+        get '/index_restaurant', to: 'orders#index_restaurant'
       end
 
       namespace :reviews do

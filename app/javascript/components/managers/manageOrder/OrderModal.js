@@ -17,12 +17,20 @@ const OrderModal = (props) => {
         )
     });
 
+    let review = null;
+    const isOrderCompleted = "complete".localeCompare(props.order.status) === 0;
+    if (isOrderCompleted) {
+        review = <p><b>Review: </b>{!!props.order.food_review ? props.order.food_review : "No review was given."}</p>
+    }
+
     return (
         <Modal {...props}>
             <h1>Order Details</h1>
             <p><b>Order id: </b>{props.order.oid}</p>
             <p><b>Customer: </b>{props.order.customer_name}</p>
             <p><b>Order date & time: </b>{props.order.date_time.format(dateTimeFormat)}</p>
+            <p><b>Payment method: </b>{props.order.payment_method}</p>
+            {review}
 
             <Table striped bordered>
                 <thead>

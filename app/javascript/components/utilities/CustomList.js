@@ -21,8 +21,6 @@ const CustomList = (props) => {
         )
     });    
 
-    console.log(props);
-
     return (
         <Card>
             <Card.Header>

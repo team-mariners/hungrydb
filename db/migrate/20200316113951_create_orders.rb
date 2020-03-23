@@ -16,7 +16,7 @@ class CreateOrders < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE Orders (
       oid bigint DEFAULT nextval('orders_id_seq'),
       customer_id bigint NOT NULL,
-      promo_id bigint NOT NULL,
+      promo_id bigint,
       restaurant_id bigint NOT NULL,
       point_offset bigint NOT NULL DEFAULT 0,
       payment_method payment_type NOT NULL,

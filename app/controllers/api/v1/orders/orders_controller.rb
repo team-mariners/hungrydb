@@ -21,12 +21,13 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
   end
 
   def index_restaurant
+    ActiveRecord::Base.connection.begin_db_transaction
     orders = ActiveRecord::Base.connection.exec_query(
       "SELECT oid, point_offset, payment_method, delivery_fee, date_time, status, food_review,
         (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name,
         (SELECT percentage FROM Promotions WHERE id = Orders.promo_id) AS promo_percentage
       FROM Orders LEFT OUTER JOIN Reviews USING (oid) 
-      WHERE restaurant_id = #{@restaurant.id}
+      WHERE restaurant_id = #{@restaurant['id']}
       ORDER BY oid;"
     ).to_a    
 
@@ -36,12 +37,17 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
       "WITH T AS (
         SELECT *
         FROM Comprises
-        WHERE oid IN (#{array.join(",")})
+        WHERE oid IN (#{order_ids.join(",")})
       )    
       SELECT *
       FROM T JOIN Foods  ON (T.food_id = Foods.id)
       ORDER BY T.oid;"      
     ).to_a  
+    ActiveRecord::Base.connection.commit_db_transaction
+
+    process_orders(orders, ordered_foods)
+
+    render json: orders
   end
 
   private
@@ -49,7 +55,7 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
     @restaurant = helpers.get_restaurant(current_user)
   end
 
-  def get_order_ids
+  def get_order_ids(orders)
     result = []
     orders.each do |order|
       result.push(order["oid"])
@@ -68,6 +74,8 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
         orders[index]["foods"] = array        
         index += 1        
         array = []
+        
+        array << food
       end
     end
 

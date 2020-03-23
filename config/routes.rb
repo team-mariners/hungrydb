@@ -84,6 +84,7 @@ Rails.application.routes.draw do
 
       namespace :orders do
         resources :orders, only: %i[index create destroy update]
+        get '/index_restaurant', to: 'orders#index_restaurant'
       end
 
       namespace :reviews do

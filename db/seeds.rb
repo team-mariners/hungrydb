@@ -41,6 +41,13 @@ ActiveRecord::Base.connection.exec_query(
     ((SELECT id FROM users WHERE username = 'admin'), 'now', 'now');"
 )
 
+test_customer_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT *
+    FROM customers
+    WHERE user_id = (SELECT id FROM users WHERE username = 'customer');"
+).to_a[0]
+
+
 # ------------------------------------------------ Restaurants -------------------------------------------------------
 test_manager_1 = Manager.find(1)
 test_manager_2 = Manager.find(2)
@@ -239,6 +246,7 @@ ActiveRecord::Base.connection.exec_query(
 ActiveRecord::Base.connection.commit_db_transaction
 
 # ------------------------------------------- Orders/Reviews ---------------------------------------------------------
+# Order 1
 ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
@@ -274,9 +282,57 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 ActiveRecord::Base.connection.exec_query(
+    "UPDATE foods
+    SET num_orders = num_orders + 2
+    WHERE id=#{test_food_2['id']}"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "UPDATE foods
+    SET num_orders = num_orders + 1
+    WHERE id=#{test_food_4['id']}"
+)
+
+ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Reviews(oid, rider_id, rider_rating, food_review)
     VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 4,
             'Delicious! But where''s the L A M B S A U C E');"
+)
+
+ActiveRecord::Base.connection.commit_db_transaction
+
+# Order 2 (in_progress)
+ActiveRecord::Base.connection.begin_db_transaction
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
+                        payment_method, delivery_fee, date_time, status)
+    VALUES (#{test_customer_1["user_id"]}, null, #{test_restaurant_1["id"]}, 0, 'cash', 2, 
+        'now', 'in_progress');"
+)
+
+test_order_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM Orders
+    WHERE status = 'in_progress'
+    AND customer_id = #{test_customer_1["user_id"]}
+    LIMIT 1"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Delivers(oid, rider_id, customer_location, order_time)
+    VALUES (#{test_order_2['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
+            CURRENT_TIMESTAMP)"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO Comprises(oid, food_id, quantity)
+    VALUES (#{test_order_2['oid']}, #{test_food_3['id']}, 5);"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "UPDATE foods
+    SET num_orders = num_orders + 5
+    WHERE id=#{test_food_3['id']}"
 )
 
 ActiveRecord::Base.connection.commit_db_transaction

@@ -9,7 +9,7 @@ const OrdersTab = (props) => {
             </Nav.Item>
             
             <Nav.Item>
-                <Nav.Link eventkey="past">Past</Nav.Link>
+                <Nav.Link eventkey="past">Complete</Nav.Link>
             </Nav.Item>
         </Nav>
     )

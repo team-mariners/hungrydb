@@ -50,7 +50,6 @@ const Index = (props) => {
                 <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
                 <Route exact path="/manager/orders" render={() => <ManageOrders/>}/>
                 <Route exact path="/manager/stats" render={() => <Stats/>}/>
-                <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
                 <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
                 <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>

@@ -1,10 +1,9 @@
 import React from 'react';
-import Table from 'react-bootstrap/Table'
-import CartItem from './CartItem';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import CartItem from './CartItem';
+import CartItemTable from './CartItemTable';
+import CartPromoForm from './CartPromoForm';
+import Button from 'react-bootstrap/Button';
 
 class Cart extends React.Component {
     constructor(props) {
@@ -17,6 +16,7 @@ class Cart extends React.Component {
 
         this.handlePromoChange = this.handlePromoChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.checkPromoUsed = this.checkPromoUsed.bind(this);
         this.state = { entered_promo: "", promotions: null };
 
         this.amountDue = 0;
@@ -43,20 +43,16 @@ class Cart extends React.Component {
     handlePromoChange(e) {
         // Set amountDue to 0 for re-render after setState
         this.amountDue = 0;
-        console.log(e.target.value);
-        this.setState({ entered_promo: e.target.value });
+        console.log(e.target.value.toUpperCase());
+        this.setState({ entered_promo: e.target.value.toUpperCase() });
     }
 
     handleSubmit(e) {
-        // Check if promo used before
-        if (this.usedPromos) {
-            let usedPromosArray = this.usedPromos.split(" ");
-            for (let usedCode of usedPromosArray) {
-                if (usedCode == this.state.entered_promo) {
-                    alert("You have already used " + usedCode);
-                    return;
-                }
-            }
+        let usedPromo = this.checkPromoUsed();
+        if (usedPromo) {
+            alert("You have already used " + usedPromo);
+            e.preventDefault();
+            return;
         }
 
         // Apply promo, save total discount % & used promo to sessionStorage
@@ -73,21 +69,34 @@ class Cart extends React.Component {
                     ? ""
                     : this.usedPromos;
                 sessionStorage.setItem("used_promos", currUsedPromos + " " + promo.promocode);
-                alert(promo.promocode + " applied for " + promo.percentage + "% off!" + currPercentage);
+                alert(promo.promocode + " applied for " + promo.percentage + "% off!");
                 return;
             }
         }
+    }
+
+    checkPromoUsed() {
+        // Check if promo used before
+        if (this.usedPromos) {
+            let usedPromosArray = this.usedPromos.split(" ");
+            for (let usedCode of usedPromosArray) {
+                if (usedCode == this.state.entered_promo) {
+                    return usedCode;
+                }
+            }
+        }
+        return null;
     }
 
     render() {
         if (this.orders === null) {
             return <h3>Your cart is empty.</h3>
         } else {
-            let cart = [];
+            let items = [];
             for (let item in this.orders) {
                 if (this.orders.hasOwnProperty(item)) {
                     let foodDetails = this.orders[item];
-                    cart.push(
+                    items.push(
                         <CartItem foodName={item} foodDetails={foodDetails} />
                     )
                     this.amountDue += foodDetails.price * foodDetails.quantity;
@@ -97,36 +106,34 @@ class Cart extends React.Component {
                 <div className='cart-container'>
                     <div><br /></div>
                     <h3>Ordering From: {sessionStorage.getItem('restaurant_name')}</h3>
+                    <h4>
+                        (minimum order ${parseFloat(sessionStorage.getItem('restaurant_min')).toFixed(2)})
+                    </h4>
                     <div><br /></div>
-                    <Table responsive className='cart-table'>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Food</th>
-                                <th>Single Price</th>
-                                <th>Quantity</th>
-                                <th>Total Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {cart}
-                        </tbody>
-                    </Table>
+                    <CartItemTable items={items}/>
                     <div><br /></div>
-
-                    <Form inline onSubmit={this.handleSubmit}>
-                        <FormControl type="text"
-                            placeholder="Promo Code"
-                            className="mr-sm-2" style={{ width: 300 }}
-                            onChange={this.handlePromoChange} />
-                        <Button type="submit" variant="success">Apply</Button>
-                    </Form>
+                    
+                    <h4>
+                        Total: ${this.amountDue.toFixed(2)}
+                    </h4>
+                    <div><br /></div>
+                    
+                    <CartPromoForm
+                        handleSubmit={this.handleSubmit}
+                        handlePromoChange={this.handlePromoChange} />
                     <div><br /></div>
 
-                    <h3 className='cart-amount-due'>
+                    <h4>
+                        Discount: -${(this.amountDue * this.discountPercentage).toFixed(2)} ( 
+                        {this.discountPercentage * 100}%)
+                    </h4>
+                    <div><br /><br /></div>
+
+                    <h2 className='cart-amount-due'>
                         Amount Due: ${(this.amountDue - this.amountDue * this.discountPercentage).toFixed(2)}
-                    </h3>
-                    <div><br /></div>
+                    </h2>
+                    <Button variant="primary" size="lg">PAY</Button>
+                    <div><br /><br /></div>
                 </div>
             )
         }

@@ -16,6 +16,7 @@ class RestaurantSelection extends React.Component {
     setSessionRestaurantInfo() {
         sessionStorage.setItem('restaurant_name', this.restaurant.name);
         sessionStorage.setItem('restaurant_id', this.restaurant.id);
+        sessionStorage.setItem('restaurant_min', this.restaurant.min_order_cost);
     }
 
     render() {

@@ -24,9 +24,7 @@ class ReviewHistory extends React.Component {
 
     render() {
         if (this.state.reviews === null) {
-            return (
-                <h3>You have not made any reviews.</h3>
-            )
+            return null;
         } else {
             let reviews = this.state.reviews.map((review) => {
                 return (
@@ -35,6 +33,10 @@ class ReviewHistory extends React.Component {
             })
             return (
                 <React.Fragment>
+                    <div><br/></div>
+                    <h4 className='customer-history-pages-title'>
+                        {reviews.length == 0 ? "You have not made any reviews." : "Review History"}
+                    </h4>
                     <div><br/></div>
                     <ListGroup style={{ width: "80%", marginLeft: "auto", marginRight: "auto" }}>
                         {reviews}

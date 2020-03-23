@@ -24,10 +24,9 @@ class OrderHistory extends React.Component {
 
     render() {
         if (this.state.orders === null) {
-            return (
-                <h3>You have no previous orders.</h3>
-            )
+            return null;
         } else {
+
             let orders = this.state.orders.map((order) => {
                 return (
                     <OrderHistoryItem order={order} />
@@ -35,6 +34,10 @@ class OrderHistory extends React.Component {
             })
             return (
                 <React.Fragment>
+                    <div><br/></div>
+                    <h4 className='customer-history-pages-title'>
+                        {orders.length == 0 ? "You have not made any orders." : "Order History"}
+                    </h4>
                     <div><br/></div>
                     <ListGroup style={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}>
                         {orders}

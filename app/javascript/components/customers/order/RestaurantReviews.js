@@ -29,9 +29,7 @@ class RestaurantReviews extends React.Component {
 
     render() {
         if (this.state.reviews == null) {
-            return (
-                <h3>No reviews yet.</h3>
-            )
+            return null;
         } else {
             let rev = this.state.reviews;
             let reviews = this.state.reviews.map((review) => {

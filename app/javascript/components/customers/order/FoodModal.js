@@ -14,53 +14,95 @@ import Button from 'react-bootstrap/Button';
  * closeButton = an optional boolean which toggles the close button's visibility (by default true).
  * size = an optional string which determines the size of the modal (available options: sm).
  */
-const FoodModal = (props) => {
-    console.log(props);
+class FoodModal extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props);
+        this.food = this.props.food;
+        this.food["quantity"] = 1;
+        this.remaining_quantity = this.food.daily_limit - this.food.num_orders;
+        this.handleQuantityChange = this.handleQuantityChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = { order: this.food };
 
-    let closeButton = (
-        <FontAwesomeIcon icon={faTimes} onClick={props.onClose} size="lg" />
-    );
+        this.closeButton = (
+            <FontAwesomeIcon icon={faTimes} onClick={this.props.onClose} size="lg" />
+        );
 
-    // The name of the css class(es) which is applied to the modal
-    let className = "custom-modal".concat(" ", props.className);
+        // The name of the css class(es) which is applied to the modal
+        this.className = "custom-modal".concat(" ", this.props.className);
 
-    // Toggles modal's visibility
-    if (!props.show) {
-        return null;
+        // Toggles close button's visibility
+        if (this.props.closeButton !== undefined && !this.props.closeButton) {
+            this.closeButton = null;
+        }
+
+        // Changes the size of modal to small
+        if (this.props.size !== undefined && this.props.size.localeCompare("sm") === 0) {
+            this.className = this.className.concat(" ", "custom-modal-size-sm");
+        }
     }
 
-    // Toggles close button's visibility
-    if (props.closeButton !== undefined && !props.closeButton) {
-        closeButton = null;
+    handleQuantityChange(e) {
+        this.food["quantity"] = e.target.value;
+        console.log(this.food);
+        this.setState({ order: this.food });
     }
 
-    // Changes the size of modal to small
-    if (props.size !== undefined && props.size.localeCompare("sm") === 0) {
-        className = className.concat(" ", "custom-modal-size-sm");
+    handleSubmit(e) {
+        console.log(this.food);
+        if (!this.food.quantity || parseInt(this.food.quantity) <= 0) {
+            alert("Please insert a valid number more than 0");
+            e.preventDefault;
+        } else {
+            this.props.onSubmitOrder(this.food, this.props.picture);
+            this.props.onClose();
+            alert("Ordered " + this.food.quantity + " " + this.food.f_name);
+            this.food.quantity = 1;
+        }
     }
 
-    return (
-        <div className="overlay">
-            <section className='food-modal-content' >
-                {closeButton}
-                <div><br/></div>
-                <img src={props.picture} height={200} width={200} />
-                <div><br/></div>
-                <h1>{ props.food.f_name }</h1>
-                <h2>${ props.food.price }</h2>
-                <Form inline>
-                    <FormControl type="text" placeholder="Promo Code" className="mr-sm-2" />
-                    <Button variant="success">Apply</Button>
-                </Form>
-                <div><br/></div>
-                <Form inline>
-                    <FormControl type="text" placeholder="Quantity of food" className="mr-sm-2" style={{width: 180}} />
-                    <Button variant="primary">Add To Cart</Button>
-                </Form>
-                <div><br/></div>
-            </section>
-        </div>
-    )
+    render() {
+        // Toggles modal's visibility
+        if (!this.props.show) {
+            return null;
+        } else {
+            return (
+                <div className="overlay">
+                    <section className='food-modal-content' >
+                        {this.closeButton}
+                        <div><br /></div>
+                        <img src={this.props.picture} height={200} width={200} />
+                        <div><br /></div>
+                        <h1>{this.props.food.f_name}</h1>
+                        <h2>${parseFloat(this.props.food.price).toFixed(2)}</h2>
+                        <div><br /></div>
+
+                        <h6>({this.remaining_quantity} left)</h6>
+                        <Form inline onSubmit={this.handleSubmit}>
+                            <FormControl type="number" min="1" max={this.remaining_quantity}
+                                defaultValue="1"
+                                placeholder="Order Quantity"
+                                className="mr-sm-2" style={{ width: 180 }}
+                                onChange={this.handleQuantityChange} />
+                            <Button type="submit" variant="success">Add To Cart</Button>
+                            {/* Use Button onClick to handle if need to prevent redirection */}
+                        </Form>
+
+                        {/* Input range handle change on an info box originally set to 0
+                        <p>Order Amount:</p>
+                        <input
+                        type="range"
+                        defaultValue={0}
+                        min={0}
+                        max={5}
+                        step={1} /> */}
+                        <div><br /><br /></div>
+                    </section>
+                </div>
+            )
+        }
+    }
 };
 
 export default FoodModal;

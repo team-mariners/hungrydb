@@ -282,18 +282,6 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 ActiveRecord::Base.connection.exec_query(
-    "UPDATE foods
-    SET num_orders = num_orders + 2
-    WHERE id=#{test_food_2['id']}"
-)
-
-ActiveRecord::Base.connection.exec_query(
-    "UPDATE foods
-    SET num_orders = num_orders + 1
-    WHERE id=#{test_food_4['id']}"
-)
-
-ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Reviews(oid, rider_id, rider_rating, food_review)
     VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 4,
             'Delicious! But where''s the L A M B S A U C E');"

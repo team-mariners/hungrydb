@@ -16,7 +16,7 @@ const Order = (props) => {
             </CardLeftSide>
 
             <CardFooter>
-                <Button>View</Button>
+                <Button onClick={props.showOrder}>View</Button>
             </CardFooter>
         </CustomCard>
     )

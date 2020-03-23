@@ -16,15 +16,21 @@ const CustomList = (props) => {
     const navItems = props.nav.map(link => {
         return (
             <Nav.Item key={link.key}>
-                <Nav.Link eventkey={link.key}>{link.value}</Nav.Link>
+                <Nav.Link eventKey={link.key}>{link.value}</Nav.Link>
             </Nav.Item>
         )
     });    
 
+    console.log(props);
+
     return (
         <Card>
             <Card.Header>
-                <Nav variant="tabs">
+                <Nav
+                    variant="tabs"
+                    defaultActiveKey={props.defaultActiveKey}
+                    onSelect={selectedKey => props.onSelect(selectedKey)}
+                >
                     {navItems}
                 </Nav>
             </Card.Header>

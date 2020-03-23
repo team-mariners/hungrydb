@@ -1,16 +1,21 @@
 import React from 'react';
 
 const CustomCard = (props) => {
-    const children = [...props.children];
-    const footerIndex = children.findIndex(child => child.type.displayName === 'CardFooter');
-    const footer = children[footerIndex];
+    let children = props.children;
+    let footer = null;
 
-    if (footerIndex !== -1) {
-        children.splice(footerIndex, 1);
+    if (Array.isArray(props.children)) {
+        children = [...props.children];
+        const footerIndex = children.findIndex(child => child.type.displayName === 'CardFooter');
+        footer = children[footerIndex];
+
+        if (footerIndex !== -1) {
+            children.splice(footerIndex, 1);
+        }
     }
 
     return (
-        <div style={{opacity: props.disabled ? "0.5": ""}}>
+        <div style={{ opacity: props.disabled ? "0.5" : "" }}>
             <div className="manageMenu-dish-info">
                 {children}
             </div>

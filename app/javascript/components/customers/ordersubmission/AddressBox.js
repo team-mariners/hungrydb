@@ -1,6 +1,4 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import axios from 'axios';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -42,20 +40,12 @@ class AddressBox extends React.Component {
 
     render() {
         return (
-            <Typeahead
-                id="basic-example"
-                // onChange={selected => this.setState({ selected })}
+            <Typeahead id="address-typeahead"
+                allowNew
+                onChange={ entered => this.props.onChangeAddress(entered[0]) }
                 options={this.state.recentAddresses}
-                placeholder="Choose a state..."
+                placeholder="Address"
             />
-
-
-            // <Form inline>
-            //     <FormControl type="text"
-            //         placeholder="Address"
-            //         className="mr-sm-2" style={{ width: 1000 }}
-            //         onChange={props.handleInsertChange} />
-            // </Form>
         )
     }
 }

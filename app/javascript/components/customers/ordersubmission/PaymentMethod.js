@@ -1,6 +1,5 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 
 const PaymentMethod = (props) => {
 
@@ -8,7 +7,8 @@ const PaymentMethod = (props) => {
         <Form>
             <Form.Group>
                 <Form.Label>Select Payment Method</Form.Label>
-                <Form.Control as="select" style={{width: "20%"}}>
+                <Form.Control as="select" style={{width: "20%"}}
+                    onChange={props.onChangeMethod}>
                     <option>Cash</option>
                     <option>Credit Card</option>
                 </Form.Control>

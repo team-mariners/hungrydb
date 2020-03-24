@@ -17,6 +17,7 @@ const AppBar = (props) => {
     const navLinkstyle = Colors.navbarLink;
 
     const handleLogout = () => {
+        sessionStorage.clear();
         axios.get("/logout"
         ).then(() => {
             // Redirect to homepage after successfully logged out

@@ -43,6 +43,7 @@ const LoginForm = (props) => {
 
             formik.setSubmitting(false);
         });
+        sessionStorage.clear();
     };
 
     return (

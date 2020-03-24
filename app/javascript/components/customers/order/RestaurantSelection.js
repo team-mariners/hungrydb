@@ -10,19 +10,21 @@ class RestaurantSelection extends React.Component {
         this.restaurant = this.props.res;
         this.menu_url = "/customer/order/" + this.restaurant.id + "/menu";
         this.review_url = "/restaurants/" + this.restaurant.id + "/reviews";
+        this.setSessionRestaurantInfo = this.setSessionRestaurantInfo.bind(this);
     }
 
-    selectRestaurant() {
-        // Pass restaurant_id state up through Restaurant to OrderPage
-        console.log("Selected restaurant ID " + this.restaurant.id);
-        this.props.onChooseRestaurant(this.restaurant.id);
+    setSessionRestaurantInfo() {
+        sessionStorage.setItem('restaurant_name', this.restaurant.name);
+        sessionStorage.setItem('restaurant_id', this.restaurant.id);
     }
 
     render() {
         return (
             <React.Fragment>
-                <div className='restaurant-media' onClick={() => this.selectRestaurant()}>
-                    <Link to={this.menu_url} className='restaurant-media-link' >
+                <div className='restaurant-media'>
+                    {/* Store the currently selected restaurant in sessionStorage */}
+                    <Link to={this.menu_url} className='restaurant-media-link'
+                    onClick={this.setSessionRestaurantInfo} >
                         <Media>
                             <img
                                 width={130}

@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       get 'home', to: 'customers#index'
       get 'order', to: 'customers#order', as: :customer_order_path
       get 'order/:rid/menu', to: 'customers#order'
+      get 'cart', to: 'customers#cart'
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
@@ -81,7 +82,8 @@ Rails.application.routes.draw do
 
       namespace :promotions do
         resources :promotions, only: %i[index create update]
-        get '/index_restaurant', to: 'promotions#index_restaurant'        
+        get '/index_restaurant', to: 'promotions#index_restaurant'
+        get '/:id/promotions', to: 'promotions#single_restaurant_promos'
       end
 
       namespace :orders do

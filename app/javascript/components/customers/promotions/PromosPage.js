@@ -28,9 +28,7 @@ class PromosPage extends React.Component {
 
     render() {
         if (!this.state.fds_promos && !this.state.restaurant_promos) {
-            return (
-                <h3>There are no promotions at the moment.</h3>
-            )
+            return null;
         } else {
             let fds_promos = this.state.fds_promos.map((fpromo) => {
                 return (

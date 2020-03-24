@@ -29,9 +29,7 @@ class Menu extends React.Component {
 
     render() {
         if (this.state.menu == null) {
-            return (
-                <h3>This restaurant is not selling anything at the moment.</h3>
-            )
+            return null;
         } else {
             // menu is an object, not array as keys are strings instead of array indices
             // so iterate instead of map()
@@ -51,7 +49,7 @@ class Menu extends React.Component {
 
                     for (let food of food_array) {
                         menuArray.push(
-                            <MenuItem food={food} />
+                            <MenuItem food={food} onSubmitOrder={this.props.onSubmitOrder}/>
                         )
                     }
                 }

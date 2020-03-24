@@ -9,8 +9,14 @@ import Button from 'react-bootstrap/Button';
 class Cart extends React.Component {
     constructor(props) {
         super(props);
+<<<<<<< HEAD
         this.orders = JSON.parse(sessionStorage.getItem('orders'))
         console.log(this.orders);
+=======
+        console.log(this.props.orders);
+        console.log(sessionStorage.getItem('orders'));
+        this.orders = JSON.parse(sessionStorage.getItem('orders'));
+>>>>>>> c6f0a45640018e13ccc6798ce6270b5de242955f
 
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmitPromo = this.handleSubmitPromo.bind(this);

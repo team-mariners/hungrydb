@@ -4,6 +4,7 @@ import CardLeftSide from '../../utilities/CustomCard/CardLeftSide';
 import CardRightSide from '../../utilities/CustomCard/CardRightSide';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
 import Button from 'react-bootstrap/Button';
+import { dateTimeFormat } from '../../utilities/Constants';
 
 const Promotion = (props) => {
     let editButton = <Button onClick={() => props.showEditPromo(props.promotion)}>Edit</Button>;
@@ -17,8 +18,8 @@ const Promotion = (props) => {
             <CardLeftSide>
                 <p><b>Name: </b>{props.promotion.p_name}</p>
                 <p><b>Promo code: </b>{props.promotion.promocode}</p>
-                <p><b>Start date & time: </b>{props.promotion.start_datetime.format('MMMM Do YYYY, h:mm a')}</p>
-                <p><b>End date & time: </b>{props.promotion.end_datetime.format('MMMM Do YYYY, h:mm a')}</p>
+                <p><b>Start date & time: </b>{props.promotion.start_datetime.format(dateTimeFormat)}</p>
+                <p><b>End date & time: </b>{props.promotion.end_datetime.format(dateTimeFormat)}</p>
             </CardLeftSide>
 
             <CardRightSide>

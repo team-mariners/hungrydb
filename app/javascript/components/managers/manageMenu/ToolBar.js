@@ -51,11 +51,6 @@ const ToolBar = (props) => {
             </Dropdown>
 
             {sectionActions}
-
-            <Form inline={true}>
-                <FormControl type="text" className="mr-sm-2" placeholder="Search Dishes" />
-                <Button type="button" variant="outline-success">Search</Button>
-            </Form>
         </div>
     )
 };

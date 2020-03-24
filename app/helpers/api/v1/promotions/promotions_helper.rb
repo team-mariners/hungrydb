@@ -37,6 +37,7 @@ module Api::V1::Promotions::PromotionsHelper
                            FROM Promotions
                            WHERE id = #{pid}
                            LIMIT 1"
+                           
     ActiveRecord::Base.connection.execute(promo_discount_query)[0]['promocode']
   end
 

@@ -12,15 +12,16 @@ class Cart extends React.Component {
         this.orders = JSON.parse(sessionStorage.getItem('orders'))
         console.log(this.orders);
 
-
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
         this.checkPromoUsed = this.checkPromoUsed.bind(this);
         this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
         this.handleSubmitPoints = this.handleSubmitPoints.bind(this);
+        this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
         this.state = { promotions: null, entered_promo: "", entered_points: "" };
 
         this.totalCost = 0;
+        this.amountDue = 0;
         this.discountPercentage = sessionStorage.getItem("discount_percent");
         this.usedPromos = sessionStorage.getItem("used_promos");
         this.points = 0;
@@ -97,6 +98,14 @@ class Cart extends React.Component {
         console.log(this.points);
     }
 
+    handleSubmitOrder(e) {
+        if (this.totalCost < sessionStorage.getItem('restaurant_min')) {
+            alert("Your order cost is lower than the minimum required by the restaurant.");
+            e.preventDefault();
+        }
+        this.props.onAmountDueSubmit(this.amountDue);
+    }
+
     render() {
         // Prevent erratic increment of totalCost on re-render
         this.totalCost = 0;
@@ -114,12 +123,16 @@ class Cart extends React.Component {
                     this.totalCost += foodDetails.price * foodDetails.quantity;
                 }
             }
+            this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage+ 3)
+                            .toFixed(2);
             return (
                 <div className='cart-container'>
                     <div><br /></div>
                     <h3>Ordering From: {sessionStorage.getItem('restaurant_name')}</h3>
                     <h4>
-                        (minimum order ${parseFloat(sessionStorage.getItem('restaurant_min')).toFixed(2)})
+                        (minimum order ${parseFloat(
+                            sessionStorage.getItem('restaurant_min')).toFixed(2)}
+                        )
                     </h4>
                     <div><br /></div>
                     <CartItemTable items={items}/>
@@ -155,12 +168,12 @@ class Cart extends React.Component {
                     <div><br /><br /></div>
 
                     <h2 className='cart-amount-due'>
-                        Amount Due: ${
-                            (this.totalCost - this.totalCost * this.discountPercentage
-                            + 3).toFixed(2)
-                        }
+                        Amount Due: ${this.amountDue}
                     </h2>
-                    <Button variant="primary" size="lg">ORDER</Button>
+                    <Button href="/customer/complete-order" variant="primary" size="lg"
+                        onClick={this.handleSubmitOrder}>
+                            ORDER
+                    </Button>
                     <div><br /><br /></div>
                 </div>
             )

@@ -23,8 +23,9 @@ class Cart extends React.Component {
         this.totalCost = 0;
         this.amountDue = 0;
         this.discountPercentage = sessionStorage.getItem("discount_percent");
-        this.usedPromos = JSON.parse(sessionStorage.getItem("used_promos"));
-        this.points = 0;
+        this.usedPromoCodes = JSON.parse(sessionStorage.getItem("used_promo_codes"));
+        this.usedPromoIds = JSON.parse(sessionStorage.getItem("used_promo_ids"));
+        this.points = sessionStorage.getItem("points") ? sessionStorage.getItem("points") : 0;
     }
 
     componentDidMount() {
@@ -64,13 +65,21 @@ class Cart extends React.Component {
                 let newPercentage = currPercentage + parseFloat(promo.percentage) / 100;
                 sessionStorage.setItem("discount_percent", newPercentage.toFixed(2));
 
-                let currUsedPromos = this.usedPromos == null
+                // Save used promo codes and ids as arrays in sessionStorage
+                let currUsedPromoCodes = this.usedPromoCodes == null
                     ? []
-                    : this.usedPromos;
-                currUsedPromos.push(promo.promocode);
-                console.log(currUsedPromos);
-                sessionStorage.setItem("used_promos", JSON.stringify(currUsedPromos));
-                // sessionStorage.setItem("used_promo_ids", promo);
+                    : this.usedPromoCodes;
+                currUsedPromoCodes.push(promo.promocode);
+                console.log(currUsedPromoCodes);
+                sessionStorage.setItem("used_promo_codes", JSON.stringify(currUsedPromoCodes));
+
+                let currUsedPromoIds = this.usedPromoIds == null
+                    ? []
+                    : this.usedPromoIds;
+                currUsedPromoIds.push(promo.id);
+                console.log(currUsedPromoIds);
+                sessionStorage.setItem("used_promo_ids", JSON.stringify(currUsedPromoIds));
+
                 alert(promo.promocode + " applied for " + promo.percentage + "% off!");
                 return;
             }
@@ -81,8 +90,8 @@ class Cart extends React.Component {
 
     checkPromoUsed() {
         // Check if promo used before
-        if (this.usedPromos) {
-            let usedPromosArray = this.usedPromos;
+        if (this.usedPromoCodes) {
+            let usedPromosArray = this.usedPromoCodes;
             for (let usedCode of usedPromosArray) {
                 if (usedCode == this.state.entered_promo) {
                     return usedCode;
@@ -97,9 +106,12 @@ class Cart extends React.Component {
         this.setState({ entered_points: e.target.value });
     }
 
-    handleSubmitPoints() {
-        this.points = parseInt(this.state.entered_points);
-        console.log(this.points);
+    handleSubmitPoints(e) {
+        if (parseInt(this.state.entered_points) > 0) {
+            sessionStorage.setItem("points", this.state.entered_points);
+        } else {
+            e.preventDefault();
+        }
     }
 
     handleSubmitOrder(e) {
@@ -127,7 +139,8 @@ class Cart extends React.Component {
                     this.totalCost += foodDetails.price * foodDetails.quantity;
                 }
             }
-            this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage+ 3)
+            this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
+                                - this.points + 3)
                             .toFixed(2);
             return (
                 <div className='cart-container'>
@@ -167,7 +180,7 @@ class Cart extends React.Component {
                     <div><br /></div>
 
                     <h4>
-                        Offset: -${this.points.toFixed(2)}
+                        Offset: -${parseInt(this.points).toFixed(2)}
                     </h4>
                     <div><br /><br /></div>
 

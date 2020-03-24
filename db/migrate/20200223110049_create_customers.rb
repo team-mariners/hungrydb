@@ -7,7 +7,6 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
       t.bigint :can
       t.integer :cvv
       t.integer :rewardPoints, null: false, default: 0
-      t.string :locationHistory
 
       t.timestamps
     end

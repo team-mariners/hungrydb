@@ -17,7 +17,7 @@ module Api::V1::Promotions::PromotionsHelper
   end
 
   def retrieve_restaurant_promos(rid)
-    res_promos_query = "SELECT P.p_name, P.promocode, P.num_redeemed,
+    res_promos_query = "SELECT P.id, P.p_name, P.promocode, P.num_redeemed,
                                P.max_redeem, P.start_datetime, P.end_datetime, P.percentage
                        FROM Has_Promotions H INNER JOIN Promotions P
                             ON H.restaurant_id = #{rid}

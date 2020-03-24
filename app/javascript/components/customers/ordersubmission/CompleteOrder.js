@@ -9,6 +9,7 @@ class CompleteOrder extends React.Component {
         super(props);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handlePaymentChange = this.handlePaymentChange.bind(this);
+        this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
         this.state = {address: "", paymentMethod: "cash" };
     }
 
@@ -27,11 +28,31 @@ class CompleteOrder extends React.Component {
         console.log(e.target.value.toLowerCase());
     }
 
-    handleSubmitOrder() {
-        order = {};
-        order['promo_ids'] = sessionStorage.getItem('promo_ids')
-        order["foods"] = sessionStorage.getItem('orders');
-        axios.post('/api/v1/orders', )
+    handleSubmitOrder(e) {
+        if (!this.state.address) {
+            alert("Address cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+
+        let order = {};
+        order["promo_ids"] = JSON.parse(sessionStorage.getItem('used_promo_ids'));
+        order["restaurant_id"] = parseInt(sessionStorage.getItem('restaurant_id'));
+        order["point_offset"] = parseInt(sessionStorage.getItem('points'));
+        order["payment_method"] = this.state.paymentMethod;
+        order["delivery_fee"] = 3.00
+        order["total_price"] = sessionStorage.getItem('amount_due');
+        order["status"] = "in progress";
+        order["foods"] = JSON.parse(sessionStorage.getItem('orders'));
+        order["customer_location"] = this.state.address;
+        axios.post('/orders', order)
+            .then((result) => {         
+                console.log(result);
+                sessionStorage.clear();
+            }).catch((error) => {
+                console.log(error);
+                alert("Failed to place order!");
+            })
     }
 
     render() {

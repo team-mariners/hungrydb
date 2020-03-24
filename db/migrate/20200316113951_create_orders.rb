@@ -2,9 +2,9 @@
 
 class CreateOrders < ActiveRecord::Migration[6.0]
   def up
-    execute "CREATE TYPE payment_type AS ENUM ('cash', 'credit_card');"
+    execute "CREATE TYPE payment_type AS ENUM ('cash', 'credit card');"
 
-    execute "CREATE TYPE status_type AS ENUM ('in_progress', 'complete');"
+    execute "CREATE TYPE status_type AS ENUM ('in progress', 'complete');"
 
     execute "CREATE SEQUENCE orders_id_seq
     START WITH 1
@@ -23,7 +23,7 @@ class CreateOrders < ActiveRecord::Migration[6.0]
       delivery_fee numeric NOT NULL DEFAULT 3,
       total_price numeric NOT NULL,
       date_time timestamp NOT NULL,
-      status status_type NOT NULL DEFAULT 'in_progress',
+      status status_type NOT NULL DEFAULT 'in progress',
       PRIMARY KEY (oid),
       FOREIGN KEY (customer_id) REFERENCES Customers(user_id),
       FOREIGN KEY (promo_id) REFERENCES Promotions,

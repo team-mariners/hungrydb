@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import AddressBox from './AddressBox';
 import PaymentMethod from './PaymentMethod';
+import axios from 'axios';
 
 class CompleteOrder extends React.Component {
     constructor(props) {
@@ -26,6 +27,13 @@ class CompleteOrder extends React.Component {
         console.log(e.target.value.toLowerCase());
     }
 
+    handleSubmitOrder() {
+        order = {};
+        order['promo_ids'] = sessionStorage.getItem('promo_ids')
+        order["foods"] = sessionStorage.getItem('orders');
+        axios.post('/api/v1/orders', )
+    }
+
     render() {
         return (
             <div className="order-submission-container">
@@ -35,7 +43,7 @@ class CompleteOrder extends React.Component {
                 <AddressBox onChangeAddress={this.handleAddressChange} />
                 <br/><br/><br/><br/>
 
-                <h2>Amount Due: ${parseFloat(sessionStorage.getItem('amountDue')).toFixed(2)}</h2>
+                <h2>Amount Due: ${parseFloat(sessionStorage.getItem('amount_due')).toFixed(2)}</h2>
                 <PaymentMethod onChangeMethod={this.handlePaymentChange} />
                 <br/><br/>
 

@@ -47,7 +47,7 @@ class Index extends React.Component {
     }
 
     handleRecordAmountDue(latestAmount) {
-        sessionStorage.setItem('amountDue', latestAmount);
+        sessionStorage.setItem('amount_due', latestAmount);
     }
 
     render() {

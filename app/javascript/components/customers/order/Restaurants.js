@@ -27,7 +27,8 @@ class Restaurants extends React.Component {
         } else {
             let restaurants = this.state.restaurants.map((restaurant) => {
                 return (
-                    <RestaurantSelection res={restaurant} />
+                    <RestaurantSelection res={restaurant}
+                        onResetOrders={this.props.onResetOrders} />
                 )
             })
             return (

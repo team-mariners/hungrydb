@@ -3,23 +3,26 @@ import axios from 'axios';
 import CartItem from './CartItem';
 import CartItemTable from './CartItemTable';
 import CartPromoForm from './CartPromoForm';
+import CartPointsForm from './CartPointsForm';
 import Button from 'react-bootstrap/Button';
 
 class Cart extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.orders);
-        console.log(sessionStorage.getItem('orders'));
         this.orders = JSON.parse(sessionStorage.getItem('orders'))
+        console.log(this.orders);
 
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
         this.checkPromoUsed = this.checkPromoUsed.bind(this);
-        this.state = { entered_promo: "", promotions: null };
+        this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
+        this.handleSubmitPoints = this.handleSubmitPoints.bind(this);
+        this.state = { promotions: null, entered_promo: "", entered_points: "" };
 
-        this.amountDue = 0;
+        this.totalCost = 0;
         this.discountPercentage = sessionStorage.getItem("discount_percent");
         this.usedPromos = sessionStorage.getItem("used_promos");
+        this.points = 0;
     }
 
     componentDidMount() {
@@ -34,18 +37,14 @@ class Cart extends React.Component {
             .catch(error => {
                 console.log(error);
             })
-        // Set amountDue to 0 for every render
-        this.amountDue = 0;
     }
 
     handlePromoInsertChange(e) {
-        // Set amountDue to 0 for re-render after setState
-        this.amountDue = 0;
         console.log(e.target.value.toUpperCase());
         this.setState({ entered_promo: e.target.value.toUpperCase() });
     }
 
-    handleSubmit(e) {
+    handleSubmitPromo(e) {
         let usedPromo = this.checkPromoUsed();
         if (usedPromo) {
             alert("You have already used " + usedPromo);
@@ -55,7 +54,6 @@ class Cart extends React.Component {
 
         // Apply promo, save total discount % & used promo to sessionStorage
         let promotionsList = this.state.promotions;
-        console.log(promotionsList);
         for (let promo of promotionsList) {
             if (promo.promocode === this.state.entered_promo) {
                 let currPercentage = this.discountPercentage == null
@@ -88,9 +86,19 @@ class Cart extends React.Component {
         return null;
     }
 
+    handlePointsInsertChange(e) {
+        console.log(e.target.value);
+        this.setState({ entered_points: e.target.value });
+    }
+
+    handleSubmitPoints() {
+        this.points = parseInt(this.state.entered_points);
+        console.log(this.points);
+    }
+
     render() {
-        // Prevent erratic increment of amountDue on re-render
-        this.amountDue = 0;
+        // Prevent erratic increment of totalCost on re-render
+        this.totalCost = 0;
 
         if (this.orders === null) {
             return <h3>Your cart is empty.</h3>
@@ -102,7 +110,7 @@ class Cart extends React.Component {
                     items.push(
                         <CartItem foodName={item} foodDetails={foodDetails} />
                     )
-                    this.amountDue += foodDetails.price * foodDetails.quantity;
+                    this.totalCost += foodDetails.price * foodDetails.quantity;
                 }
             }
             return (
@@ -117,25 +125,41 @@ class Cart extends React.Component {
                     <div><br /></div>
                     
                     <h4>
-                        Total: ${this.amountDue.toFixed(2)}
+                        Total: ${this.totalCost.toFixed(2)}
                     </h4>
-                    <div><br /></div>
+                    <h4>
+                        Delivery Fee: $3.00
+                    </h4>
+                    <div><br /><br /></div>
                     
                     <CartPromoForm
-                        handleSubmit={this.handleSubmit}
-                        handlePromoInsertChange={this.handlePromoInsertChange} />
+                        handleSubmit={this.handleSubmitPromo}
+                        handleInsertChange={this.handlePromoInsertChange} />
                     <div><br /></div>
 
                     <h4>
-                        Discount: -${(this.amountDue * this.discountPercentage).toFixed(2)} ( 
+                        Discount: -${(this.totalCost * this.discountPercentage).toFixed(2)} ( 
                         {this.discountPercentage * 100}%)
                     </h4>
                     <div><br /><br /></div>
 
+                    <CartPointsForm
+                        points={this.props.points} handleSubmit={this.handleSubmitPoints}
+                        handleInsertChange={this.handlePointsInsertChange} />
+                    <div><br /></div>
+
+                    <h4>
+                        Offset: -${this.points.toFixed(2)}
+                    </h4>
+                    <div><br /><br /></div>
+
                     <h2 className='cart-amount-due'>
-                        Amount Due: ${(this.amountDue - this.amountDue * this.discountPercentage).toFixed(2)}
+                        Amount Due: ${
+                            (this.totalCost - this.totalCost * this.discountPercentage
+                            + 3).toFixed(2)
+                        }
                     </h2>
-                    <Button variant="primary" size="lg">PAY</Button>
+                    <Button variant="primary" size="lg">ORDER</Button>
                     <div><br /><br /></div>
                 </div>
             )

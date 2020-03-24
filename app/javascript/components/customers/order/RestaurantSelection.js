@@ -24,6 +24,7 @@ class RestaurantSelection extends React.Component {
                 return;
             } else {
                 sessionStorage.clear();
+                this.props.onResetOrders();
             }
         }
         this.setSessionRestaurantInfo();

@@ -13,7 +13,9 @@ import RestaurantReviews from './order/RestaurantReviews';
 class Index extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
+        this.resetOrders = this.resetOrders.bind(this);
         this.state = { orders: JSON.parse(sessionStorage.getItem('orders')) };
     }
 
@@ -38,6 +40,10 @@ class Index extends React.Component {
         console.log(sessionStorage.getItem('orders'));
     }
 
+    resetOrders() {
+        this.setState({ orders: JSON.parse(sessionStorage.getItem('orders')) });
+    }
+
     render() {
         return (
             <Router>
@@ -45,7 +51,8 @@ class Index extends React.Component {
                 {/* <h6>{JSON.stringify(props.info)}</h6> */}
                 <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
 
-                <Route exact path="/customer/order" render={() => <Restaurants />} />
+                <Route exact path="/customer/order"
+                    render={() => <Restaurants onResetOrders={this.resetOrders} />} />
 
                 <Route exact path={ "/customer/order/:rid/menu" }>
                     <Menu onSubmitOrder={this.handleSubmitOrder} />
@@ -53,7 +60,9 @@ class Index extends React.Component {
 
                 <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews/>} />
                 
-                <Route exact path="/customer/cart" render={() => <Cart orders={this.state.orders} />} />
+                <Route exact path="/customer/cart">
+                    <Cart orders={this.state.orders} points={this.props.info.points} />
+                </Route>
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
                 <Route exact path="/customer/promotions" render={() => <PromosPage />} />

@@ -243,13 +243,12 @@ ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
-                        payment_method, delivery_fee, date_time, status)
-    VALUES (1, 1, 1, 3, 'cash', 2.5, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+                        payment_method, delivery_fee, total_price, date_time, status)
+    VALUES (1, 1, 1, 3, 'cash', 3, 18, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
 )
 
 test_order_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT oid FROM Orders
-    WHERE status = 'complete'
     LIMIT 1"
 ).to_a[0]
 

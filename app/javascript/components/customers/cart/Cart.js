@@ -14,7 +14,6 @@ class Cart extends React.Component {
 
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
-        this.checkPromoUsed = this.checkPromoUsed.bind(this);
         this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
         this.handleSubmitPoints = this.handleSubmitPoints.bind(this);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
@@ -23,8 +22,8 @@ class Cart extends React.Component {
         this.totalCost = 0;
         this.amountDue = 0;
         this.discountPercentage = sessionStorage.getItem("discount_percent");
-        this.usedPromoCodes = JSON.parse(sessionStorage.getItem("used_promo_codes"));
-        this.usedPromoIds = JSON.parse(sessionStorage.getItem("used_promo_ids"));
+        this.usedPromoCode = JSON.parse(sessionStorage.getItem("used_promo_code"));
+        this.usedPromoId = JSON.parse(sessionStorage.getItem("used_promo_id"));
         this.points = sessionStorage.getItem("points") ? sessionStorage.getItem("points") : 0;
     }
 
@@ -48,9 +47,8 @@ class Cart extends React.Component {
     }
 
     handleSubmitPromo(e) {
-        let usedPromo = this.checkPromoUsed();
-        if (usedPromo) {
-            alert("You have already used " + usedPromo);
+        if (this.usedPromoCode === this.state.entered_promo) {
+            alert("You have already used " + this.usedPromoCode);
             e.preventDefault();
             return;
         }
@@ -59,26 +57,12 @@ class Cart extends React.Component {
         let promotionsList = this.state.promotions;
         for (let promo of promotionsList) {
             if (promo.promocode === this.state.entered_promo) {
-                let currPercentage = this.discountPercentage == null
-                    ? 0
-                    : parseFloat(this.discountPercentage);
-                let newPercentage = currPercentage + parseFloat(promo.percentage) / 100;
+                let newPercentage = parseFloat(promo.percentage) / 100;
                 sessionStorage.setItem("discount_percent", newPercentage.toFixed(2));
 
-                // Save used promo codes and ids as arrays in sessionStorage
-                let currUsedPromoCodes = this.usedPromoCodes == null
-                    ? []
-                    : this.usedPromoCodes;
-                currUsedPromoCodes.push(promo.promocode);
-                console.log(currUsedPromoCodes);
-                sessionStorage.setItem("used_promo_codes", JSON.stringify(currUsedPromoCodes));
+                sessionStorage.setItem("used_promo_code", JSON.stringify(promo.promocode));
 
-                let currUsedPromoIds = this.usedPromoIds == null
-                    ? []
-                    : this.usedPromoIds;
-                currUsedPromoIds.push(promo.id);
-                console.log(currUsedPromoIds);
-                sessionStorage.setItem("used_promo_ids", JSON.stringify(currUsedPromoIds));
+                sessionStorage.setItem("used_promo_id", JSON.stringify(promo.id));
 
                 alert(promo.promocode + " applied for " + promo.percentage + "% off!");
                 return;
@@ -86,19 +70,6 @@ class Cart extends React.Component {
         }
         alert("No such promotion exists!");
         e.preventDefault();
-    }
-
-    checkPromoUsed() {
-        // Check if promo used before
-        if (this.usedPromoCodes) {
-            let usedPromosArray = this.usedPromoCodes;
-            for (let usedCode of usedPromosArray) {
-                if (usedCode == this.state.entered_promo) {
-                    return usedCode;
-                }
-            }
-        }
-        return null;
     }
 
     handlePointsInsertChange(e) {

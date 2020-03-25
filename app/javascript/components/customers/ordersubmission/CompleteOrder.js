@@ -36,7 +36,7 @@ class CompleteOrder extends React.Component {
         }
 
         let order = {};
-        order["promo_ids"] = JSON.parse(sessionStorage.getItem('used_promo_ids'));
+        order["promo_ids"] = JSON.parse(sessionStorage.getItem('used_promo_id'));
         order["restaurant_id"] = parseInt(sessionStorage.getItem('restaurant_id'));
         order["point_offset"] = parseInt(sessionStorage.getItem('points'));
         order["payment_method"] = this.state.paymentMethod;

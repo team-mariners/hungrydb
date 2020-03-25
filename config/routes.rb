@@ -94,6 +94,10 @@ Rails.application.routes.draw do
       namespace :reviews do
         resources :reviews, only: %i[index create destroy update]
       end
+
+      namespace :statistics do
+        get '/monthy_overall_summary', to: 'statistics#monthly_overall_summary'
+      end
     end
   end
 

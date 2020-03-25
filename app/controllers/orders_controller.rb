@@ -48,18 +48,38 @@ class OrdersController < ApplicationController
               CURRENT_TIMESTAMP)"
     )
 
-    # Insert corresponding Comprises entry
+    # Insert corresponding Comprises entry and add num_order to food
     foods = filtered_params['foods']
-    foods.each do |food, details|
+    foods.each do |foodKey, foodDetails|
       ActiveRecord::Base.connection.exec_query(
         "INSERT INTO Comprises
-        VALUES (#{stored_order['oid']}, #{details['id']}, #{details['quantity']})"
+        VALUES (#{stored_order['oid']}, #{foodDetails['id']}, #{foodDetails['quantity']})"
+      )
+
+
+      ActiveRecord::Base.connection.exec_query(
+        "UPDATE Foods
+        SET num_orders = num_orders + #{foodDetails['quantity']}
+        WHERE id = #{foodDetails['id']}"
       )
     end
 
-    ActiveRecord::Base.connection.commit_db_transaction
-  end
+    # Deduct Customer used reward points and add after payment
+    ActiveRecord::Base.connection.exec_query(
+      "UPDATE Customers
+      SET reward_points = reward_points - #{stored_order['point_offset']}
+                          + #{stored_order['total_price'].to_i}
+      WHERE id = #{current_user.id}"
+    )
 
-  def update_relevant_tables
+    used_promo = stored_order['promo_id'] ? stored_order['promo_id'] : "null"
+    # Add Promotions number redeemed
+    ActiveRecord::Base.connection.exec_query(
+      "UPDATE Promotions
+      SET num_redeemed = num_redeemed + 1
+      WHERE id = #{used_promo}"
+    )
+
+    ActiveRecord::Base.connection.commit_db_transaction
   end
 end

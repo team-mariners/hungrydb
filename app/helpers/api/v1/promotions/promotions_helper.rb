@@ -3,9 +3,12 @@
 module Api::V1::Promotions::PromotionsHelper
   def retrieve_fds_promos
     fds_promos_query = "SELECT *
-                        FROM Promotions P INNER JOIN FDS_Promotions F
-                             ON (P.id = F.promotion_id)
-                        ORDER BY P.promocode"
+                       FROM Promotions P INNER JOIN FDS_Promotions F
+                            ON P.id = F.promotion_id
+                               and CURRENT_TIMESTAMP >= P.start_datetime
+                               and CURRENT_TIMESTAMP <= P.end_datetime
+                               and num_redeemed < max_redeem
+                       ORDER BY P.promocode"
     ActiveRecord::Base.connection.execute(fds_promos_query)
   end
 
@@ -24,6 +27,7 @@ module Api::V1::Promotions::PromotionsHelper
                                and H.restaurant_promotion_id = P.id
                                and CURRENT_TIMESTAMP >= P.start_datetime
                                and CURRENT_TIMESTAMP <= P.end_datetime
+                               and num_redeemed < max_redeem
                        ORDER BY P.promocode"
     ActiveRecord::Base.connection.execute(res_promos_query)
   end

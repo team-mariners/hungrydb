@@ -22,18 +22,32 @@ class Index extends React.Component {
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
-    handleSubmitOrder(newFood, picture) {
+    handleSubmitOrder(e, newFood, picture) {
         let updatedOrders = this.state.orders === null ? {} : this.state.orders;
+        let numAvailable = newFood.daily_limit - newFood.num_orders;
+        console.log(numAvailable);
         if (newFood.f_name in updatedOrders) {
-            updatedOrders[newFood.f_name]["quantity"] =
-                parseInt(updatedOrders[newFood.f_name]["quantity"]) +
-                parseInt(newFood.quantity);
+            let orderedQuantity = parseInt(updatedOrders[newFood.f_name]["quantity"])
+                                    + parseInt(newFood.quantity);
+            if (orderedQuantity <= numAvailable) {
+                updatedOrders[newFood.f_name]["quantity"] = orderedQuantity;
+            } else {
+                alert("Your order has exceeded the available number.");
+                e.preventDefault();
+                return false;
+            }
         } else {
-            updatedOrders[newFood.f_name] = {};
-            updatedOrders[newFood.f_name]["picture"] = picture;
-            updatedOrders[newFood.f_name]["price"] = newFood.price;
-            updatedOrders[newFood.f_name]["quantity"] = newFood.quantity;
-            updatedOrders[newFood.f_name]["id"] = newFood.id;
+            if (newFood.quantity <= numAvailable) {
+                updatedOrders[newFood.f_name] = {};
+                updatedOrders[newFood.f_name]["picture"] = picture;
+                updatedOrders[newFood.f_name]["price"] = newFood.price;
+                updatedOrders[newFood.f_name]["quantity"] = newFood.quantity;
+                updatedOrders[newFood.f_name]["id"] = newFood.id;
+            } else {
+                alert("Your order has exceeded the available number.");
+                e.preventDefault();
+                return false;
+            }
         }
         console.log(updatedOrders);
 
@@ -41,6 +55,7 @@ class Index extends React.Component {
         // Persist order info in local browser storage
         sessionStorage.setItem('foods', JSON.stringify(updatedOrders));
         console.log(sessionStorage.getItem('foods'));
+        return true;
     }
 
     resetFoods() {

@@ -4,11 +4,18 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
 const CartPointsForm = (props) => {
-    let infotext = "Use Points (You have " + props.points + ")"
+
+    // If points <= amountDue, can use all points
+    // If points > amountDue, can use up to amountDue points
+    let maxPoints = (props.points <= parseInt(props.amountDue))
+                    ? props.points
+                    : parseInt(props.amountDue);
+
+    let infotext = "Use Points (You can use " + maxPoints + ")";
 
     return (
         <Form inline onSubmit={props.handleSubmit}>
-        <FormControl type="number" min="1" max={props.points}
+        <FormControl type="number" min="0" max={maxPoints}
             placeholder={infotext}
             className="mr-sm-2" style={{ width: 300 }}
             onChange={props.handleInsertChange} />

@@ -103,7 +103,7 @@ class Cart extends React.Component {
     }
 
     handleSubmitPoints(e) {
-        if (parseInt(this.state.entered_points) > 0) {
+        if (parseInt(this.state.entered_points) >= 0) {
             sessionStorage.setItem("points", this.state.entered_points);
         } else {
             e.preventDefault();
@@ -172,7 +172,8 @@ class Cart extends React.Component {
                     <div><br /><br /></div>
 
                     <CartPointsForm
-                        points={this.props.points} handleSubmit={this.handleSubmitPoints}
+                        points={this.props.points} amountDue={this.amountDue}
+                        handleSubmit={this.handleSubmitPoints}
                         handleInsertChange={this.handlePointsInsertChange} />
                     <div><br /></div>
 
@@ -184,6 +185,7 @@ class Cart extends React.Component {
                     <h2 className='cart-amount-due'>
                         Amount Due: ${this.amountDue}
                     </h2>
+                    <div><br /></div>
                     <Button href="/customer/complete-order" variant="primary" size="lg"
                         onClick={this.handleSubmitOrder}>
                             ORDER

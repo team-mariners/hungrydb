@@ -18,7 +18,7 @@ ActiveRecord::Base.connection.exec_query(
 
 # Users with customer role
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO customers(user_id, created_at, updated_at, \"rewardPoints\") VALUES
+    "INSERT INTO customers(user_id, created_at, updated_at, reward_points) VALUES
     ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now', 50);"
 )
 
@@ -307,7 +307,7 @@ test_order_2 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time)
-    VALUES (#{test_order_2['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
+    VALUES (#{test_order_2['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Bikini Bottom',
             CURRENT_TIMESTAMP)"
 )
 

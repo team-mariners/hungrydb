@@ -55,10 +55,11 @@ class FoodModal extends React.Component {
             alert("Please insert a valid number more than 0");
             e.preventDefault;
         } else {
-            this.props.onSubmitOrder(this.food, this.props.picture);
-            this.props.onClose();
-            alert("Ordered " + this.food.quantity + " " + this.food.f_name);
-            this.food.quantity = 1;
+            if (this.props.onSubmitOrder(e, this.food, this.props.picture)) {
+                this.props.onClose();
+                alert("Ordered " + this.food.quantity + " " + this.food.f_name);
+                this.food.quantity = 1;
+            }
         }
     }
 

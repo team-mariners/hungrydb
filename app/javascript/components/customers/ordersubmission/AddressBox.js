@@ -30,7 +30,7 @@ class AddressBox extends React.Component {
                     OR uniqueAddresses = Array.from(new Set(addresses))
                     */
 
-                    this.setState({ recentAddresses: uniqueAddresses.slice(0, 1) });
+                    this.setState({ recentAddresses: uniqueAddresses.slice(0, 5) });
                     console.log(this.state.recentAddresses);
                 })
             .catch(error => {

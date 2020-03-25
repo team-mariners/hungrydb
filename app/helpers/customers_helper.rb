@@ -14,7 +14,7 @@ module CustomersHelper
     # user_hash keys are id, username, email, roles, customer_id
     user_hash = get_user_hash(user)
     user_hash['customer_id'] = customer.id
-    user_hash['points'] = customer.rewardPoints
+    user_hash['points'] = customer.reward_points
 
     # Return the object
     user_hash

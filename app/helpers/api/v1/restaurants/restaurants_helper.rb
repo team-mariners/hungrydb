@@ -16,7 +16,7 @@ module Api::V1::Restaurants::RestaurantsHelper
   end
 
   def retrieve_section_food(rid, ms_id)
-    sec_food_query = "SELECT DISTINCT F.f_name, F.price, F.num_orders, F.daily_limit
+    sec_food_query = "SELECT DISTINCT F.f_name, F.price, F.num_orders, F.daily_limit, F.id
                      FROM menu_sections M INNER JOIN Foods F
                      ON M.restaurant_id = #{rid} and M.url_id = #{ms_id}
                         and F.ms_url_id = M.url_id

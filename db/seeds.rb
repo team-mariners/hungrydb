@@ -264,7 +264,7 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time,
                           depart_to_restaurant_time, arrive_at_restaurant_time,
                           depart_to_customer_time, arrive_at_customer_time)
-    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
+    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\\_(ツ)_/¯',
             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '5 min',
             CURRENT_TIMESTAMP + INTERVAL '10 min', CURRENT_TIMESTAMP + INTERVAL '15 min',
             CURRENT_TIMESTAMP + INTERVAL '1 hour');"

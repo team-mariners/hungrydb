@@ -17,14 +17,14 @@ class RestaurantSelection extends React.Component {
     handleSelectRestaurant(e) {
         let currentOrderRestaurant = sessionStorage.getItem('restaurant_name');
         // Check if there are already orders placed under a different restaurant
-        if (sessionStorage.getItem('orders') &&
+        if (sessionStorage.getItem('foods') &&
             this.restaurant.name !== currentOrderRestaurant) {
             if (!this.confirmChangeRestaurant(currentOrderRestaurant)) {
                 e.preventDefault();
                 return;
             } else {
                 sessionStorage.clear();
-                this.props.onResetOrders();
+                this.props.onResetOrder();
             }
         }
         this.setSessionRestaurantInfo();

@@ -17,33 +17,34 @@ class Index extends React.Component {
         console.log(props);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
         this.handleRecordAmountDue = this.handleRecordAmountDue.bind(this);
-        this.resetOrders = this.resetOrders.bind(this);
-        this.state = { orders: JSON.parse(sessionStorage.getItem('orders')) };
+        this.resetFoods = this.resetFoods.bind(this);
+        this.state = { orders: JSON.parse(sessionStorage.getItem('foods')) };
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
-    handleSubmitOrder(newOrder, picture) {
+    handleSubmitOrder(newFood, picture) {
         let updatedOrders = this.state.orders === null ? {} : this.state.orders;
-        if (newOrder.f_name in updatedOrders) {
-            updatedOrders[newOrder.f_name]["quantity"] =
-                parseInt(updatedOrders[newOrder.f_name]["quantity"]) +
-                parseInt(newOrder.quantity);
+        if (newFood.f_name in updatedOrders) {
+            updatedOrders[newFood.f_name]["quantity"] =
+                parseInt(updatedOrders[newFood.f_name]["quantity"]) +
+                parseInt(newFood.quantity);
         } else {
-            updatedOrders[newOrder.f_name] = {};
-            updatedOrders[newOrder.f_name]["picture"] = picture;
-            updatedOrders[newOrder.f_name]["price"] = newOrder.price;
-            updatedOrders[newOrder.f_name]["quantity"] = newOrder.quantity;
+            updatedOrders[newFood.f_name] = {};
+            updatedOrders[newFood.f_name]["picture"] = picture;
+            updatedOrders[newFood.f_name]["price"] = newFood.price;
+            updatedOrders[newFood.f_name]["quantity"] = newFood.quantity;
+            updatedOrders[newFood.f_name]["id"] = newFood.id;
         }
         console.log(updatedOrders);
 
         this.setState({ orders: updatedOrders });
         // Persist order info in local browser storage
-        sessionStorage.setItem('orders', JSON.stringify(updatedOrders));
-        console.log(sessionStorage.getItem('orders'));
+        sessionStorage.setItem('foods', JSON.stringify(updatedOrders));
+        console.log(sessionStorage.getItem('foods'));
     }
 
-    resetOrders() {
-        this.setState({ orders: JSON.parse(sessionStorage.getItem('orders')) });
+    resetFoods() {
+        this.setState({ orders: JSON.parse(sessionStorage.getItem('foods')) });
     }
 
     handleRecordAmountDue(latestAmount) {
@@ -58,7 +59,7 @@ class Index extends React.Component {
                 <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
 
                 <Route exact path="/customer/order"
-                    render={() => <Restaurants onResetOrders={this.resetOrders} />} />
+                    render={() => <Restaurants onResetOrder={this.resetFoods} />} />
 
                 <Route exact path={ "/customer/order/:rid/menu" }>
                     <Menu onSubmitOrder={this.handleSubmitOrder} />

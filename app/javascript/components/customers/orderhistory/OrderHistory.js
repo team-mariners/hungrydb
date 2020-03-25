@@ -15,7 +15,7 @@ class OrderHistory extends React.Component {
                 (response) => {
                     const retrieved_orders = response.data.orders;
                     this.setState({ orders: retrieved_orders });
-                    console.log("Order History: " + retrieved_orders);
+                    console.log(retrieved_orders);
             })
             .catch(error => {
                 console.log(error);

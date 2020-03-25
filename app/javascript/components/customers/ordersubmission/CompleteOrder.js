@@ -53,18 +53,23 @@ class CompleteOrder extends React.Component {
         }
 
         let order = {};
-        order["promo_ids"] = JSON.parse(sessionStorage.getItem('used_promo_id'));
+        order["promo_id"] = sessionStorage.getItem('used_promo_id')
+                            ? JSON.parse(sessionStorage.getItem('used_promo_id'))
+                            : "null";
         order["restaurant_id"] = parseInt(sessionStorage.getItem('restaurant_id'));
-        order["point_offset"] = parseInt(sessionStorage.getItem('points'));
+        order["point_offset"] = sessionStorage.getItem('points')
+                                ? parseInt(sessionStorage.getItem('points'))
+                                : 0;
         order["payment_method"] = this.state.paymentMethod;
         order["delivery_fee"] = 3.00
         order["total_price"] = sessionStorage.getItem('amount_due');
         order["status"] = "in progress";
-        order["foods"] = JSON.parse(sessionStorage.getItem('orders'));
+        order["foods"] = JSON.parse(sessionStorage.getItem('foods'));
         order["customer_location"] = this.state.address;
         axios.post('/orders', order)
             .then((result) => {
                 console.log(result);
+                alert("Your order has been placed!");
                 sessionStorage.clear();
             }).catch((error) => {
                 console.log(error);
@@ -84,7 +89,7 @@ class CompleteOrder extends React.Component {
         }
         console.log(menuArray);
 
-        let orderedFoods = JSON.parse(sessionStorage.getItem("orders"));
+        let orderedFoods = JSON.parse(sessionStorage.getItem("foods"));
         console.log(orderedFoods);
         for (let food in orderedFoods) {
             if (!menuArray.includes(food)) {

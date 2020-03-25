@@ -272,7 +272,7 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 CREATE TABLE public.delivers (
     oid bigint NOT NULL,
-    rider_id bigint NOT NULL,
+    rider_id bigint,
     customer_location character varying(500) NOT NULL,
     order_time timestamp without time zone NOT NULL,
     depart_to_restaurant_time timestamp without time zone,
@@ -709,19 +709,11 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: delivers delivers_oid_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_oid_key UNIQUE (oid);
-
-
---
 -- Name: delivers delivers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid, rider_id);
+    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid);
 
 
 --

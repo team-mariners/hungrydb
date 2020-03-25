@@ -3,7 +3,7 @@
 class CreateDelivers < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TABLE Delivers (
-      oid bigint UNIQUE NOT NULL,
+      oid bigint PRIMARY KEY,
       rider_id bigint,
       customer_location varchar(500) NOT NULL,
       order_time timestamp NOT NULL,
@@ -11,10 +11,9 @@ class CreateDelivers < ActiveRecord::Migration[6.0]
       arrive_at_restaurant_time timestamp,
       depart_to_customer_time timestamp,
       arrive_at_customer_time timestamp,
-      PRIMARY KEY (oid, rider_id),
       FOREIGN KEY (oid) REFERENCES Orders
         ON DELETE CASCADE,
-      FOREIGN KEY (rider_id) REFERENCES Riders(user_id)    
+      FOREIGN KEY (rider_id) REFERENCES Riders(user_id)
     );"
   end
 

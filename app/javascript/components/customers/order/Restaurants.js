@@ -28,7 +28,7 @@ class Restaurants extends React.Component {
             let restaurants = this.state.restaurants.map((restaurant) => {
                 return (
                     <RestaurantSelection res={restaurant}
-                        onResetOrders={this.props.onResetOrders} />
+                        onResetOrder={this.props.onResetOrder} />
                 )
             })
             return (

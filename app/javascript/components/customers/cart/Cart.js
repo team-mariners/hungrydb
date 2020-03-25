@@ -9,8 +9,8 @@ import Button from 'react-bootstrap/Button';
 class Cart extends React.Component {
     constructor(props) {
         super(props);
-        this.orders = JSON.parse(sessionStorage.getItem('orders'));
-        console.log(this.orders);
+        this.foods = JSON.parse(sessionStorage.getItem('foods'));
+        console.log(this.foods);
 
         this.handleDeleteItem = this.handleDeleteItem.bind(this)
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
@@ -48,18 +48,18 @@ class Cart extends React.Component {
             return;
         }
 
-        for (let storedName in this.orders) {
+        for (let storedName in this.foods) {
             if (storedName === foodName) {
-                // delete this.orders.storedName;
+                // delete this.foods.storedName;
                 let temp = {};
-                for (let order in this.orders) {
+                for (let order in this.foods) {
                     if (order !== foodName) {
-                        temp[order] = this.orders[storedName];
+                        temp[order] = this.foods[storedName];
                     }
                 }
-                this.orders = Object.keys(temp).length === 0 ? null : temp;
-                console.log(this.orders);
-                sessionStorage.setItem("orders", JSON.stringify(this.orders));
+                this.foods = Object.keys(temp).length === 0 ? null : temp;
+                console.log(this.foods);
+                sessionStorage.setItem("foods", JSON.stringify(this.foods));
                 location.reload();
             }
         }
@@ -122,13 +122,13 @@ class Cart extends React.Component {
         // Prevent erratic increment of totalCost on re-render
         this.totalCost = 0;
 
-        if (!this.orders) {
+        if (!this.foods) {
             return <h3>Your cart is empty.</h3>
         } else {
             let items = [];
-            for (let item in this.orders) {
-                if (this.orders.hasOwnProperty(item)) {
-                    let foodDetails = this.orders[item];
+            for (let item in this.foods) {
+                if (this.foods.hasOwnProperty(item)) {
+                    let foodDetails = this.foods[item];
                     items.push(
                         <CartItem foodName={item} foodDetails={foodDetails}
                             onDeleteItem={this.handleDeleteItem} />

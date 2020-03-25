@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 
 const CartItem = (props) => {
     console.log(props);
@@ -20,6 +21,10 @@ const CartItem = (props) => {
                     <td>
                         ${parseFloat(props.foodDetails.quantity * props.foodDetails.price)
                         .toFixed(2)}
+                    </td>
+                    <td><Button variant="danger" onClick={() => props.onDeleteItem(props.foodName)}>
+                            Delete
+                        </Button>
                     </td>
             </tr>
         </>

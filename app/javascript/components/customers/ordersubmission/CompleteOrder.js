@@ -46,7 +46,7 @@ class CompleteOrder extends React.Component {
         order["foods"] = JSON.parse(sessionStorage.getItem('orders'));
         order["customer_location"] = this.state.address;
         axios.post('/orders', order)
-            .then((result) => {         
+            .then((result) => {
                 console.log(result);
                 sessionStorage.clear();
             }).catch((error) => {

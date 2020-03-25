@@ -9,9 +9,10 @@ import Button from 'react-bootstrap/Button';
 class Cart extends React.Component {
     constructor(props) {
         super(props);
-        this.orders = JSON.parse(sessionStorage.getItem('orders'))
+        this.orders = JSON.parse(sessionStorage.getItem('orders'));
         console.log(this.orders);
 
+        this.handleDeleteItem = this.handleDeleteItem.bind(this)
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
         this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
@@ -39,6 +40,30 @@ class Cart extends React.Component {
             .catch(error => {
                 console.log(error);
             })
+    }
+
+    handleDeleteItem(foodName) {
+        if (!confirm("Are you sure you want to remove " + foodName + "?")) {
+            e.preventDefault();
+            return;
+        }
+
+        for (let storedName in this.orders) {
+            if (storedName === foodName) {
+                // delete this.orders.storedName;
+                let temp = {};
+                for (let order in this.orders) {
+                    if (order !== foodName) {
+                        temp[order] = this.orders[storedName];
+                    }
+                }
+                this.orders = Object.keys(temp).length === 0 ? null : temp;
+                console.log(this.orders);
+                sessionStorage.setItem("orders", JSON.stringify(this.orders));
+                location.reload();
+            }
+        }
+        console.log(foodName);
     }
 
     handlePromoInsertChange(e) {
@@ -97,7 +122,7 @@ class Cart extends React.Component {
         // Prevent erratic increment of totalCost on re-render
         this.totalCost = 0;
 
-        if (this.orders === null) {
+        if (!this.orders) {
             return <h3>Your cart is empty.</h3>
         } else {
             let items = [];
@@ -105,7 +130,8 @@ class Cart extends React.Component {
                 if (this.orders.hasOwnProperty(item)) {
                     let foodDetails = this.orders[item];
                     items.push(
-                        <CartItem foodName={item} foodDetails={foodDetails} />
+                        <CartItem foodName={item} foodDetails={foodDetails}
+                            onDeleteItem={this.handleDeleteItem} />
                     )
                     this.totalCost += foodDetails.price * foodDetails.quantity;
                 }
@@ -123,7 +149,7 @@ class Cart extends React.Component {
                         )
                     </h4>
                     <div><br /></div>
-                    <CartItemTable items={items}/>
+                    <CartItemTable items={items} />
                     <div><br /></div>
                     
                     <h4>

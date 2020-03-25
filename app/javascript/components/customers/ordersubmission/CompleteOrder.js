@@ -10,7 +10,20 @@ class CompleteOrder extends React.Component {
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handlePaymentChange = this.handlePaymentChange.bind(this);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
-        this.state = {address: "", paymentMethod: "cash" };
+        this.state = {address: "", paymentMethod: "cash", resMenu: {}};
+    }
+
+    componentDidMount() {
+        axios.get("/api/v1/restaurants/" + sessionStorage.getItem('restaurant_id') + '/menu.json')
+            .then(
+                (response) => {
+                    let retrievedFoods = response.data.menu;
+                    this.setState({ resMenu: retrievedFoods });
+                    console.log(this.state.resMenu);
+                })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     handleAddressChange(entered) {
@@ -35,6 +48,10 @@ class CompleteOrder extends React.Component {
             return;
         }
 
+        if (!this.checkAllFoodActive()) {
+            return;
+        }
+
         let order = {};
         order["promo_ids"] = JSON.parse(sessionStorage.getItem('used_promo_id'));
         order["restaurant_id"] = parseInt(sessionStorage.getItem('restaurant_id'));
@@ -53,6 +70,29 @@ class CompleteOrder extends React.Component {
                 console.log(error);
                 alert("Failed to place order!");
             })
+    }
+
+    checkAllFoodActive() {
+        // Check if all the ordered food is still active (exists in menu.json)
+        // Only active foods were queried by SQL & sent to menu.json
+        let menu = this.state.resMenu;
+        let menuArray = [];
+        for (let section in menu) {
+            for (let food of menu[section]) {
+                menuArray.push(food.f_name);
+            }
+        }
+        console.log(menuArray);
+
+        let orderedFoods = JSON.parse(sessionStorage.getItem("orders"));
+        console.log(orderedFoods);
+        for (let food in orderedFoods) {
+            if (!menuArray.includes(food)) {
+                alert(food + " is no longer available");
+                return false;
+            }
+        }
+        return true;
     }
 
     render() {

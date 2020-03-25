@@ -8,7 +8,7 @@ const CartPointsForm = (props) => {
 
     return (
         <Form inline onSubmit={props.handleSubmit}>
-        <FormControl type="number" min="0" max={props.points}
+        <FormControl type="number" min="1" max={props.points}
             placeholder={infotext}
             className="mr-sm-2" style={{ width: 300 }}
             onChange={props.handleInsertChange} />

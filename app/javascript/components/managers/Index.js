@@ -4,11 +4,10 @@ import Alert from 'react-bootstrap/Alert';
 import NavigationBar from './common/NavigationBar';
 import Dashboard from './Dashboard';
 import ManageOrders from './ManageOrders';
-import Stats from './Stats';
-import Reviews from './Reviews';
 import ManageMenu from './ManageMenu';
 import ManagePromo from './ManagePromo';
 import ManageInfo from './ManageInfo';
+import PromotionStats from './PromotionStats';
 
 const Index = (props) => {
     const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -49,6 +48,7 @@ const Index = (props) => {
             <Switch>
                 <Route exact path="/" render={() => <Dashboard {...props}/>}/>
                 <Route exact path="/manager/orders" render={() => <ManageOrders/>}/>
+                <Route exact path="/manager/promo_stats" render={() => <PromotionStats/>}/>
                 <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
                 <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import MonthPicker from './summary/MonthPicker';
-import MonthSummary from './summary/MonthSummary';
+import MonthPicker from './statistics/MonthPicker';
+import MonthSummary from './statistics/MonthSummary';
 import moment from 'moment-timezone';
 
 const Stats = () => {
@@ -31,7 +31,7 @@ const Stats = () => {
 
     return (
         <div>
-            <h2 style={{ textDecoration: "underline" }}>Summary</h2>
+            <h2 style={{ textDecoration: "underline" }}>Orders Summary</h2>
             <MonthPicker
                 className="my-3"
                 month={month}

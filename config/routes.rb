@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
     scope '/manager' do
       get 'manage', to: 'managers#index'
+      get 'promo_stats', to: 'managers#index'
       get 'orders', to: 'managers#index'
       get 'manage_menu', to: 'managers#index'
       get 'manage_menu/menu_sections/:id', to: 'managers#index'

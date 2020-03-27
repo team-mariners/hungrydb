@@ -34,8 +34,7 @@ const MonthSummary = (props) => {
 
                     <tr>
                         <td><b>Total Orders Cost: </b></td>
-                        <td>
-                        </td>
+                        <td>$ {props.summary.total_cost}</td>
                     </tr>
 
                     <tr>

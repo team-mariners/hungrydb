@@ -252,7 +252,7 @@ ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
                         payment_method, delivery_fee, total_price, date_time, status)
-    VALUES (1, 1, 1, 3, 'cash', 3, 18, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+    VALUES (1, 1, 1, 3, 'cash', 3, 12.40, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
 )
 
 test_order_1 = ActiveRecord::Base.connection.exec_query(
@@ -295,7 +295,7 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
                         payment_method, delivery_fee, total_price, date_time, status)
     VALUES (#{test_customer_1["user_id"]}, null, #{test_restaurant_1["id"]}, 0, 'cash', 3, 
-        50, 'now', 'in progress');"
+        9, 'now', 'in progress');"
 )
 
 test_order_2 = ActiveRecord::Base.connection.exec_query(

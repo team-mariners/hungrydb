@@ -23,6 +23,9 @@ const OrderModal = (props) => {
         review = <p><b>Review: </b>{!!props.order.food_review ? props.order.food_review : "No review was given."}</p>
     }
 
+    const delivery_fee = parseFloat(props.order.delivery_fee);
+    const totalExcludeDeliveryFee = parseFloat(props.order.total_price) - delivery_fee;
+
     return (
         <Modal {...props}>
             <h1>Order Details</h1>
@@ -32,7 +35,7 @@ const OrderModal = (props) => {
             <p><b>Payment method: </b>{props.order.payment_method}</p>
             {review}
 
-            <Table striped bordered>
+            <Table striped bordered className="my-4">
                 <thead>
                     <tr>
                         <th>Dish Name</th>
@@ -44,6 +47,9 @@ const OrderModal = (props) => {
                     {tableRows}
                 </tbody>
             </Table>
+
+            <h5><b>Total Cost (Excluding Delivery):</b> $ {totalExcludeDeliveryFee.toFixed(2)}</h5>
+            <h5><b>Delivery:</b> $ {delivery_fee.toFixed(2)}</h5>
         </Modal>
     )
 };

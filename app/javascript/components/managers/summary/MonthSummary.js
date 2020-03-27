@@ -18,8 +18,6 @@ const MonthSummary = (props) => {
 
     return (
         <div {...props}>
-            <h3 style={{ textDecoration: "underline" }}>Summary</h3>
-
             <Table striped bordered style={{ width: "60%" }}>
                 <thead>
                     <tr>

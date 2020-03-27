@@ -1,12 +1,14 @@
 import React from 'react';
 import Summary from './dashboard/Summary';
+import Stats from './Stats';
 
 const Dashboard = (props) => {
+    console.log(props);
     return (
-        <React.Fragment>
-            <h2>Hello {props.currentUser.username}!</h2>
-            <Summary/>
-       </React.Fragment>
+        <div className="p-3">
+            <h1>Hello {props.info.manager.username}!</h1>
+            <Stats/>
+       </div>
     )
 }
 

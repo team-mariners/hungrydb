@@ -11,7 +11,6 @@ const NavigationBar = () => {
 
     return (
         <AppBar isLoggedIn={true}>
-            <Nav.Link as={NavLink} to="/manager/stats" style={navLinkstyle}>Stats</Nav.Link>
             <Nav.Link as={NavLink} to="/manager/orders" style={navLinkstyle}>Orders</Nav.Link>
             <NavDropdown title={dropDownTitle} id="basic-nav-dropdown" >
                 <NavDropdown.Item as={NavLink} to="/manager/manage_menu">Menu</NavDropdown.Item>

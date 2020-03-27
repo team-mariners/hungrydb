@@ -30,8 +30,8 @@ const Stats = () => {
 
 
     return (
-        <div className="p-3">
-            <h1>{month.format(MONTH_FORMAT)}</h1>                        
+        <div>
+            <h2 style={{ textDecoration: "underline" }}>Summary</h2>
             <MonthPicker
                 className="my-3"
                 month={month}

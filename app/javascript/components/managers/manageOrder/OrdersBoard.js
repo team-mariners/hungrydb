@@ -49,7 +49,7 @@ const OrdersBoard = () => {
 
         if (ordersType == ORDERS_TYPES.ongoing) {
             result = orders.filter(order => {
-                return "in_progress".localeCompare(order.status) === 0;
+                return "in progress".localeCompare(order.status) === 0;
             });
         } else if (ordersType == ORDERS_TYPES.complete) {
             console.log("I am executed");

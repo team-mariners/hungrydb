@@ -29,7 +29,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 CREATE TYPE public.payment_type AS ENUM (
     'cash',
-    'credit_card'
+    'credit card'
 );
 
 
@@ -48,7 +48,7 @@ CREATE TYPE public.promo_type AS ENUM (
 --
 
 CREATE TYPE public.status_type AS ENUM (
-    'in_progress',
+    'in progress',
     'complete'
 );
 
@@ -241,8 +241,7 @@ CREATE TABLE public.customers (
     user_id bigint,
     can bigint,
     cvv integer,
-    "rewardPoints" integer DEFAULT 0 NOT NULL,
-    "locationHistory" character varying,
+    reward_points integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -273,9 +272,9 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 CREATE TABLE public.delivers (
     oid bigint NOT NULL,
-    rider_id bigint NOT NULL,
+    rider_id bigint,
     customer_location character varying(500) NOT NULL,
-    order_time time without time zone NOT NULL,
+    order_time timestamp without time zone NOT NULL,
     depart_to_restaurant_time timestamp without time zone,
     arrive_at_restaurant_time timestamp without time zone,
     depart_to_customer_time timestamp without time zone,
@@ -426,9 +425,10 @@ CREATE TABLE public.orders (
     restaurant_id bigint NOT NULL,
     point_offset bigint DEFAULT 0 NOT NULL,
     payment_method public.payment_type NOT NULL,
-    delivery_fee numeric DEFAULT 0 NOT NULL,
+    delivery_fee numeric DEFAULT 3 NOT NULL,
+    total_price numeric NOT NULL,
     date_time timestamp without time zone NOT NULL,
-    status public.status_type DEFAULT 'in_progress'::public.status_type NOT NULL
+    status public.status_type DEFAULT 'in progress'::public.status_type NOT NULL
 );
 
 
@@ -709,19 +709,11 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: delivers delivers_oid_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_oid_key UNIQUE (oid);
-
-
---
 -- Name: delivers delivers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid, rider_id);
+    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid);
 
 
 --

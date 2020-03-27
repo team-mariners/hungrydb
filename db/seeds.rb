@@ -18,8 +18,8 @@ ActiveRecord::Base.connection.exec_query(
 
 # Users with customer role
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO customers(user_id, created_at, updated_at) VALUES
-    ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now');"
+    "INSERT INTO customers(user_id, created_at, updated_at, reward_points) VALUES
+    ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now', 50);"
 )
 
 # Users with rider role
@@ -251,13 +251,12 @@ ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
-                        payment_method, delivery_fee, date_time, status)
-    VALUES (1, 1, 1, 3, 'cash', 2.5, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+                        payment_method, delivery_fee, total_price, date_time, status)
+    VALUES (1, 1, 1, 3, 'cash', 3, 18, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
 )
 
 test_order_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT oid FROM Orders
-    WHERE status = 'complete'
     LIMIT 1"
 ).to_a[0]
 
@@ -265,7 +264,7 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time,
                           depart_to_restaurant_time, arrive_at_restaurant_time,
                           depart_to_customer_time, arrive_at_customer_time)
-    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
+    VALUES (#{test_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\\_(ツ)_/¯',
             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '5 min',
             CURRENT_TIMESTAMP + INTERVAL '10 min', CURRENT_TIMESTAMP + INTERVAL '15 min',
             CURRENT_TIMESTAMP + INTERVAL '1 hour');"
@@ -289,26 +288,26 @@ ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.commit_db_transaction
 
-# Order 2 (in_progress)
+# Order 2 (in progress)
 ActiveRecord::Base.connection.begin_db_transaction
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
-                        payment_method, delivery_fee, date_time, status)
-    VALUES (#{test_customer_1["user_id"]}, null, #{test_restaurant_1["id"]}, 0, 'cash', 2, 
-        'now', 'in_progress');"
+                        payment_method, delivery_fee, total_price, date_time, status)
+    VALUES (#{test_customer_1["user_id"]}, null, #{test_restaurant_1["id"]}, 0, 'cash', 3, 
+        50, 'now', 'in progress');"
 )
 
 test_order_2 = ActiveRecord::Base.connection.exec_query(
     "SELECT * FROM Orders
-    WHERE status = 'in_progress'
+    WHERE status = 'in progress'
     AND customer_id = #{test_customer_1["user_id"]}
     LIMIT 1"
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time)
-    VALUES (#{test_order_2['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Somewhere in Singapore ¯\_(ツ)_/¯',
+    VALUES (#{test_order_2['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Bikini Bottom',
             CURRENT_TIMESTAMP)"
 )
 

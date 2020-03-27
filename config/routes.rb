@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       get 'order', to: 'customers#order', as: :customer_order_path
       get 'order/:rid/menu', to: 'customers#order'
       get 'cart', to: 'customers#cart'
+      get 'complete-order', to: 'customers#complete_order'
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
@@ -60,6 +61,7 @@ Rails.application.routes.draw do
     resources :foods, except: [:new, :edit, :show, :destroy]
     resources :menu_sections, except: [:new, :edit, :show]
     resources :promotions, except: [:new, :edit, :show]
+    resources :orders, only: %i[create]
 
     put '/foods/deactivate/:id', to: 'foods#deactivate'
   end

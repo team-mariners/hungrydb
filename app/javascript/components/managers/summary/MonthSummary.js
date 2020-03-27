@@ -2,15 +2,25 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 
 const MonthSummary = (props) => {
-    const dishes = props.summary.popular_dishes.map((dishName) => {
-        return <li key={dishName}>{dishName}</li>
-    });
+    let dishes = "-";
+
+    if (props.summary.popular_dishes.length > 0) {
+        dishes = (
+            <ol>
+                {
+                    props.summary.popular_dishes.map((dishName) => {
+                        return <li key={dishName}>{dishName}</li>
+                    })
+                }
+            </ol>
+        )
+    }
 
     return (
         <div {...props}>
-            <h3 style={{textDecoration: "underline"}}>Summary</h3>
+            <h3 style={{ textDecoration: "underline" }}>Summary</h3>
 
-            <Table striped bordered style={{width: "60%"}}>
+            <Table striped bordered style={{ width: "60%" }}>
                 <thead>
                     <tr>
                         <th>Summary</th>
@@ -22,7 +32,7 @@ const MonthSummary = (props) => {
                     <tr>
                         <td><b>Total Orders: </b></td>
                         <td>{props.summary.total_orders}</td>
-                    </tr>                    
+                    </tr>
 
                     <tr>
                         <td><b>Total Orders Cost: </b></td>
@@ -33,14 +43,12 @@ const MonthSummary = (props) => {
                     <tr>
                         <td><b>Top 5 Favourite Dishes: </b></td>
                         <td>
-                            <ol>
-                                {dishes}
-                            </ol>
+                            {dishes}
                         </td>
                     </tr>
                 </tbody>
             </Table>
-       </div>
+        </div>
     )
 };
 

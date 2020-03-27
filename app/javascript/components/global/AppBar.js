@@ -59,6 +59,6 @@ const AppBar = (props) => {
             </Navbar.Collapse>
         </Navbar>
     )
-}
+};
 
 export default AppBar;

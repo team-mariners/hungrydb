@@ -16,6 +16,7 @@
     "formik": "^2.1.4",
     "jquery": "^3.4.1",
     "minimist": "^1.2.5",
+    "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.28",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",

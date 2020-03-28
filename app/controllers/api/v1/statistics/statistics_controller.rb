@@ -5,7 +5,7 @@ class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
     def monthly_overall_summary
         ActiveRecord::Base.connection.begin_db_transaction
         orders_summary = ActiveRecord::Base.connection.exec_query(
-            "SELECT COUNT(*) as total_orders, SUM(total_price - delivery_fee) as total_cost
+            "SELECT COUNT(*) as total_orders, COALESCE(SUM(total_price - delivery_fee), 0) as total_cost
             FROM Orders
             WHERE date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}';"
         ).rows[0]

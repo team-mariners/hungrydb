@@ -176,6 +176,24 @@ CREATE FUNCTION public.update_food_quantity() RETURNS trigger
       $$;
 
 
+--
+-- Name: update_num_redeemed(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_num_redeemed() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        IF NEW.promo_id IS NOT NULL THEN
+          UPDATE promotions
+            SET num_redeemed = num_redeemed + 1
+            WHERE id = NEW.promo_id;
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -964,6 +982,13 @@ CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid 
 
 
 --
+-- Name: orders promotion_num_redeemed_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER promotion_num_redeemed_trigger AFTER INSERT ON public.orders FOR EACH ROW EXECUTE FUNCTION public.update_num_redeemed();
+
+
+--
 -- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1174,6 +1199,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316132202'),
 ('20200317070245'),
 ('20200317072650'),
-('20200328053249');
+('20200328053249'),
+('20200328061538');
 
 

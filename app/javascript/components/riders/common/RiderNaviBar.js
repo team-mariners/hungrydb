@@ -1,6 +1,6 @@
 import Nav from 'react-bootstrap/Nav';
 import React from 'react';
-import AppBar from '../global/AppBar';
+import AppBar from '../../global/AppBar';
 
 const RiderNaviBar = () => {
     return (

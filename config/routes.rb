@@ -56,6 +56,9 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
+    scope '/rider' do      
+    end
+
     resources :restaurants, except: %i[new edit show destroy]
     get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
 

@@ -41,6 +41,7 @@ const OrderModal = (props) => {
             <p><b>Payment method: </b>{props.order.payment_method}</p>
             <p><b>Points Offset: </b>{props.order.point_offset} points</p>
             <p><b>Promocode: </b>{promocode}</p>
+            <p><b>Promo Percentage: </b>{!props.order.promo_percentage ? "-" : `${props.order.promo_percentage}%`}</p>
             {review}
 
             <Table striped bordered className="my-4">

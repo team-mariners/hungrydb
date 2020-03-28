@@ -24,9 +24,12 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
   def index_restaurant
     ActiveRecord::Base.connection.begin_db_transaction
     orders = ActiveRecord::Base.connection.exec_query(
-      "SELECT oid, point_offset, payment_method, delivery_fee, date_time, status, total_price, food_review,
+      "SELECT oid, point_offset, payment_method, delivery_fee, date_time, status, food_review,
+        (total_price - delivery_fee) AS total_cost,
         (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name,
-        (SELECT percentage FROM Promotions WHERE id = Orders.promo_id) AS promo_percentage
+        (SELECT percentage FROM Promotions WHERE id = Orders.promo_id) AS promo_percentage,
+        (SELECT promocode FROM Promotions WHERE id = Orders.promo_id) AS promocode,
+        (SELECT p_type FROM Promotions WHERE id = Orders.promo_id) AS p_type
       FROM Orders LEFT OUTER JOIN Reviews USING (oid) 
       WHERE restaurant_id = #{@restaurant['id']}
       ORDER BY oid;"
@@ -86,7 +89,7 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
 
   def get_order(row)
     result = row.clone
-    return result.extract!("oid", "customer_id", "promo_id", "point_offset", "payment_method",
-      "delivery_fee", "date_time", "status", "total_price")
+    return result.extract!("oid", "customer_id", "point_offset", "payment_method", "delivery_fee",
+      "date_time", "status", "total_cost", "promo_percentage", "promocode", "p_type")      
   end
 end

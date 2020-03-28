@@ -57,7 +57,6 @@ const OrdersBoard = () => {
             });
         }
 
-        console.log(result);
         setVisibleOrders(result);
     };
 

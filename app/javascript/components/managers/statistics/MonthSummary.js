@@ -33,7 +33,7 @@ const MonthSummary = (props) => {
                     </tr>
 
                     <tr>
-                        <td><b>Total Orders Cost (Excluding Delivery)</b></td>
+                        <td><b>Total Orders Earning (Excluding Delivery)</b></td>
                         <td>$ {parseFloat(props.summary.total_cost).toFixed(2)}</td>
                     </tr>
 

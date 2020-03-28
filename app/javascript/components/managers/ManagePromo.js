@@ -48,7 +48,6 @@ const ManagePromo = (props) => {
             result = promotions.filter(promotion => isClosed(promotion));                        
         }
 
-        console.log(result);
         setVisiblePromotions(result);
     };
 

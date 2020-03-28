@@ -159,6 +159,23 @@ CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
       $$;
 
 
+--
+-- Name: update_food_quantity(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_food_quantity() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        UPDATE foods
+          SET num_orders = num_orders + NEW.quantity
+          WHERE id = NEW.food_id
+          AND 'in progress' = (SELECT status FROM Orders O WHERE O.oid = NEW.oid);
+        RETURN NULL;
+      END;
+      $$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -293,7 +310,7 @@ CREATE TABLE public.foods (
     restaurant_id bigint NOT NULL,
     ms_url_id bigint NOT NULL,
     CONSTRAINT foods_daily_limit CHECK ((daily_limit >= 0)),
-    CONSTRAINT foods_num_orders CHECK ((num_orders >= 0)),
+    CONSTRAINT foods_num_orders CHECK (((num_orders >= 0) AND (num_orders <= daily_limit))),
     CONSTRAINT foods_price CHECK ((price >= (0)::numeric))
 );
 
@@ -926,6 +943,13 @@ CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.deliver
 
 
 --
+-- Name: comprises food_quantity_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER food_quantity_trigger AFTER INSERT ON public.comprises FOR EACH ROW EXECUTE FUNCTION public.update_food_quantity();
+
+
+--
 -- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1149,6 +1173,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316131147'),
 ('20200316132202'),
 ('20200317070245'),
-('20200317072650');
+('20200317072650'),
+('20200328053249');
 
 

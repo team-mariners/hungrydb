@@ -23,6 +23,11 @@ ActiveRecord::Base.connection.exec_query(
     ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now', 50);"
 )
 
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO customers(user_id, created_at, updated_at, reward_points) VALUES
+    ((SELECT id FROM users WHERE username = 'John Doe'), 'now', 'now', 50);"
+)
+
 # Users with rider role
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO riders(user_id, created_at, updated_at) VALUES
@@ -58,28 +63,28 @@ test_customer_2 = ActiveRecord::Base.connection.exec_query(
 test_manager_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT *
     FROM managers
-    WHERE user_id = 1"
+    WHERE user_id = (SELECT id FROM users WHERE username ='manager');"
 ).to_a[0]
 
 test_manager_2 = ActiveRecord::Base.connection.exec_query(
     "SELECT *
     FROM managers
-    WHERE user_id = 2"
+    WHERE user_id = (SELECT id FROM users WHERE username ='manager2');"
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
-    VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', #{test_manager_1.id});"
+    VALUES (\'ameens\', 5.5, \'12 Clementi Rd, Singapore 129742\', #{test_manager_1["id"]});"
 )
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO restaurants(name, min_order_cost, address, manager_id)
-    VALUES (\'Bannered Mare\', 5, \'Whiterun\', #{test_manager_2.id});"
+    VALUES (\'Bannered Mare\', 5, \'Whiterun\', #{test_manager_2["id"]});"
 )
 
 test_restaurant_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT * FROM restaurants
-     WHERE manager_id = #{test_manager_1.id};"
+     WHERE manager_id = #{test_manager_1["id"]};"
 ).to_a[0]
 
 # ------------------------------------------------ Menu Sections -----------------------------------------------------
@@ -330,13 +335,6 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Comprises(oid, food_id, quantity)
     VALUES (#{in_progress_order_1['oid']}, #{test_food_3['id']}, 5);"
 )
-
-# Delete this?
-ActiveRecord::Base.connection.exec_query(
-    "UPDATE foods
-    SET num_orders = num_orders + 5
-    WHERE id=#{test_food_3['id']}"
-)
 ActiveRecord::Base.connection.commit_db_transaction
 
 # Order 2
@@ -381,7 +379,5 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Comprises(oid, food_id, quantity)
     VALUES (#{in_progress_order_2['oid']}, #{test_food_5['id']}, 3);"
 )
-
-# update food quantity?
-AcutiveRecord::Base.connection.commit_db_transaction
+ActiveRecord::Base.connection.commit_db_transaction
 

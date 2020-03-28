@@ -55,13 +55,6 @@ class OrdersController < ApplicationController
         "INSERT INTO Comprises
         VALUES (#{stored_order['oid']}, #{foodDetails['id']}, #{foodDetails['quantity']})"
       )
-
-
-      ActiveRecord::Base.connection.exec_query(
-        "UPDATE Foods
-        SET num_orders = num_orders + #{foodDetails['quantity']}
-        WHERE id = #{foodDetails['id']}"
-      )
     end
 
     # Deduct Customer used reward points and add after payment

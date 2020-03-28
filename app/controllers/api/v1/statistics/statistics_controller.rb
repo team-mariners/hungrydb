@@ -1,13 +1,13 @@
 class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
     before_action :get_restaurant 
 
-    # update id too
     def monthly_overall_summary
         ActiveRecord::Base.connection.begin_db_transaction
         orders_summary = ActiveRecord::Base.connection.exec_query(
             "SELECT COUNT(*) as total_orders, COALESCE(SUM(total_price - delivery_fee), 0) as total_cost
             FROM Orders
-            WHERE date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}';"
+            WHERE restaurant_id = #{@restaurant["id"]}
+            AND date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}';"
         ).rows[0]
 
         popular_dishes = ActiveRecord::Base.connection.exec_query(
@@ -16,7 +16,8 @@ class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
             WHERE oid IN (
                 SELECT oid
                 FROM Orders
-                WHERE date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}'
+                WHERE restaurant_id = #{@restaurant["id"]}
+                AND date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}'
             )
             GROUP BY food_id
             ORDER BY SUM(quantity) DESC

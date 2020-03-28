@@ -1,11 +1,11 @@
 import React from 'react';
-import OrdersSummary from './OrdersSummary';
+import OrdersStats from './OrdersStats';
 
 const Dashboard = (props) => {
     return (
         <div className="p-3">
             <h1>Hello {props.info.manager.username}!</h1>
-            <OrdersSummary/>
+            <OrdersStats/>
        </div>
     )
 }

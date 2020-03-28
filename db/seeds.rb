@@ -270,10 +270,11 @@ DELIVERY_FEE = 3
 
 # Order 1
 ActiveRecord::Base.connection.begin_db_transaction
+# Total price: (9.4 + 3 - 3) * 0.8 = $ 7.52
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
                         payment_method, delivery_fee, total_price, date_time, status)
-    VALUES (1, 1, 1, 3, 'cash', 3, 12.40, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+    VALUES (1, 1, 1, 3, 'cash', 3, 7.52, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
 )
 
 test_order_1 = ActiveRecord::Base.connection.exec_query(
@@ -339,11 +340,12 @@ ActiveRecord::Base.connection.commit_db_transaction
 
 # Order 2
 ActiveRecord::Base.connection.begin_db_transaction
+# Total price = 24.5 * 0.95 = $ 23.28 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
                         payment_method, delivery_fee, total_price, date_time, status)
     VALUES (#{test_customer_2["user_id"]}, #{test_promo_2["id"]}, #{test_restaurant_1["id"]}, 0, 'cash', #{DELIVERY_FEE}, 
-        24.50, 'now', 'in progress');"
+        23.28, 'now', 'in progress');"
 )
 
 in_progress_order_2 = ActiveRecord::Base.connection.exec_query(

@@ -1,4 +1,7 @@
 class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
+    before_action :get_restaurant 
+
+    # update id too
     def monthly_overall_summary
         ActiveRecord::Base.connection.begin_db_transaction
         orders_summary = ActiveRecord::Base.connection.exec_query(
@@ -25,9 +28,32 @@ class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
         render json: result
     end
 
+    def promotions_summary
+        summary = ActiveRecord::Base.connection.exec_query(
+            "SELECT id, p_name, start_datetime, end_datetime, num_redeemed, (
+                SELECT COALESCE(SUM(total_price - delivery_fee), 0)
+                FROM Orders
+                WHERE promo_id = id
+            ) as total_order_cost
+            FROM promotions
+            WHERE id IN (
+                SELECT restaurant_promotion_id
+                FROM has_promotions
+                WHERE restaurant_id = #{@restaurant["id"]}
+            )
+            ORDER BY id"
+        ).to_a 
+
+        render json: summary
+    end
+
     private
 
     def month_params
         params.require(:month).permit(:month)
+    end
+
+    def get_restaurant
+        @restaurant = helpers.get_restaurant(current_user)
     end
 end    

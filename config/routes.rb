@@ -99,6 +99,7 @@ Rails.application.routes.draw do
 
       namespace :statistics do
         get '/monthy_overall_summary', to: 'statistics#monthly_overall_summary'
+        get '/promotions_summary', to: 'statistics#promotions_summary'
       end
     end
   end

@@ -10,7 +10,7 @@
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO users(username, encrypted_password, email, roles, created_at, updated_at) VALUES
     ('customer', '#{Devise::Encryptor.digest(User, "12345678")}', 'customer@example.com', 'customer', 'now', 'now'),
-    ('John Doe', '#{Devise::Encryptor.digest(User, "12345678")}', 'johnDoe@example.com', 'customer', 'now', 'now'),
+    ('JohnDoe', '#{Devise::Encryptor.digest(User, "12345678")}', 'johnDoe@example.com', 'customer', 'now', 'now'),
     ('rider', '#{Devise::Encryptor.digest(User, "12345678")}', 'rider@example.com', 'rider', 'now', 'now'),
     ('manager', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager@example.com', 'manager', 'now', 'now'),
     ('manager2', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager2@example.com', 'manager', 'now', 'now'),
@@ -25,7 +25,7 @@ ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO customers(user_id, created_at, updated_at, reward_points) VALUES
-    ((SELECT id FROM users WHERE username = 'John Doe'), 'now', 'now', 50);"
+    ((SELECT id FROM users WHERE username = 'JohnDoe'), 'now', 'now', 50);"
 )
 
 # Users with rider role
@@ -56,7 +56,7 @@ test_customer_1 = ActiveRecord::Base.connection.exec_query(
 test_customer_2 = ActiveRecord::Base.connection.exec_query(
     "SELECT *
     FROM customers
-    WHERE user_id = (SELECT id FROM users WHERE username = 'John Doe');"
+    WHERE user_id = (SELECT id FROM users WHERE username = 'JohnDoe');"
 ).to_a[0]
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------

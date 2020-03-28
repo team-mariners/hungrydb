@@ -10,20 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
 -- Name: payment_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -173,9 +159,44 @@ CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
       $$;
 
 
+--
+-- Name: update_food_quantity(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_food_quantity() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        UPDATE foods
+          SET num_orders = num_orders + NEW.quantity
+          WHERE id = NEW.food_id
+          AND 'in progress' = (SELECT status FROM Orders O WHERE O.oid = NEW.oid);
+        RETURN NULL;
+      END;
+      $$;
+
+
+--
+-- Name: update_num_redeemed(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_num_redeemed() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        IF NEW.promo_id IS NOT NULL THEN
+          UPDATE promotions
+            SET num_redeemed = num_redeemed + 1
+            WHERE id = NEW.promo_id;
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: admins; Type: TABLE; Schema: public; Owner: -
@@ -307,7 +328,7 @@ CREATE TABLE public.foods (
     restaurant_id bigint NOT NULL,
     ms_url_id bigint NOT NULL,
     CONSTRAINT foods_daily_limit CHECK ((daily_limit >= 0)),
-    CONSTRAINT foods_num_orders CHECK ((num_orders >= 0)),
+    CONSTRAINT foods_num_orders CHECK (((num_orders >= 0) AND (num_orders <= daily_limit))),
     CONSTRAINT foods_price CHECK ((price >= (0)::numeric))
 );
 
@@ -929,42 +950,56 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 -- Name: comprises comprises_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION public.delivers_delete_orders_constraint();
 
 
 --
 -- Name: delivers delivers_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION public.delivers_delete_orders_constraint();
+
+
+--
+-- Name: comprises food_quantity_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER food_quantity_trigger AFTER INSERT ON public.comprises FOR EACH ROW EXECUTE FUNCTION public.update_food_quantity();
 
 
 --
 -- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_comprises_total_participation();
+CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.orders_comprises_total_participation();
 
 
 --
 -- Name: orders orders_delivers_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_delivers_total_participation();
+CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.orders_delivers_total_participation();
+
+
+--
+-- Name: orders promotion_num_redeemed_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER promotion_num_redeemed_trigger AFTER INSERT ON public.orders FOR EACH ROW EXECUTE FUNCTION public.update_num_redeemed();
 
 
 --
 -- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_promotions_constraint();
+CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_promotions_constraint();
 
 
 --
 -- Name: restaurant_promotions restaurant_promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_has_promotions_exist();
+CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_has_promotions_exist();
 
 
 --
@@ -1000,11 +1035,11 @@ ALTER TABLE ONLY public.delivers
 
 
 --
--- Name: fds_promotions fds_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fds_promotions fds_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fds_promotions
-    ADD CONSTRAINT fds_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT fds_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -1104,11 +1139,11 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: restaurant_promotions restaurant_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: restaurant_promotions restaurant_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.restaurant_promotions
-    ADD CONSTRAINT restaurant_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT restaurant_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -1163,6 +1198,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316131147'),
 ('20200316132202'),
 ('20200317070245'),
-('20200317072650');
+('20200317072650'),
+('20200328053249'),
+('20200328061538');
 
 

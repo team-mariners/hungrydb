@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment-timezone';
 import axios from 'axios';
 import PromotionsBoard from './managePromo/PromotionsBoard';
 import ToolBar from './managePromo/ToolBar';
 import NewPromotion from './managePromo/NewPromotion';
 import EditPromotion from './managePromo/EditPromotion';
+import { momentisePromotionDateTime, isOngoing, isClosed, isScheduled } from '../helpers/PromotionHelpers';
 
 const ManagePromo = (props) => {
     const [promotions, setPromotions] = useState([]);
@@ -20,13 +20,8 @@ const ManagePromo = (props) => {
         axios.get('/api/v1/promotions/index_restaurant')
         .then(result => {
             console.log(result)
-
-            result.data.forEach(promotion => {
-                momentiseDateTime(promotion);
-            });
-
+            result.data.forEach(momentisePromotionDateTime);
             setPromotionsAndVisiblePromotions(result.data);
-            console.log(result.data);
         }).catch(error => {
             console.log(error);
         });
@@ -37,11 +32,6 @@ const ManagePromo = (props) => {
         filterAndSetVisiblePromotions(promotions);
     }, [promotionsType]);
 
-    const momentiseDateTime = (promotion) => {
-        promotion.start_datetime = moment.parseZone(promotion.start_datetime);
-        promotion.end_datetime = moment.parseZone(promotion.end_datetime);
-    }
-
     const setPromotionsAndVisiblePromotions = (promotions) => {
         setPromotions(promotions);
         filterAndSetVisiblePromotions(promotions);
@@ -51,21 +41,13 @@ const ManagePromo = (props) => {
         let result = [];
 
         if (promotionsType === 'ongoing') {
-            result = promotions.filter(promotion => {
-                const now = moment();
-                return promotion.start_datetime.isSameOrBefore(now) && promotion.end_datetime.isAfter(now);
-            });
+            result = promotions.filter(promotion => isOngoing(promotion));
         } else if (promotionsType === 'scheduled') {
-            result = promotions.filter(promotion => {
-                return promotion.start_datetime.isAfter(moment());
-            });        
+            result = promotions.filter(promotion => isScheduled(promotion));        
         } else if (promotionsType === 'closed') {
-            result = promotions.filter(promotion => {
-                return promotion.end_datetime.isBefore(moment());
-            });
+            result = promotions.filter(promotion => isClosed(promotion));                        
         }
 
-        console.log(result);
         setVisiblePromotions(result);
     };
 

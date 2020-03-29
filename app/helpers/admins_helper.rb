@@ -13,6 +13,15 @@ module AdminsHelper
         return output
     end
 
+    def get_all_fds_promos
+        promos = ActiveRecord::Base.connection.exec_query(
+            "SELECT * FROM promotions
+            WHERE p_type = 'fds';"
+        ).to_a
+        
+        return promos
+    end
+
     def get_existing_restaurant(userid)
         managerid = ActiveRecord::Base.connection.exec_query(
             "SELECT id FROM managers

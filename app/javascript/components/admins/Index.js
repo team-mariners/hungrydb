@@ -23,6 +23,7 @@ const Index = (props) => {
                     username={props.rolesUsername}
                     userrole={props.rolesUserrole}
                     rolesAvailable={props.rolesAvailable}
+                    existingRestaurant={props.existingRestaurant}
                 />
             </Route>
             <Route exact path="/admin/statistics">

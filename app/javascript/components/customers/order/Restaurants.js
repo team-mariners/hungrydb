@@ -23,17 +23,20 @@ class Restaurants extends React.Component {
 
     render() {
         if (this.state.restaurants === null) {
-            return (
-                <h3>There are no restaurants available at the moment.</h3>
-            )
+            return null;
         } else {
             let restaurants = this.state.restaurants.map((restaurant) => {
                 return (
-                    <RestaurantSelection res={restaurant} onChooseRestaurant={ this.props.onChooseRestaurant }/>
+                    <RestaurantSelection res={restaurant}
+                        onResetOrder={this.props.onResetOrder} />
                 )
             })
             return (
                 <div className='restaurants-container'>
+                    <div><br/></div>
+                    <h3>
+                        {restaurants.length == 0 ? "No restaurants available." : "Restaurants"}
+                    </h3>
                     {restaurants}
                 </div>
             )

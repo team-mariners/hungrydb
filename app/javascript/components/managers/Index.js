@@ -3,12 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 import NavigationBar from './common/NavigationBar';
 import Dashboard from './Dashboard';
-import Orders from './Orders';
-import Stats from './Stats';
-import Reviews from './Reviews';
+import ManageOrders from './ManageOrders';
 import ManageMenu from './ManageMenu';
 import ManagePromo from './ManagePromo';
 import ManageInfo from './ManageInfo';
+import PromotionStats from './PromotionStats';
 
 const Index = (props) => {
     const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -47,14 +46,13 @@ const Index = (props) => {
                 {alertMessage}
             </Alert>
             <Switch>
-                <Route exact path="/" render={() => <Dashboard  currentUser={props.info}/>}/>
-                <Route exact path="/manager/orders" render={() => <Orders/>}/>
-                <Route exact path="/manager/stats" render={() => <Stats/>}/>
-                <Route exact path="/manager/reviews" render={() => <Reviews/>}/>
+                <Route exact path="/" render={() => <Dashboard {...props}/>}/>
+                <Route exact path="/manager/orders" render={() => <ManageOrders/>}/>
+                <Route exact path="/manager/promo_stats" render={() => <PromotionStats/>}/>
                 <Route exact path={["/manager/manage_menu/menu_sections/:id", "/manager/manage_menu"]}
                     render={(props) => <ManageMenu alerts={alerts} {...props}/>}/>
-                <Route exact path="/manager/manage_promo" render={() => <ManagePromo alerts={alerts}/>}/>
-                <Route exact path="/manager/manage_info" render={() => <ManageInfo/>}/>
+                <Route exact path="/manager/manage_promo" render={() => <ManagePromo/>}/>
+                <Route exact path="/manager/manage_info" render={() => <ManageInfo {...props}/>}/>
             </Switch>
        </Router>
     )

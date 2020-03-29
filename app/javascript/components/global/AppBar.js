@@ -17,6 +17,7 @@ const AppBar = (props) => {
     const navLinkstyle = Colors.navbarLink;
 
     const handleLogout = () => {
+        sessionStorage.clear();
         axios.get("/logout"
         ).then(() => {
             // Redirect to homepage after successfully logged out
@@ -49,11 +50,7 @@ const AppBar = (props) => {
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-            <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
-                <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-light">Go!</Button>
-                </Form>
+            <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                 <Nav >
                     {props.children}
                     {profileButton}
@@ -62,6 +59,6 @@ const AppBar = (props) => {
             </Navbar.Collapse>
         </Navbar>
     )
-}
+};
 
 export default AppBar;

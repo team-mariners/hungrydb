@@ -15,7 +15,7 @@ class CreateFoods < ActiveRecord::Migration[6.0]
       daily_limit integer NOT NULL
         CONSTRAINT foods_daily_limit CHECK(daily_limit >= 0),
       num_orders integer NOT NULL DEFAULT 0
-        CONSTRAINT foods_num_orders CHECK(num_orders >= 0),
+        CONSTRAINT foods_num_orders CHECK((num_orders >= 0) AND (num_orders <= daily_limit)),
       price numeric NOT NULL
         CONSTRAINT foods_price CHECK(price >= 0),
       is_active boolean NOT NULL DEFAULT true,

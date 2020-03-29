@@ -23,7 +23,8 @@ class MenuItem extends React.Component {
         return (
             <>
                 <FoodModal show={this.state.showModal} onClose={this.handleHideModal}
-                    food={this.props.food} picture={placeholderPic} />
+                    food={this.props.food} picture={placeholderPic}
+                    onSubmitOrder={this.props.onSubmitOrder} />
                 <button className='menu-media-button' onClick={this.handleShowModal}>
                     <Media>
                         <img
@@ -36,7 +37,7 @@ class MenuItem extends React.Component {
                         <Media.Body>
                             <h5 />
                             <h3>{ this.props.food.f_name }</h3>
-                            <h3>${ this.props.food.price }</h3>
+                            <h3>${ parseFloat(this.props.food.price).toFixed(2) }</h3>
                         </Media.Body>
                     </Media>
                 </button>

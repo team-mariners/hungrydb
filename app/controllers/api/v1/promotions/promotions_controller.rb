@@ -16,6 +16,12 @@ class Api::V1::Promotions::PromotionsController < Api::V1::BaseController
                  'restaurant_promos': res_promos_hash }
   end
 
+  def single_restaurant_promos
+    fds_promos = helpers.retrieve_fds_promos.to_a
+    curr_res_promos = helpers.retrieve_restaurant_promos(params[:id]).to_a
+    render json: fds_promos + curr_res_promos
+  end
+
   # Retrieve the promotions of the current restaurant (for manager's account)
   def index_restaurant
     promotions = ActiveRecord::Base.connection.exec_query(

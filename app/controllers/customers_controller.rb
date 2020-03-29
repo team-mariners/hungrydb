@@ -11,6 +11,10 @@ class CustomersController < UsersController
 
   def order; end
 
+  def cart; end
+
+  def complete_order; end
+
   def history; end
 
   def reviews; end

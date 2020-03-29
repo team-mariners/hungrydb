@@ -3,22 +3,67 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CustomerNavBar from './CustomerNavBar'
 import Dashboard from './dashboard/CustomerDashboard';
 import Menu from './order/Menu';
+import Cart from './cart/Cart';
 import OrderHistory from './orderhistory/OrderHistory';
 import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
+import CompleteOrder from './ordersubmission/CompleteOrder';
 
 class Index extends React.Component {
     constructor(props) {
         super(props);
-        this.handleChooseRestaurant = this.handleChooseRestaurant.bind(this);
-        this.state = { chosen_restaurant: null };
+        console.log(props);
+        this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
+        this.handleRecordAmountDue = this.handleRecordAmountDue.bind(this);
+        this.resetFoods = this.resetFoods.bind(this);
+        this.state = { orders: JSON.parse(sessionStorage.getItem('foods')) };
     }
 
-    // State passed upward from RestaurantSelection to Restaurants to this
-    handleChooseRestaurant(restaurant) {
-        this.setState({ chosen_restaurant: restaurant });
+    // State passed upward from FoodModal through MenuItem & Menu to this
+    handleSubmitOrder(e, newFood, picture) {
+        let updatedOrders = this.state.orders === null ? {} : this.state.orders;
+        let numAvailable = newFood.daily_limit - newFood.num_orders;
+        console.log(numAvailable);
+        if (newFood.f_name in updatedOrders) {
+            let orderedQuantity = parseInt(updatedOrders[newFood.f_name]["quantity"])
+                                    + parseInt(newFood.quantity);
+            if (orderedQuantity <= numAvailable) {
+                updatedOrders[newFood.f_name]["quantity"] = orderedQuantity;
+            } else {
+                alert("Your order has exceeded the available number.");
+                e.preventDefault();
+                return false;
+            }
+        } else {
+            if (newFood.quantity <= numAvailable) {
+                updatedOrders[newFood.f_name] = {};
+                updatedOrders[newFood.f_name]["picture"] = picture;
+                updatedOrders[newFood.f_name]["price"] = newFood.price;
+                updatedOrders[newFood.f_name]["quantity"] = newFood.quantity;
+                updatedOrders[newFood.f_name]["id"] = newFood.id;
+            } else {
+                alert("Your order has exceeded the available number.");
+                e.preventDefault();
+                return false;
+            }
+        }
+        console.log(updatedOrders);
+
+        this.setState({ orders: updatedOrders });
+        // Persist order info in local browser storage
+        sessionStorage.setItem('foods', JSON.stringify(updatedOrders));
+        console.log(sessionStorage.getItem('foods'));
+        return true;
+    }
+
+    resetFoods() {
+        this.setState({ orders: JSON.parse(sessionStorage.getItem('foods')) });
+    }
+
+    handleRecordAmountDue(latestAmount) {
+        sessionStorage.setItem('amount_due', latestAmount);
     }
 
     render() {
@@ -29,14 +74,21 @@ class Index extends React.Component {
                 <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
 
                 <Route exact path="/customer/order"
-                    render={() => <Restaurants onChooseRestaurant={ this.handleChooseRestaurant }/>} />
+                    render={() => <Restaurants onResetOrder={this.resetFoods} />} />
 
                 <Route exact path={ "/customer/order/:rid/menu" }>
-                    <Menu restaurant_id={this.state.chosen_restaurant}/>
+                    <Menu onSubmitOrder={this.handleSubmitOrder} />
                 </Route>
 
                 <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews/>} />
                 
+                <Route exact path="/customer/cart">
+                    <Cart orders={this.state.orders} points={this.props.info.points}
+                            onAmountDueSubmit={this.handleRecordAmountDue} />
+                </Route>
+                <Route exact path="/customer/complete-order"
+                    render={() => <CompleteOrder/> } />
+
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
                 <Route exact path="/customer/promotions" render={() => <PromosPage />} />

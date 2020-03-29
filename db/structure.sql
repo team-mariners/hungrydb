@@ -15,7 +15,7 @@ SET row_security = off;
 
 CREATE TYPE public.payment_type AS ENUM (
     'cash',
-    'credit_card'
+    'credit card'
 );
 
 
@@ -34,7 +34,7 @@ CREATE TYPE public.promo_type AS ENUM (
 --
 
 CREATE TYPE public.status_type AS ENUM (
-    'in_progress',
+    'in progress',
     'complete'
 );
 
@@ -159,6 +159,41 @@ CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
       $$;
 
 
+--
+-- Name: update_food_quantity(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_food_quantity() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        UPDATE foods
+          SET num_orders = num_orders + NEW.quantity
+          WHERE id = NEW.food_id
+          AND 'in progress' = (SELECT status FROM Orders O WHERE O.oid = NEW.oid);
+        RETURN NULL;
+      END;
+      $$;
+
+
+--
+-- Name: update_num_redeemed(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_num_redeemed() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+        IF NEW.promo_id IS NOT NULL THEN
+          UPDATE promotions
+            SET num_redeemed = num_redeemed + 1
+            WHERE id = NEW.promo_id;
+        END IF;
+        RETURN NULL;
+      END;
+      $$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -227,8 +262,7 @@ CREATE TABLE public.customers (
     user_id bigint,
     can bigint,
     cvv integer,
-    "rewardPoints" integer DEFAULT 0 NOT NULL,
-    "locationHistory" character varying,
+    reward_points integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -259,9 +293,9 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 CREATE TABLE public.delivers (
     oid bigint NOT NULL,
-    rider_id bigint NOT NULL,
+    rider_id bigint,
     customer_location character varying(500) NOT NULL,
-    order_time time without time zone NOT NULL,
+    order_time timestamp without time zone NOT NULL,
     depart_to_restaurant_time timestamp without time zone,
     arrive_at_restaurant_time timestamp without time zone,
     depart_to_customer_time timestamp without time zone,
@@ -294,7 +328,7 @@ CREATE TABLE public.foods (
     restaurant_id bigint NOT NULL,
     ms_url_id bigint NOT NULL,
     CONSTRAINT foods_daily_limit CHECK ((daily_limit >= 0)),
-    CONSTRAINT foods_num_orders CHECK ((num_orders >= 0)),
+    CONSTRAINT foods_num_orders CHECK (((num_orders >= 0) AND (num_orders <= daily_limit))),
     CONSTRAINT foods_price CHECK ((price >= (0)::numeric))
 );
 
@@ -408,13 +442,14 @@ CREATE SEQUENCE public.orders_id_seq
 CREATE TABLE public.orders (
     oid bigint DEFAULT nextval('public.orders_id_seq'::regclass) NOT NULL,
     customer_id bigint NOT NULL,
-    promo_id bigint NOT NULL,
+    promo_id bigint,
     restaurant_id bigint NOT NULL,
     point_offset bigint DEFAULT 0 NOT NULL,
     payment_method public.payment_type NOT NULL,
-    delivery_fee numeric DEFAULT 0 NOT NULL,
+    delivery_fee numeric DEFAULT 3 NOT NULL,
+    total_price numeric NOT NULL,
     date_time timestamp without time zone NOT NULL,
-    status public.status_type DEFAULT 'in_progress'::public.status_type NOT NULL
+    status public.status_type DEFAULT 'in progress'::public.status_type NOT NULL
 );
 
 
@@ -435,8 +470,7 @@ CREATE TABLE public.promotions (
     CONSTRAINT promotions_end_date CHECK ((end_datetime > start_datetime)),
     CONSTRAINT promotions_max_redeem CHECK (((max_redeem >= 0) AND (max_redeem >= num_redeemed))),
     CONSTRAINT promotions_num_redeemed CHECK (((num_redeemed >= 0) AND (num_redeemed <= max_redeem))),
-    CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100))),
-    CONSTRAINT promotions_start_date CHECK ((start_date >= '2020-03-18 11:35:41.689732'::timestamp without time zone))
+    CONSTRAINT promotions_percentage_check CHECK (((percentage >= 0) AND (percentage <= 100)))
 );
 
 
@@ -696,19 +730,11 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: delivers delivers_oid_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_oid_key UNIQUE (oid);
-
-
---
 -- Name: delivers delivers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.delivers
-    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid, rider_id);
+    ADD CONSTRAINT delivers_pkey PRIMARY KEY (oid);
 
 
 --
@@ -935,6 +961,13 @@ CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.deliver
 
 
 --
+-- Name: comprises food_quantity_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER food_quantity_trigger AFTER INSERT ON public.comprises FOR EACH ROW EXECUTE FUNCTION public.update_food_quantity();
+
+
+--
 -- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -946,6 +979,13 @@ CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid
 --
 
 CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.orders_delivers_total_participation();
+
+
+--
+-- Name: orders promotion_num_redeemed_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER promotion_num_redeemed_trigger AFTER INSERT ON public.orders FOR EACH ROW EXECUTE FUNCTION public.update_num_redeemed();
 
 
 --
@@ -1158,6 +1198,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316131147'),
 ('20200316132202'),
 ('20200317070245'),
-('20200317072650');
+('20200317072650'),
+('20200328053249'),
+('20200328061538');
 
 

@@ -15,7 +15,7 @@ class CreateFoodQuantityTrigger < ActiveRecord::Migration[6.0]
       CREATE TRIGGER food_quantity_trigger 
         AFTER INSERT ON Comprises
         FOR EACH ROW
-        EXECUTE FUNCTION update_food_quantity();
+        EXECUTE PROCEDURE update_food_quantity();
     SQL
   end
 

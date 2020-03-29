@@ -16,7 +16,7 @@ class CreatePromotionNumRedeemedTrigger < ActiveRecord::Migration[6.0]
       CREATE TRIGGER promotion_num_redeemed_trigger
         AFTER INSERT ON Orders
         FOR EACH ROW
-        EXECUTE FUNCTION update_num_redeemed();
+        EXECUTE PROCEDURE update_num_redeemed();
     SQL
   end
 

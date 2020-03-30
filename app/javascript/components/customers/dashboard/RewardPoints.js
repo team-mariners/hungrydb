@@ -11,7 +11,7 @@ class RewardPoints extends React.Component {
             .then(res => res.json())
             .then(
                 (response) => {
-                    const retrieved_points = response.customer[0].rewardPoints;
+                    const retrieved_points = response.customer[0].reward_points;
                     this.setState({ rewardPoints: retrieved_points});
                     console.log("Points: " + retrieved_points);
                 }

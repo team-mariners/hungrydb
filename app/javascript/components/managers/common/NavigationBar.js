@@ -7,19 +7,24 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const NavigationBar = () => {
     const navLinkstyle = Colors.navbarLink;
-    const dropDownTitle = <span style={navLinkstyle}>Manage</span>
-
+    const statsTitle = <span style={navLinkstyle}>Stats</span>;
+    const manageTitle = <span style={navLinkstyle}>Manage</span>;
+    
     return (
         <AppBar isLoggedIn={true}>
-            <Nav.Link as={NavLink} to="/manager/stats" style={navLinkstyle}>Stats</Nav.Link>
+            <NavDropdown title={statsTitle} id="basic-nav-dropdown">
+                <NavDropdown.Item as={NavLink} to="/manager/promo_stats">Promotions</NavDropdown.Item>
+            </NavDropdown>
+
             <Nav.Link as={NavLink} to="/manager/orders" style={navLinkstyle}>Orders</Nav.Link>
-            <NavDropdown title={dropDownTitle} id="basic-nav-dropdown" >
+
+            <NavDropdown title={manageTitle} id="basic-nav-dropdown" >
                 <NavDropdown.Item as={NavLink} to="/manager/manage_menu">Menu</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/manager/manage_promo">Promotion</NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/manager/manage_promo">Promotions</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/manager/manage_info">Restaurant Information</NavDropdown.Item>
             </NavDropdown>
         </AppBar>
     )
-}
+};
 
 export default NavigationBar;

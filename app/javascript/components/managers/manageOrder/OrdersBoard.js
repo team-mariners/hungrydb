@@ -49,16 +49,14 @@ const OrdersBoard = () => {
 
         if (ordersType == ORDERS_TYPES.ongoing) {
             result = orders.filter(order => {
-                return "in_progress".localeCompare(order.status) === 0;
+                return "in progress".localeCompare(order.status) === 0;
             });
         } else if (ordersType == ORDERS_TYPES.complete) {
-            console.log("I am executed");
             result = orders.filter(order => {
                 return "complete".localeCompare(order.status) === 0;
             });
         }
 
-        console.log(result);
         setVisibleOrders(result);
     };
 

@@ -1,27 +1,31 @@
 import React from 'react';
-import Table from 'react-bootstrap/Table'
-import CartItem from './CartItem';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import CartItem from './CartItem';
+import CartItemTable from './CartItemTable';
+import CartPromoForm from './CartPromoForm';
+import CartPointsForm from './CartPointsForm';
+import Button from 'react-bootstrap/Button';
 
 class Cart extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.orders);
-        console.log(sessionStorage.getItem('orders'));
-        this.orders = this.props.orders === null
-            ? JSON.parse(sessionStorage.getItem('orders'))
-            : this.props.orders;
+        this.foods = JSON.parse(sessionStorage.getItem('foods'));
+        console.log(this.foods);
 
-        this.handlePromoChange = this.handlePromoChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.state = { entered_promo: "", promotions: null };
+        this.handleDeleteItem = this.handleDeleteItem.bind(this)
+        this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
+        this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
+        this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
+        this.handleSubmitPoints = this.handleSubmitPoints.bind(this);
+        this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
+        this.state = { promotions: null, entered_promo: "", entered_points: "" };
 
+        this.totalCost = 0;
         this.amountDue = 0;
         this.discountPercentage = sessionStorage.getItem("discount_percent");
-        this.usedPromos = sessionStorage.getItem("used_promos");
+        this.usedPromoCode = JSON.parse(sessionStorage.getItem("used_promo_code"));
+        this.usedPromoId = JSON.parse(sessionStorage.getItem("used_promo_id"));
+        this.points = sessionStorage.getItem("points") ? sessionStorage.getItem("points") : 0;
     }
 
     componentDidMount() {
@@ -36,97 +40,157 @@ class Cart extends React.Component {
             .catch(error => {
                 console.log(error);
             })
-        // Set amountDue to 0 for every render
-        this.amountDue = 0;
     }
 
-    handlePromoChange(e) {
-        // Set amountDue to 0 for re-render after setState
-        this.amountDue = 0;
-        console.log(e.target.value);
-        this.setState({ entered_promo: e.target.value });
-    }
+    handleDeleteItem(foodName) {
+        if (!confirm("Are you sure you want to remove " + foodName + "?")) {
+            e.preventDefault();
+            return;
+        }
 
-    handleSubmit(e) {
-        // Check if promo used before
-        if (this.usedPromos) {
-            let usedPromosArray = this.usedPromos.split(" ");
-            for (let usedCode of usedPromosArray) {
-                if (usedCode == this.state.entered_promo) {
-                    alert("You have already used " + usedCode);
-                    return;
+        for (let storedName in this.foods) {
+            if (storedName === foodName) {
+                // delete this.foods.storedName;
+                let temp = {};
+                for (let order in this.foods) {
+                    if (order !== foodName) {
+                        temp[order] = this.foods[storedName];
+                    }
                 }
+                this.foods = Object.keys(temp).length === 0 ? null : temp;
+                console.log(this.foods);
+                sessionStorage.setItem("foods", JSON.stringify(this.foods));
+                location.reload();
             }
+        }
+        console.log(foodName);
+    }
+
+    handlePromoInsertChange(e) {
+        console.log(e.target.value.toUpperCase());
+        this.setState({ entered_promo: e.target.value.toUpperCase() });
+    }
+
+    handleSubmitPromo(e) {
+        if (this.usedPromoCode === this.state.entered_promo) {
+            alert("You have already used " + this.usedPromoCode);
+            e.preventDefault();
+            return;
         }
 
         // Apply promo, save total discount % & used promo to sessionStorage
         let promotionsList = this.state.promotions;
-        console.log(promotionsList);
         for (let promo of promotionsList) {
             if (promo.promocode === this.state.entered_promo) {
-                let currPercentage = this.discountPercentage == null
-                    ? 0
-                    : parseFloat(this.discountPercentage);
-                let newPercentage = currPercentage + parseFloat(promo.percentage) / 100;
+                let newPercentage = parseFloat(promo.percentage) / 100;
                 sessionStorage.setItem("discount_percent", newPercentage.toFixed(2));
-                let currUsedPromos = this.usedPromos == null
-                    ? ""
-                    : this.usedPromos;
-                sessionStorage.setItem("used_promos", currUsedPromos + " " + promo.promocode);
-                alert(promo.promocode + " applied for " + promo.percentage + "% off!" + currPercentage);
+
+                sessionStorage.setItem("used_promo_code", JSON.stringify(promo.promocode));
+
+                sessionStorage.setItem("used_promo_id", JSON.stringify(promo.id));
+
+                alert(promo.promocode + " applied for " + promo.percentage + "% off!");
                 return;
             }
         }
+        alert("No such promotion exists!");
+        e.preventDefault();
+    }
+
+    handlePointsInsertChange(e) {
+        console.log(e.target.value);
+        this.setState({ entered_points: e.target.value });
+    }
+
+    handleSubmitPoints(e) {
+        if (parseInt(this.state.entered_points) >= 0) {
+            sessionStorage.setItem("points", this.state.entered_points);
+        } else {
+            e.preventDefault();
+        }
+    }
+
+    handleSubmitOrder(e) {
+        if (this.totalCost < sessionStorage.getItem('restaurant_min')) {
+            alert("Your order cost is lower than the minimum required by the restaurant.");
+            e.preventDefault();
+        }
+        this.props.onAmountDueSubmit(this.amountDue);
     }
 
     render() {
-        if (this.orders === null) {
+        // Prevent erratic increment of totalCost on re-render
+        this.totalCost = 0;
+
+        if (!this.foods) {
             return <h3>Your cart is empty.</h3>
         } else {
-            let cart = [];
-            for (let item in this.orders) {
-                if (this.orders.hasOwnProperty(item)) {
-                    let foodDetails = this.orders[item];
-                    cart.push(
-                        <CartItem foodName={item} foodDetails={foodDetails} />
+            let items = [];
+            for (let item in this.foods) {
+                if (this.foods.hasOwnProperty(item)) {
+                    let foodDetails = this.foods[item];
+                    items.push(
+                        <CartItem foodName={item} foodDetails={foodDetails}
+                            onDeleteItem={this.handleDeleteItem} />
                     )
-                    this.amountDue += foodDetails.price * foodDetails.quantity;
+                    this.totalCost += foodDetails.price * foodDetails.quantity;
                 }
             }
+            this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
+                                - this.points + 3)
+                            .toFixed(2);
             return (
                 <div className='cart-container'>
                     <div><br /></div>
                     <h3>Ordering From: {sessionStorage.getItem('restaurant_name')}</h3>
+                    <h4>
+                        (minimum order ${parseFloat(
+                            sessionStorage.getItem('restaurant_min')).toFixed(2)}
+                        )
+                    </h4>
                     <div><br /></div>
-                    <Table responsive className='cart-table'>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Food</th>
-                                <th>Single Price</th>
-                                <th>Quantity</th>
-                                <th>Total Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {cart}
-                        </tbody>
-                    </Table>
+                    <CartItemTable items={items} />
                     <div><br /></div>
-
-                    <Form inline onSubmit={this.handleSubmit}>
-                        <FormControl type="text"
-                            placeholder="Promo Code"
-                            className="mr-sm-2" style={{ width: 300 }}
-                            onChange={this.handlePromoChange} />
-                        <Button type="submit" variant="success">Apply</Button>
-                    </Form>
+                    
+                    <h4>
+                        Total: ${this.totalCost.toFixed(2)}
+                    </h4>
+                    <h4>
+                        Delivery Fee: $3.00
+                    </h4>
+                    <div><br /><br /></div>
+                    
+                    <CartPromoForm
+                        handleSubmit={this.handleSubmitPromo}
+                        handleInsertChange={this.handlePromoInsertChange} />
                     <div><br /></div>
 
-                    <h3 className='cart-amount-due'>
-                        Amount Due: ${(this.amountDue - this.amountDue * this.discountPercentage).toFixed(2)}
-                    </h3>
+                    <h4>
+                        Discount: -${(this.totalCost * this.discountPercentage).toFixed(2)} ( 
+                        {this.discountPercentage * 100}%)
+                    </h4>
+                    <div><br /><br /></div>
+
+                    <CartPointsForm
+                        points={this.props.points} amountDue={this.amountDue}
+                        handleSubmit={this.handleSubmitPoints}
+                        handleInsertChange={this.handlePointsInsertChange} />
                     <div><br /></div>
+
+                    <h4>
+                        Offset: -${parseInt(this.points).toFixed(2)}
+                    </h4>
+                    <div><br /><br /></div>
+
+                    <h2 className='cart-amount-due'>
+                        Amount Due: ${this.amountDue}
+                    </h2>
+                    <div><br /></div>
+                    <Button href="/customer/complete-order" variant="primary" size="lg"
+                        onClick={this.handleSubmitOrder}>
+                            ORDER
+                    </Button>
+                    <div><br /><br /></div>
                 </div>
             )
         }

@@ -61,3 +61,6 @@ gem 'rack-cors'
 
 # Enables controllers to respond_to and respond_with JSON
 gem 'responders'
+
+# Scheduling cron jobs
+gem 'whenever', require: false

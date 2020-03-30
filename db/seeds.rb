@@ -30,8 +30,8 @@ ActiveRecord::Base.connection.exec_query(
 
 # Users with rider role
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO riders(user_id, created_at, updated_at) VALUES
-    ((SELECT id FROM users WHERE username = 'rider'), 'now', 'now');"
+    "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'rider'), 'full_time', 'now', 'now');"
 )
 
 # Users with manager role

@@ -1,10 +1,9 @@
 class CreateFullTimeRiderMonthlyScheduleTrigger < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
-      CREATE OR REPLACE FUNCTION check_monthly_schedule_exist() RETURNS TRIGGER AS $$
+      CREATE OR REPLACE FUNCTION check_monthly_schedule_exists() RETURNS TRIGGER AS $$
       DECLARE         
-        ft_rider_id bigint;
-        schedule bigint;       
+        ft_rider_id bigint;               
         ok boolean;     
       BEGIN
         IF (TG_TABLE_NAME = 'full_time_riders') THEN
@@ -37,7 +36,7 @@ class CreateFullTimeRiderMonthlyScheduleTrigger < ActiveRecord::Migration[6.0]
         AFTER UPDATE OF id OR INSERT ON full_time_riders
         DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW
-        EXECUTE PROCEDURE check_monthly_schedule_exist();
+        EXECUTE PROCEDURE check_monthly_schedule_exists();
 
       -- Deletion or update of monthly_work_schedules
       DROP TRIGGER IF EXISTS monthly_work_schedule_trigger ON monthly_work_schedules CASCADE;
@@ -45,7 +44,7 @@ class CreateFullTimeRiderMonthlyScheduleTrigger < ActiveRecord::Migration[6.0]
         AFTER DELETE OR UPDATE OF rider_id ON monthly_work_schedules
         DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW
-        EXECUTE PROCEDURE check_monthly_schedule_exist();      
+        EXECUTE PROCEDURE check_monthly_schedule_exists();      
     SQL
   end
 
@@ -53,7 +52,7 @@ class CreateFullTimeRiderMonthlyScheduleTrigger < ActiveRecord::Migration[6.0]
     execute <<-SQL    
       DROP TRIGGER full_time_rider_trigger ON full_time_riders CASCADE;
       DROP TRIGGER monthly_work_schedule_trigger ON monthly_work_schedules CASCADE;
-      DROP FUNCTION check_monthly_schedule_exist() CASCADE;
+      DROP FUNCTION check_monthly_schedule_exists() CASCADE;
     SQL
   end
 end

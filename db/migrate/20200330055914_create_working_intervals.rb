@@ -13,9 +13,9 @@ class CreateWorkingIntervals < ActiveRecord::Migration[6.0]
       workingDay varchar(300) NOT NULL,
       startHour varchar(300) NOT NULL,
       endHour varchar(300) NOT NULL,
-      wws_id bigint,
+      wws_id bigint NOT NULL,
       PRIMARY KEY(wi_id),
-      FOREIGN KEY(wws_id) REFERENCES weekly_work_schedule
+      FOREIGN KEY(wws_id) REFERENCES weekly_work_schedules
           ON DELETE CASCADE
     );"
 

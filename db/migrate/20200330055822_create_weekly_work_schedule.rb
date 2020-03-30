@@ -15,7 +15,7 @@ class CreateWeeklyWorkSchedule < ActiveRecord::Migration[6.0]
       PRIMARY KEY(wws_id),
       FOREIGN KEY(id) REFERENCES part_time_riders
           ON DELETE CASCADE,
-      FOREIGN KEY(mwsid) REFERENCES monthly_work_schedule
+      FOREIGN KEY(mwsid) REFERENCES monthly_work_schedules
           ON DELETE CASCADE
     );"
 

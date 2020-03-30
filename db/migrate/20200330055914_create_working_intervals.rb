@@ -9,18 +9,18 @@ class CreateWorkingIntervals < ActiveRecord::Migration[6.0]
       CACHE 1;"
     
     execute "CREATE TABLE working_intervals (
-      wid bigint NOT NULL DEFAULT nextval('wi_id_seq'),
+      wi_id bigint NOT NULL DEFAULT nextval('wi_id_seq'),
       workingDay varchar(300) NOT NULL,
       startHour varchar(300) NOT NULL,
       endHour varchar(300) NOT NULL,
       wws_id bigint,
-      PRIMARY KEY(wid),
+      PRIMARY KEY(wi_id),
       FOREIGN KEY(wws_id) REFERENCES weekly_work_schedule
           ON DELETE CASCADE
     );"
 
     # This will auto drop the sequence when Working Interval is dropped
-    execute "ALTER SEQUENCE wi_id_seq OWNED BY working_intervals.wid;"
+    execute "ALTER SEQUENCE wi_id_seq OWNED BY working_intervals.wi_id;"
   end
 
   # For rolling back

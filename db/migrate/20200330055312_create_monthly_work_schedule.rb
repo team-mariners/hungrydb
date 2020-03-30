@@ -8,19 +8,19 @@ class CreateMonthlyWorkSchedule < ActiveRecord::Migration[6.0]
       NO MAXVALUE
       CACHE 1;"
     
-    execute "CREATE TABLE monthly_work_schedule (
+    execute "CREATE TABLE monthly_work_schedules (
       mws_id bigint NOT NULL DEFAULT nextval('mws_id_seq'),
-      id bigint,
+      rider_id bigint,
       PRIMARY KEY(mws_id),
-      FOREIGN KEY(id) REFERENCES full_time_riders
+      FOREIGN KEY(rider_id) REFERENCES full_time_riders
         ON DELETE CASCADE
     );"
 
-    execute "ALTER SEQUENCE mws_id_seq OWNED BY monthly_work_schedule.mws_id;"
+    execute "ALTER SEQUENCE mws_id_seq OWNED BY monthly_work_schedules.mws_id;"
   end
 
   # For rolling back
   def down
-    execute "DROP TABLE monthly_work_schedule;"
+    execute "DROP TABLE monthly_work_schedules;"
   end
 end

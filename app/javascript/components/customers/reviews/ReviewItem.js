@@ -2,6 +2,9 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 
 const ReviewItem = (props) => {
+    if (!props.review) {
+        return null;
+    }
 
     return (
             <ListGroup.Item variant="success" style={{color: "black", textAlign: "center"}}>

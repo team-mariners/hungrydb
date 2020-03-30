@@ -37,8 +37,8 @@ Rails.application.routes.draw do
 
     scope '/manager' do
       get 'manage', to: 'managers#index'
+      get 'promo_stats', to: 'managers#index'
       get 'orders', to: 'managers#index'
-      get 'stats', to: 'managers#index'
       get 'manage_menu', to: 'managers#index'
       get 'manage_menu/menu_sections/:id', to: 'managers#index'
       get 'manage_promo', to: 'managers#index'
@@ -98,6 +98,11 @@ Rails.application.routes.draw do
 
       namespace :reviews do
         resources :reviews, only: %i[index create destroy update]
+      end
+
+      namespace :statistics do
+        get '/monthy_overall_summary', to: 'statistics#monthly_overall_summary'
+        get '/promotions_summary', to: 'statistics#promotions_summary'
       end
     end
   end

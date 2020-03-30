@@ -11,6 +11,7 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
       current_order = order['oid']
       order['customer_name'] = helpers.retrieve_order_customer(current_order)
       order['restaurant_name'] = helpers.retrieve_restaurant_name(order['restaurant_id'])
+      order['address'] = helpers.retrieve_order_address(current_order)
       order['promocode'] = helpers.retrieve_promo_code(order['promo_id'])
       order['promo_discount'] = helpers.retrieve_promo_discount(order['promo_id'])
       order['foods'] = helpers.retrieve_order_foods(current_order)
@@ -24,8 +25,11 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
     ActiveRecord::Base.connection.begin_db_transaction
     orders = ActiveRecord::Base.connection.exec_query(
       "SELECT oid, point_offset, payment_method, delivery_fee, date_time, status, food_review,
+        (total_price - delivery_fee) AS total_cost,
         (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name,
-        (SELECT percentage FROM Promotions WHERE id = Orders.promo_id) AS promo_percentage
+        (SELECT percentage FROM Promotions WHERE id = Orders.promo_id) AS promo_percentage,
+        (SELECT promocode FROM Promotions WHERE id = Orders.promo_id) AS promocode,
+        (SELECT p_type FROM Promotions WHERE id = Orders.promo_id) AS p_type
       FROM Orders LEFT OUTER JOIN Reviews USING (oid) 
       WHERE restaurant_id = #{@restaurant['id']}
       ORDER BY oid;"
@@ -85,7 +89,7 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
 
   def get_order(row)
     result = row.clone
-    return result.extract!("oid", "customer_id", "promo_id", "point_offset", "payment_method",
-      "delivery_fee", "date_time", "status")
+    return result.extract!("oid", "customer_id", "point_offset", "payment_method", "delivery_fee",
+      "date_time", "status", "total_cost", "promo_percentage", "promocode", "p_type")      
   end
 end

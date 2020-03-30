@@ -1,3 +1,1 @@
-const dateTimeFormat = 'MMMM Do YYYY, h:mm a';
-
-export { dateTimeFormat };
+export const dateTimeFormat = 'MMMM Do YYYY, h:mm a';

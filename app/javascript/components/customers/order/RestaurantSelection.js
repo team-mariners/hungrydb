@@ -10,12 +10,39 @@ class RestaurantSelection extends React.Component {
         this.restaurant = this.props.res;
         this.menu_url = "/customer/order/" + this.restaurant.id + "/menu";
         this.review_url = "/restaurants/" + this.restaurant.id + "/reviews";
+        this.handleSelectRestaurant = this.handleSelectRestaurant.bind(this);
         this.setSessionRestaurantInfo = this.setSessionRestaurantInfo.bind(this);
+    }
+
+    handleSelectRestaurant(e) {
+        let currentOrderRestaurant = sessionStorage.getItem('restaurant_name');
+        // Check if there are already orders placed under a different restaurant
+        if (sessionStorage.getItem('foods') &&
+            this.restaurant.name !== currentOrderRestaurant) {
+            if (!this.confirmChangeRestaurant(currentOrderRestaurant)) {
+                e.preventDefault();
+                return;
+            } else {
+                sessionStorage.clear();
+                this.props.onResetOrder();
+            }
+        }
+        this.setSessionRestaurantInfo();
+    }
+
+    confirmChangeRestaurant(currentOrderRestaurant) {
+        return confirm("WARNING: You can only order from ONE restaurant."
+                        + "\n\nYou have placed orders from "
+                        + currentOrderRestaurant.toUpperCase()
+                        + ". Your current orders will be removed if you choose another restaurant."
+                        + "\n\nAre you sure you want to choose "
+                        + this.restaurant.name.toUpperCase() + "?");
     }
 
     setSessionRestaurantInfo() {
         sessionStorage.setItem('restaurant_name', this.restaurant.name);
         sessionStorage.setItem('restaurant_id', this.restaurant.id);
+        sessionStorage.setItem('restaurant_min', this.restaurant.min_order_cost);
     }
 
     render() {
@@ -24,7 +51,7 @@ class RestaurantSelection extends React.Component {
                 <div className='restaurant-media'>
                     {/* Store the currently selected restaurant in sessionStorage */}
                     <Link to={this.menu_url} className='restaurant-media-link'
-                    onClick={this.setSessionRestaurantInfo} >
+                    onClick={this.handleSelectRestaurant} >
                         <Media>
                             <img
                                 width={130}

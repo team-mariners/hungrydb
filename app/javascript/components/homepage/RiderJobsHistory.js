@@ -1,5 +1,5 @@
 import React from 'react';
-import RiderNaviBar from './RiderNaviBar';
+import RiderNaviBar from '../riders/common/RiderNaviBar';
 
 
 const RiderJobsHistory = () => {

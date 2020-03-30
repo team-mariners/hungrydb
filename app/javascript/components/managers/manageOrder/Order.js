@@ -2,7 +2,6 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import CustomCard from '../../utilities/CustomCard/CustomCard';
 import CardLeftSide from '../../utilities/CustomCard/CardLeftSide';
-import CardRightSide from '../../utilities/CustomCard/CardRightSide';
 import { dateTimeFormat } from '../../utilities/Constants';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
 

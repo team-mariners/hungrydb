@@ -23,4 +23,12 @@ module Api::V1::Orders::OrdersHelper
                            LIMIT 1"
     ActiveRecord::Base.connection.execute(order_customer_query)[0]['username']
   end
+
+  def retrieve_order_address(oid)
+    address_query = "SELECT customer_location
+                    FROM Delivers
+                    WHERE oid = #{oid}
+                    LIMIT 1"
+    ActiveRecord::Base.connection.execute(address_query)[0]['customer_location']
+  end
 end

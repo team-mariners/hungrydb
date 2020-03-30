@@ -1,4 +1,4 @@
-class CreateMonthlyWorkSchedule < ActiveRecord::Migration[6.0]
+class CreateMonthlyWorkSchedules < ActiveRecord::Migration[6.0]
   def up
     # Create an auto-incremented id for mws
     execute "CREATE SEQUENCE mws_id_seq

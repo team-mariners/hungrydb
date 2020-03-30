@@ -1,4 +1,4 @@
-class CreateWeeklyWorkSchedule < ActiveRecord::Migration[6.0]
+class CreateWeeklyWorkSchedules < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE SEQUENCE wws_id_seq
       START WITH 1
@@ -10,11 +10,11 @@ class CreateWeeklyWorkSchedule < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE weekly_work_schedules (
       wws_id bigint NOT NULL DEFAULT nextval('wws_id_seq'),
       rider_id bigint,
-      mwsid bigint,
+      mws_id bigint,
       PRIMARY KEY(wws_id),
       FOREIGN KEY(rider_id) REFERENCES part_time_riders
           ON DELETE CASCADE,
-      FOREIGN KEY(mwsid) REFERENCES monthly_work_schedules
+      FOREIGN KEY(mws_id) REFERENCES monthly_work_schedules
           ON DELETE CASCADE
     );"
 

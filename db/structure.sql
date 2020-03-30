@@ -10,20 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
 -- Name: payment_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -175,7 +161,7 @@ CREATE FUNCTION public.orders_delivers_total_participation() RETURNS trigger
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: admins; Type: TABLE; Schema: public; Owner: -
@@ -333,6 +319,16 @@ ALTER SEQUENCE public.foods_id_seq OWNED BY public.foods.id;
 
 
 --
+-- Name: full_time_riders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.full_time_riders (
+    id bigint NOT NULL,
+    monthlybasesalary numeric NOT NULL
+);
+
+
+--
 -- Name: has_promotions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -404,6 +400,35 @@ ALTER SEQUENCE public.menu_sections_url_id_seq OWNED BY public.menu_sections.url
 
 
 --
+-- Name: monthly_work_schedule; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.monthly_work_schedule (
+    mws_id bigint NOT NULL,
+    id bigint
+);
+
+
+--
+-- Name: mws_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mws_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mws_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mws_id_seq OWNED BY public.monthly_work_schedule.mws_id;
+
+
+--
 -- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -429,6 +454,16 @@ CREATE TABLE public.orders (
     delivery_fee numeric DEFAULT 0 NOT NULL,
     date_time timestamp without time zone NOT NULL,
     status public.status_type DEFAULT 'in_progress'::public.status_type NOT NULL
+);
+
+
+--
+-- Name: part_time_riders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.part_time_riders (
+    id bigint NOT NULL,
+    weeklybasesalary numeric NOT NULL
 );
 
 
@@ -614,6 +649,68 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: weekly_work_schedule; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.weekly_work_schedule (
+    wws_id bigint NOT NULL,
+    id bigint,
+    mwsid bigint
+);
+
+
+--
+-- Name: working_intervals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.working_intervals (
+    wid bigint NOT NULL,
+    workingday character varying(300) NOT NULL,
+    starthour character varying(300) NOT NULL,
+    endhour character varying(300) NOT NULL,
+    wws_id bigint
+);
+
+
+--
+-- Name: wi_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wi_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wi_id_seq OWNED BY public.working_intervals.wid;
+
+
+--
+-- Name: wws_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wws_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wws_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wws_id_seq OWNED BY public.weekly_work_schedule.wws_id;
+
+
+--
 -- Name: admins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -649,6 +746,13 @@ ALTER TABLE ONLY public.menu_sections ALTER COLUMN url_id SET DEFAULT nextval('p
 
 
 --
+-- Name: monthly_work_schedule mws_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monthly_work_schedule ALTER COLUMN mws_id SET DEFAULT nextval('public.mws_id_seq'::regclass);
+
+
+--
 -- Name: promotions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -674,6 +778,20 @@ ALTER TABLE ONLY public.riders ALTER COLUMN id SET DEFAULT nextval('public.rider
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: weekly_work_schedule wws_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.weekly_work_schedule ALTER COLUMN wws_id SET DEFAULT nextval('public.wws_id_seq'::regclass);
+
+
+--
+-- Name: working_intervals wid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.working_intervals ALTER COLUMN wid SET DEFAULT nextval('public.wi_id_seq'::regclass);
 
 
 --
@@ -749,6 +867,14 @@ ALTER TABLE ONLY public.foods
 
 
 --
+-- Name: full_time_riders full_time_riders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.full_time_riders
+    ADD CONSTRAINT full_time_riders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: has_promotions has_promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -781,11 +907,27 @@ ALTER TABLE ONLY public.menu_sections
 
 
 --
+-- Name: monthly_work_schedule monthly_work_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monthly_work_schedule
+    ADD CONSTRAINT monthly_work_schedule_pkey PRIMARY KEY (mws_id);
+
+
+--
 -- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.orders
     ADD CONSTRAINT orders_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: part_time_riders part_time_riders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.part_time_riders
+    ADD CONSTRAINT part_time_riders_pkey PRIMARY KEY (id);
 
 
 --
@@ -885,6 +1027,22 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: weekly_work_schedule weekly_work_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.weekly_work_schedule
+    ADD CONSTRAINT weekly_work_schedule_pkey PRIMARY KEY (wws_id);
+
+
+--
+-- Name: working_intervals working_intervals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.working_intervals
+    ADD CONSTRAINT working_intervals_pkey PRIMARY KEY (wid);
+
+
+--
 -- Name: index_admins_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -937,42 +1095,42 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 -- Name: comprises comprises_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+CREATE CONSTRAINT TRIGGER comprises_delete_trigger AFTER DELETE ON public.comprises NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION public.delivers_delete_orders_constraint();
 
 
 --
 -- Name: delivers delivers_delete_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE PROCEDURE public.delivers_delete_orders_constraint();
+CREATE CONSTRAINT TRIGGER delivers_delete_trigger AFTER DELETE ON public.delivers NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION public.delivers_delete_orders_constraint();
 
 
 --
 -- Name: orders orders_comprises_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_comprises_total_participation();
+CREATE CONSTRAINT TRIGGER orders_comprises_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.orders_comprises_total_participation();
 
 
 --
 -- Name: orders orders_delivers_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.orders_delivers_total_participation();
+CREATE CONSTRAINT TRIGGER orders_delivers_trigger AFTER INSERT OR UPDATE OF oid ON public.orders DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.orders_delivers_total_participation();
 
 
 --
 -- Name: promotions promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_promotions_constraint();
+CREATE CONSTRAINT TRIGGER promotion_trigger AFTER INSERT OR UPDATE ON public.promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_promotions_constraint();
 
 
 --
 -- Name: restaurant_promotions restaurant_promotion_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE public.check_has_promotions_exist();
+CREATE CONSTRAINT TRIGGER restaurant_promotion_trigger AFTER INSERT OR UPDATE ON public.restaurant_promotions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.check_has_promotions_exist();
 
 
 --
@@ -1008,11 +1166,11 @@ ALTER TABLE ONLY public.delivers
 
 
 --
--- Name: fds_promotions fds_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fds_promotions fds_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fds_promotions
-    ADD CONSTRAINT fds_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT fds_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -1064,6 +1222,14 @@ ALTER TABLE ONLY public.foods
 
 
 --
+-- Name: full_time_riders full_time_riders_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.full_time_riders
+    ADD CONSTRAINT full_time_riders_id_fkey FOREIGN KEY (id) REFERENCES public.riders(id) ON DELETE CASCADE;
+
+
+--
 -- Name: has_promotions has_promotions_restaurant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1085,6 +1251,14 @@ ALTER TABLE ONLY public.has_promotions
 
 ALTER TABLE ONLY public.menu_sections
     ADD CONSTRAINT menu_sections_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: monthly_work_schedule monthly_work_schedule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monthly_work_schedule
+    ADD CONSTRAINT monthly_work_schedule_id_fkey FOREIGN KEY (id) REFERENCES public.full_time_riders(id) ON DELETE CASCADE;
 
 
 --
@@ -1112,11 +1286,19 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: restaurant_promotions restaurant_promotions_promotion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: part_time_riders part_time_riders_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.part_time_riders
+    ADD CONSTRAINT part_time_riders_id_fkey FOREIGN KEY (id) REFERENCES public.riders(id) ON DELETE CASCADE;
+
+
+--
+-- Name: restaurant_promotions restaurant_promotions_promotion_id_p_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.restaurant_promotions
-    ADD CONSTRAINT restaurant_promotions_promotion_id_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
+    ADD CONSTRAINT restaurant_promotions_promotion_id_p_type_fkey FOREIGN KEY (promotion_id, p_type) REFERENCES public.promotions(id, p_type) MATCH FULL ON DELETE CASCADE;
 
 
 --
@@ -1141,6 +1323,30 @@ ALTER TABLE ONLY public.reviews
 
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT reviews_rider_id_fkey FOREIGN KEY (rider_id) REFERENCES public.riders(user_id);
+
+
+--
+-- Name: weekly_work_schedule weekly_work_schedule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.weekly_work_schedule
+    ADD CONSTRAINT weekly_work_schedule_id_fkey FOREIGN KEY (id) REFERENCES public.part_time_riders(id) ON DELETE CASCADE;
+
+
+--
+-- Name: weekly_work_schedule weekly_work_schedule_mwsid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.weekly_work_schedule
+    ADD CONSTRAINT weekly_work_schedule_mwsid_fkey FOREIGN KEY (mwsid) REFERENCES public.monthly_work_schedule(mws_id) ON DELETE CASCADE;
+
+
+--
+-- Name: working_intervals working_intervals_wws_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.working_intervals
+    ADD CONSTRAINT working_intervals_wws_id_fkey FOREIGN KEY (wws_id) REFERENCES public.weekly_work_schedule(wws_id) ON DELETE CASCADE;
 
 
 --
@@ -1171,6 +1377,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200316131147'),
 ('20200316132202'),
 ('20200317070245'),
-('20200317072650');
+('20200317072650'),
+('20200330055226'),
+('20200330055312'),
+('20200330055734'),
+('20200330055822'),
+('20200330055914');
 
 

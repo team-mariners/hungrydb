@@ -9,13 +9,16 @@ const ToolBar = (props) => {
     const [isShowClockOut, showClockOut] = useState(false);
 
     const clockInTime = !props.clockedInData.clock_in
-        ? "" 
+        ? "-" 
         : moment(props.clockedInData.clock_in, "HH:mm").format("HH:mm a");
 
     const clockOutTime = !props.clockedInData.clock_out
-        ? "" 
+        ? "-" 
         : moment(props.clockedInData.clock_out, "HH:mm").format("HH:mm a");
-   
+    
+    const totalHoursWorked = !props.clockedInData.total_hours
+        ? "-"
+        : `${props.clockedInData.total_hours} hours`;
 
     return (
         <div>
@@ -29,14 +32,18 @@ const ToolBar = (props) => {
                 <span><b>Time: </b>{clockInTime}</span>
             </div>
             
-            <div>
+            <div className="mb-3">
                 <Button
                     className="clock-in-out-button"
                     onClick={() => showClockOut(true)}
-                    disabled={!!props.clockedInData.clock_out}>
+                    disabled={!props.clockedInData.clock_in || !!props.clockedInData.clock_out}>
                     Clock Out
                 </Button>
                 <span><b>Time: </b>{clockOutTime}</span>
+            </div>
+
+            <div className="mb-3">
+                    <p><b>Total Hours worked today: </b>{totalHoursWorked}</p>
             </div>
 
             <ClockIn show={isShowClockIn} onClose={() => showClockIn(false)} {...props}/>

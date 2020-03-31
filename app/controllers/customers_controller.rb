@@ -15,6 +15,8 @@ class CustomersController < UsersController
 
   def complete_order; end
 
+  def review; end
+
   def history; end
 
   def reviews; end

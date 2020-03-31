@@ -4,12 +4,13 @@ import CustomerNavBar from './CustomerNavBar'
 import Dashboard from './dashboard/CustomerDashboard';
 import Menu from './order/Menu';
 import Cart from './cart/Cart';
+import CompleteOrder from './ordersubmission/CompleteOrder';
+import Review from './revieworder/Review';
 import OrderHistory from './orderhistory/OrderHistory';
 import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
-import CompleteOrder from './ordersubmission/CompleteOrder';
 
 class Index extends React.Component {
     constructor(props) {
@@ -86,8 +87,8 @@ class Index extends React.Component {
                     <Cart orders={this.state.orders} points={this.props.info.points}
                             onAmountDueSubmit={this.handleRecordAmountDue} />
                 </Route>
-                <Route exact path="/customer/complete-order"
-                    render={() => <CompleteOrder/> } />
+                <Route exact path="/customer/complete_order" render={() => <CompleteOrder /> } />
+                <Route exact path="/customer/review_order" render={() => <Review /> } />
 
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />

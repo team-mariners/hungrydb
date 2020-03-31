@@ -66,12 +66,11 @@ class CompleteOrder extends React.Component {
         order["status"] = "in progress";
         order["foods"] = JSON.parse(sessionStorage.getItem('foods'));
         order["customer_location"] = this.state.address;
-        axios.post('/orders', order)
+        axios.post('/order', order)
             .then((result) => {
                 console.log(result);
                 alert("Your order has been placed." + "\nYou have earned "
                         + Math.floor(sessionStorage.getItem('amount_due')) + " points!");
-                sessionStorage.clear();
             }).catch((error) => {
                 console.log(error);
                 alert("Failed to place order!");
@@ -115,7 +114,7 @@ class CompleteOrder extends React.Component {
                 <br/><br/>
 
                 <Button style={{display: "block", width: 200, margin: "auto"}}
-                        href="/" variant="primary" size="lg"
+                        href="/customer/review_order" variant="primary" size="lg"
                         onClick={this.handleSubmitOrder}>
                     CONFIRM
                 </Button>

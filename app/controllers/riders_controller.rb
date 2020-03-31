@@ -32,7 +32,7 @@ class RidersController < UsersController
         AND w_date = CURRENT_DATE;"
       )
 
-      result = ActiveRecord::Base.connection.exec_query(
+      intervals = ActiveRecord::Base.connection.exec_query(
         "SELECT *
         FROM working_intervals
         WHERE workingDay::text = trim(to_char(CURRENT_TIMESTAMP, 'Day'))

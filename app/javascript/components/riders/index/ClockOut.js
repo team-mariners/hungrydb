@@ -2,23 +2,23 @@ import React from 'react';
 import axios from 'axios';
 import ConfirmationDialog from '../../utilities/ConfirmationDialog';
 
-const ClockIn = (props) => {
-    const clockIn = () => {
-        axios.post("/rider/clock_in")
-            .then(result => {                
+const ClockOut = (props) => {
+    const clockOut = () => {
+        axios.post("/rider/clock_out")
+            .then(result => {
                 const newClockInData = {...props.clockedInData};
-                newClockInData.clock_in = result.data.clock_in;
+                newClockInData.clock_out = result.data.clock_out;
                 props.setClockedInData(newClockInData);
             }).catch(error => {
                 console.log(error);
             }).finally(() => {
                 props.onClose();
-            });    
+            });
     }
 
     return (
-        <ConfirmationDialog onConfirm={clockIn} {...props}/>    
+        <ConfirmationDialog onConfirm={clockOut} {...props}/>
     )
 };
 
-export default ClockIn;
+export default ClockOut;

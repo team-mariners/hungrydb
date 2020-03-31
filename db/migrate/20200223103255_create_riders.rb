@@ -1,34 +1,25 @@
 # frozen_string_literal: true
 
 class CreateRiders < ActiveRecord::Migration[6.0]
-  def change
-    create_table :riders do |t|
-      t.belongs_to :user, index: { unique: true }, foreign_key: "id"
-      t.string :currLocation
-      t.string :status
-      t.float :fee
+  def up
+    execute "CREATE TYPE rider_type AS ENUM ('full_time', 'part_time');"
 
-      t.timestamps
-    end
+    execute "CREATE TABLE riders (
+      user_id bigint NOT NULL PRIMARY KEY,
+      r_type rider_type NOT NULL,
+      currLocation varchar(300),
+      status varchar(300) NOT NULL DEFAULT '',
+      comission numeric NOT NULL DEFAULT 0,
+      created_at timestamp(6) without time zone NOT NULL,
+      updated_at timestamp(6) without time zone NOT NULL,
+      UNIQUE(user_id, r_type),
+      FOREIGN KEY(user_id) REFERENCES users
+        ON DELETE CASCADE
+    );"
   end
 
-  # def up
-  #   execute "CREATE TABLE riders (
-  #     id bigint NOT NULL,
-  #     currLocation varchar(300) NOT NULL,
-  #     status varchar(300) NOT NULL,
-  #     comission numeric NOT NULL,
-  #     PRIMARY KEY(id),
-  #     FOREIGN KEY(id) REFERENCES users
-  #       ON DELETE CASCADE
-  #   );"
-
-  #   # This will auto drop the sequence when Riders is dropped
-  #   execute "ALTER SEQUENCE riders_id_seq OWNED BY riders.id;"
-  # end
-
-  # # For rolling back
-  # def down
-  #   execute "DROP TABLE riders;"
-  # end
+  # For rolling back
+  def down
+    execute "DROP TABLE riders;"
+  end
 end

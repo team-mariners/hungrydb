@@ -28,11 +28,19 @@ ActiveRecord::Base.connection.exec_query(
     ((SELECT id FROM users WHERE username = 'JohnDoe'), 'now', 'now', 50);"
 )
 
+MONTHLY_BASE_SALARY = 1200
+
 # Users with rider role
+ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO riders(user_id, created_at, updated_at) VALUES
-    ((SELECT id FROM users WHERE username = 'rider'), 'now', 'now');"
+    "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'rider'), 'full_time', 'now', 'now');"
 )
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO full_time_riders(id, monthlyBaseSalary) VALUES
+    ((SELECT id FROM users WHERE username = 'rider'), #{MONTHLY_BASE_SALARY});"
+)
+ActiveRecord::Base.connection.commit_db_transaction
 
 # Users with manager role
 ActiveRecord::Base.connection.exec_query(

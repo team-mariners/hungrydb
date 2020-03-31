@@ -18,8 +18,62 @@ module AdminsHelper
             "SELECT * FROM promotions
             WHERE p_type = 'fds';"
         ).to_a
-        
+
         return promos
+    end
+
+    def create_fds_promo(name, code, start, enddate, percent, max)
+        begin
+            ActiveRecord::Base.connection.begin_db_transaction
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO Promotions(p_name, p_type, promocode, max_redeem, start_datetime, end_datetime, percentage)
+                VALUES ('#{name}', 'fds', '#{code}', #{max}, '#{start}', '#{enddate}', #{percent});"
+            )
+
+            promo = ActiveRecord::Base.connection.exec_query(
+                "SELECT * FROM Promotions
+                WHERE promocode = '#{code}'"
+            ).to_a[0]
+
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO fds_promotions(promotion_id, p_type)
+                VALUES (#{promo['id']}, '#{promo['p_type']}');"
+            )
+            ActiveRecord::Base.connection.commit_db_transaction
+        rescue Exception => e
+            return false
+        end
+
+        return fds_promo_exist?(code)
+    end
+
+    def edit_fds_promo(code, start, enddate, percent, max)
+        ActiveRecord::Base.connection.exec_query(
+            "UPDATE Promotions SET
+            max_redeem = #{max}, start_datetime = '#{start}',
+            end_datetime = '#{enddate}', percentage = #{percent}
+            WHERE promocode = '#{code}';"
+        )
+
+        promo = ActiveRecord::Base.connection.exec_query(
+            "SELECT * FROM Promotions
+            WHERE promocode = '#{code}';"
+        ).to_a[0]
+
+        return (promo['start_datetime'] == start && promo['end_datetime'] == enddate && promo['percentage'] == percent && promo['max_redeem'] == max)
+    end
+
+    def fds_promo_exist?(code)
+        promo = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM Promotions
+            WHERE promocode = '#{code}'"
+        ).first['count']
+
+        if promo == 1
+            return true
+        else
+            return false
+        end
     end
 
     def get_existing_restaurant(userid)

@@ -10,7 +10,7 @@ const PromoList = (props) => {
             <ListGroup.Item key={promo.id}>
                 <PromoItem
                     promo={promo}
-                    showEditPromoForm={props.showEditPromoForm}
+                    showEditPromo={props.showEditPromo}
                     promoType={props.promoType}
                 />
             </ListGroup.Item>

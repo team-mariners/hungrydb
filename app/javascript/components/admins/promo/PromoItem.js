@@ -1,11 +1,14 @@
 import React from 'react';
 import moment from 'moment-timezone';
+import momentDurationFormatSetup from 'moment-duration-format';
 import Button from 'react-bootstrap/Button';
-import dateTimeFormat from '../../utilities/Constants';
+import { dateTimeFormat } from '../../utilities/Constants';
 import CustomCard from '../../utilities/CustomCard/CustomCard';
 import CardLeftSide from '../../utilities/CustomCard/CardLeftSide';
 import CardRightSide from '../../utilities/CustomCard/CardRightSide';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
+
+momentDurationFormatSetup(moment);
 
 const PromoItem = (props) => {
     const editButton = <Button onClick={() => props.showEditPromo(props.promo)}>Edit</Button>;
@@ -23,7 +26,7 @@ const PromoItem = (props) => {
                 <p><b>Promo code: </b>{props.promo.promocode}</p>
                 <p><b>Start date & time: </b>{moment(props.promo.start_datetime).format(dateTimeFormat)}</p>
                 <p><b>End date & time: </b>{moment(props.promo.end_datetime).format(dateTimeFormat)}</p>
-                <p><b>Duration: </b>{moment(duration).format()}</p>
+                <p><b>Duration: </b>{duration.format()}</p>
             </CardLeftSide>
 
             <CardRightSide>

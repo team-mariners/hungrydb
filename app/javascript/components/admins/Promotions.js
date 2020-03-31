@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import moment from 'moment-timezone';
 import Button from 'react-bootstrap/Button';
-import PromoList from './promo/PromoList.js';
+import EditPromo from './promo/EditPromo';
+import NewPromo from './promo/NewPromo';
+import PromoList from './promo/PromoList';
 
 const Promotions = (props) => {
     const [newPromoForm, showNewPromoForm] = useState(false);
     const [editPromoForm, showEditPromoForm] = useState(false);
     const [promoType, setPromoType] = useState("ongoing");
+    const [promo, setPromo] = useState(null);
 
     const isOngoing = (promo) => {
         return moment(promo.start_datetime).isSameOrBefore(moment()) && moment(promo.end_datetime).isAfter(moment());
     };
-    
+
     const isScheduled = (promo) => {
         return moment(promo.start_datetime).isAfter(moment());
     };
-    
+
     const isClosed = (promo) => {
         return moment(promo.end_datetime).isBefore(moment());
     };
@@ -30,12 +33,22 @@ const Promotions = (props) => {
         }
     }
 
-    const handleNewPromo = (props) => {
+    const handlePromoCreated = (props) => {
+        showNewPromoForm(false);
+        window.location.assign(window.location);
+    }
+
+    const handlePromoEdited = (props) => {
+        showEditPromoForm(false);
+        window.location.assign(window.location);
+    }
+
+    const showNewPromo = () => {
         showNewPromoForm(true);
     }
 
-
     const showEditPromo = (promo) => {
+        setPromo(promo);
         showEditPromoForm(true);
     }
 
@@ -45,7 +58,7 @@ const Promotions = (props) => {
             <p>As an administrator, you can manage promotions that are applied on all restaurants.</p>
 
             <div className="manageMenu-toolbar mb-3">
-                <Button onClick={handleNewPromo}>New Promotion</Button>
+                <Button onClick={showNewPromo}>New Promotion</Button>
             </div>
 
             <PromoList
@@ -54,17 +67,17 @@ const Promotions = (props) => {
                 setPromoType={setPromoType}
                 showEditPromo={showEditPromo}
             />
-            {/* <NewPromotion
-                show={isNewPromoVisible}
-                onClose={() => setIsNewPromoVisible(false)}
+            <NewPromo
+                show={newPromoForm}
+                onClose={() => showNewPromoForm(false)}
                 onPromoCreated={handlePromoCreated}
-                {...props}/>
-            <EditPromotion
-                show={isEditPromoVisible}
-                onClose={() => setIsEditPromoVisibile(false)}
-                promotion={promotion}
+            />
+            <EditPromo
+                show={editPromoForm}
+                onClose={() => showEditPromoForm(false)}
+                promo={promo}
                 onPromoEdited={handlePromoEdited}
-                {...props}/> */}
+            />
         </div>
     )
 };

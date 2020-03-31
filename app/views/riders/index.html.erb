@@ -1,1 +1,8 @@
-<%= react_component('riders/Index', current_user: current_user) %>
+<%= 
+react_component(
+    'riders/Index', 
+    current_user: current_user,
+    riderStatistics: get_riders_statistics
+) 
+%>
+

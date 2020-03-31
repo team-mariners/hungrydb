@@ -12,7 +12,12 @@ const Index = (props) => {
             <RiderNaviBar/>        
             <Switch>
                 <Route exact path="/" render={() => <DashBoard {...props}/>}/>
-            </Switch>            
+            </Switch> 
+            <Switch>
+                <Route exact path="/RiderStatistics">
+                    <RiderStatistics riderStatistics ={props.riderStatistics} />
+                </Route>
+            </Switch>           
         </Router>
     )
 };

@@ -7,7 +7,7 @@ class CreateCustomerOrderPointsTrigger < ActiveRecord::Migration[6.0]
       BEGIN
           UPDATE Customers
           SET reward_points = reward_points - NEW.point_offset
-                              + NEW.total_price
+                              + FLOOR(NEW.total_price)
           WHERE id = NEW.customer_id;
         RETURN NULL;
       END;

@@ -57,8 +57,8 @@ class OrdersController < ApplicationController
       )
     end
 
-    # Updates for Foods num_order, Promos num_redeemed and Customers rewardPoints
-    # handled with Triggers
+    # Updates for Foods num_order, Promos num_redeemed and
+    # Customers rewardPoints handled with Triggers
 
     ActiveRecord::Base.connection.commit_db_transaction
   end

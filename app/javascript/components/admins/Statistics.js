@@ -2,7 +2,7 @@ import React from 'react';
 
 const Statistics = (props) => {
     return (
-        <React.Fragment>
+        <div className="p-3">
             <h2>Statistics on HungryDB</h2>
             <p>This page provides some statistics on the HungryDB instance.</p>
             <h3>Users</h3>
@@ -18,7 +18,7 @@ const Statistics = (props) => {
                 <li>Number of restaurants: {props.statistics.numRestaurants}</li>
                 <li>Number of food items: {props.statistics.numFood}</li>
             </ul>
-        </React.Fragment>
+        </div>
     )
 }
 

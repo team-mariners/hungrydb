@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import secureStorage from '../utilities/HungrySecureStorage';
 
 /**
  * 
@@ -17,7 +18,7 @@ const AppBar = (props) => {
     const navLinkstyle = Colors.navbarLink;
 
     const handleLogout = () => {
-        sessionStorage.clear();
+        secureStorage.clear();
         axios.get("/logout"
         ).then(() => {
             // Redirect to homepage after successfully logged out

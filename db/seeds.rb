@@ -36,9 +36,14 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
     ((SELECT id FROM users WHERE username = 'rider'), 'full_time', 'now', 'now');"
 )
+
+test_rider_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM riders WHERE user_id = (SELECT id FROM users WHERE username = 'rider');"
+).to_a[0]
+
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO full_time_riders(id, monthlyBaseSalary) VALUES
-    ((SELECT id FROM users WHERE username = 'rider'), #{MONTHLY_BASE_SALARY});"
+    (#{test_rider_1["user_id"]}, #{MONTHLY_BASE_SALARY});"
 )
 ActiveRecord::Base.connection.commit_db_transaction
 
@@ -391,3 +396,56 @@ ActiveRecord::Base.connection.exec_query(
 )
 ActiveRecord::Base.connection.commit_db_transaction
 
+# ---------------------------------------------- Work Schedules ---------------------------------------------------
+# Rider 1
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO monthly_work_schedules(rider_id)
+    VALUES(#{test_rider_1["user_id"]});"
+)
+
+test_mws_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM monthly_work_schedules 
+    WHERE rider_id = #{test_rider_1["user_id"]}"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO weekly_work_schedules(w_type, mws_id)
+    VALUES('monthly_work_schedule', #{test_mws_1["mws_id"]});"
+)
+
+test_wws_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM WEEKLY_work_schedules 
+    WHERE w_type = 'monthly_work_schedule'
+    AND mws_id = #{test_mws_1["mws_id"]};"
+).to_a[0]
+
+for i in 0..4 do
+    day = (Date.parse('2020-03-30') + i.days).strftime('%A')
+    start_hour_1 = (Time.parse('10:00') + (i % 4).hours).strftime('%R') 
+    end_hour_1 = (Time.parse('14:00') + (i % 4).hours).strftime('%R')
+    start_hour_2 = (Time.parse('15:00') + (i % 4).hours).strftime('%R') 
+    end_hour_2 = (Time.parse('19:00') + (i % 4).hours).strftime('%R')
+    
+    ActiveRecord::Base.connection.exec_query(
+        "INSERT INTO working_intervals(workingDay, startHour, endHour, wws_id)
+        VALUES('#{day}', '#{start_hour_1}', '#{end_hour_1}', #{test_wws_1["wws_id"]})"
+    )
+
+    ActiveRecord::Base.connection.exec_query(
+        "INSERT INTO working_intervals(workingDay, startHour, endHour, wws_id)
+        VALUES('#{day}', '#{start_hour_2}', '#{end_hour_2}', #{test_wws_1["wws_id"]})"
+    )
+end
+
+# --------------------------------------------------- Attendance ------------------------------------------------------
+# Rider 1
+for i in 0..4 do
+    date = (Date.parse('2020-03-30') + i.days).strftime('%F')
+    clock_in = (Time.parse('10:00') + (i % 4).hours).strftime('%R')
+    clock_out = (Time.parse('19:00') + (i % 4).hours).strftime('%R')
+    
+    ActiveRecord::Base.connection.exec_query(
+        "INSERT INTO Attendance(id, w_date, clock_in, clock_out, total_hours)
+        VALUES(#{test_rider_1["user_id"]}, '#{date}', '#{clock_in}', '#{clock_out}', 8)"
+    )    
+end

@@ -2,6 +2,7 @@ import React from 'react';
 import Media from 'react-bootstrap/Media';
 import placeholderPic from '../../../../assets/images/krusty-krab.png';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 class RestaurantSelection extends React.Component {
     constructor(props) {
@@ -15,18 +16,19 @@ class RestaurantSelection extends React.Component {
     }
 
     handleSelectRestaurant(e) {
-        let currentOrderRestaurant = sessionStorage.getItem('restaurant_name');
+        let currentOrderRestaurant = secureStorage.getItem('restaurant_name');
         // Check if there are already orders placed under a different restaurant
-        if (sessionStorage.getItem('foods') &&
+        if (secureStorage.getItem('foods') && currentOrderRestaurant &&
             this.restaurant.name !== currentOrderRestaurant) {
             if (!this.confirmChangeRestaurant(currentOrderRestaurant)) {
                 e.preventDefault();
                 return;
-            } else {
-                sessionStorage.clear();
-                this.props.onResetOrder();
             }
         }
+        // Clears sessionStorage and resets order if no restaurant name
+        // in sessionStorage or customer chooses to change restaurant
+        secureStorage.clear();
+        this.props.onResetOrder();
         this.setSessionRestaurantInfo();
     }
 
@@ -40,9 +42,9 @@ class RestaurantSelection extends React.Component {
     }
 
     setSessionRestaurantInfo() {
-        sessionStorage.setItem('restaurant_name', this.restaurant.name);
-        sessionStorage.setItem('restaurant_id', this.restaurant.id);
-        sessionStorage.setItem('restaurant_min', this.restaurant.min_order_cost);
+        secureStorage.setItem('restaurant_name', this.restaurant.name);
+        secureStorage.setItem('restaurant_id', this.restaurant.id);
+        secureStorage.setItem('restaurant_min', this.restaurant.min_order_cost);
     }
 
     render() {

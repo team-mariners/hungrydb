@@ -4,7 +4,7 @@ import ClockIn from './ClockIn';
 import ClockOut from './ClockOut';
 import moment from 'moment-timezone';
 
-const ToolBar = (props) => {
+const TimeRecorder = (props) => {
     const [isShowClockIn, showClockIn] = useState(false);
     const [isShowClockOut, showClockOut] = useState(false);
 
@@ -16,7 +16,7 @@ const ToolBar = (props) => {
         ? "-" 
         : moment(props.clockedInData.clock_out, "HH:mm").format("HH:mm a");
     
-    const totalHoursWorked = !props.clockedInData.total_hours
+    const totalHoursWorked = !props.clockedInData.total_hours && props.clockedInData.total_hours !== 0
         ? "-"
         : `${props.clockedInData.total_hours} hours`;
 
@@ -52,4 +52,4 @@ const ToolBar = (props) => {
     )
 };
 
-export default ToolBar;
+export default TimeRecorder;

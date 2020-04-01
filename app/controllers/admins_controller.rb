@@ -45,4 +45,20 @@ class AdminsController < UsersController
             render plain: false
         end
     end
+
+    def fdspromo
+        if (params.has_key?(:func) && params.has_key?(:code) && params.has_key?(:start) && params.has_key?(:end) && params.has_key?(:percent) && params.has_key?(:max))
+            if (params[:func] == 'new' && params.has_key?(:name) )
+                render plain: helpers.create_fds_promo(params[:name], params[:code], params[:start], params[:end], params[:percent], params[:max])
+            elsif (params[:func] == 'edit')
+                if helpers.fds_promo_exist?(params[:code])
+                    render plain: helpers.edit_fds_promo(params[:code], params[:start], params[:end], params[:percent], params[:max])
+                else
+                    render plain: false
+                end
+            end
+        else
+            render plain: false
+        end
+    end
 end

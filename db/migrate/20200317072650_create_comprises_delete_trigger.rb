@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateComprisesDeleteTrigger < ActiveRecord::Migration[6.0]
   # When deleting last Orders-Foods Comprises entry, the related Order must also be deleted from Orders
   def up

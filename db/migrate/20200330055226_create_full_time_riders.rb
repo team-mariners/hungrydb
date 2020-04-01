@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFullTimeRiders < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE TABLE full_time_riders (

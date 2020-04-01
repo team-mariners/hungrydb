@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateWorkingIntervals < ActiveRecord::Migration[6.0]
   def up
     # Create an auto-incremented id for Working Interval

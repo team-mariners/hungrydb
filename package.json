@@ -2,7 +2,7 @@
   "name": "hungrydb",
   "private": true,
   "dependencies": {
-    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-react": "^7.9.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.8",

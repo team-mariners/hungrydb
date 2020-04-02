@@ -14,7 +14,6 @@ const RiderNaviBar = () => {
                 <Nav.Link as={NavLink} to="/rider/deliveries" style={navLinkstyle}>Deliveries</Nav.Link>
                 {/* <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link> */}
                 {/* <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link> */}
-                <Nav.Link href="/rider" style={navLinkstyle}>Profile</Nav.Link>
             </Nav>
         </AppBar>
     )

@@ -8,6 +8,7 @@ const ClockOut = (props) => {
             .then(result => {
                 const newClockInData = {...props.clockedInData};
                 newClockInData.clock_out = result.data.clock_out;
+                newClockInData.total_hours = result.data.total_hours;
                 props.setClockedInData(newClockInData);
             }).catch(error => {
                 console.log(error);

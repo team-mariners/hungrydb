@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Dashboard from './Dashboard';
 import NavBar from './NavBar';
+import Promotions from './Promotions';
 import Roles from './Roles';
 import Statistics from './Statistics';
 
@@ -14,6 +15,11 @@ const Index = (props) => {
                 <Dashboard
                     currentUser={props.currentUser}
                     roleAttributes={props.roleAttributes}
+                />
+            </Route>
+            <Route exact path="/admin/promotions">
+                <Promotions
+                    allPromos={props.allPromos}
                 />
             </Route>
             <Route path="/admin/roles">

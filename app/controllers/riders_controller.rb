@@ -67,6 +67,32 @@ class RidersController < UsersController
         AND w_date = CURRENT_DATE;"
       )
 
+      intervals = ActiveRecord::Base.connection.exec_query(
+        "SELECT *
+        FROM working_intervals
+        WHERE workingDay::text = trim(to_char(CURRENT_TIMESTAMP, 'Day'))
+        AND wws_id = (
+          SELECT CASE (SELECT r_type FROM Riders WHERE user_id=3)
+            WHEN 'full_time' THEN (
+              SELECT wws_id
+              FROM weekly_work_schedules
+              WHERE w_type = 'monthly_work_schedule'
+              AND mws_id = (
+                SELECT mws_id
+                FROM monthly_work_schedules
+                WHERE rider_id = 3
+              )
+            )
+            WHEN 'part_time' THEN (
+              SELECT wws_id
+              FROM weekly_work_schedules
+              WHERE w_type = 'part_time_rider'
+              AND pt_rider_id = 3
+            )
+            END AS id                    
+        );"
+      )
+
       result = get_clocked_in_data
       ActiveRecord::Base.connection.commit_db_transaction
 

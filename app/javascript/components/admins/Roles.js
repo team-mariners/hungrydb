@@ -234,7 +234,7 @@ const Roles = (props) => {
     )}
 
     return (
-        <React.Fragment>
+        <div className="p-3">
             <h2>Roles management</h2>
             <Formik
                 validationSchema={validation}
@@ -243,7 +243,7 @@ const Roles = (props) => {
             >
                 {(props) => displayForm(props)}
             </Formik>
-        </React.Fragment>
+        </div>
     )
 };
 

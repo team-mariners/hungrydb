@@ -58,10 +58,11 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    scope '/rider' do
+    scope '/rider' do      
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
       post 'clock_out', to: 'riders#clock_out'
+      get 'deliveries', to: 'riders#index'
     end
 
     resources :restaurants, except: %i[new edit show destroy]

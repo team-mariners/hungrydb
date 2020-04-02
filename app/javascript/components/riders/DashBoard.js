@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ToolBar from './index/ToolBar';
+import TimeRecorder from './index/TimeRecorder';
 
 const DashBoard = (props) => {
     const [clockedInData, setClockedInData] = useState({
@@ -25,7 +25,7 @@ const DashBoard = (props) => {
     return (
         <div className="p-3">
             <h1>Hello {props.current_user.username}!</h1>
-            <ToolBar
+            <TimeRecorder
                 clockedInData={clockedInData}
                 setClockedInData={setClockedInData}/>                
         </div>

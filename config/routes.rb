@@ -12,8 +12,7 @@ Rails.application.routes.draw do
     post 'signup', to: 'users/registrations#create'
 
     get 'profile', to: 'users/registrations#edit'
-    patch 'profile', to: 'users/registrations#update'
-    put 'profile', to: 'users/registrations#update'
+    post 'profile', to: 'users/registrations#update'
 
     get 'rider', to: 'pages#rider'
     get 'jobs', to: 'pages#jobs'

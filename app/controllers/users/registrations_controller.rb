@@ -48,9 +48,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    if params.has_key?(:id)
+      if params.has_key?(:email)
+        ActiveRecord::Base.connection.exec_query(
+          "UPDATE users SET email = '#{params[:email]}', updated_at = 'now'
+          WHERE id = '#{params[:id]}';"
+        )
+        render plain: true
+      elsif params.has_key?(:curPassword) && params.has_key?(:newPassword)
+        user = User.find_for_authentication(id: params[:id])
+
+        if user.valid_password?(params[:curPassword])
+          ActiveRecord::Base.connection.exec_query(
+            "UPDATE users SET
+            encrypted_password = '#{Devise::Encryptor.digest(User, params[:newPassword])}',
+            updated_at = 'now'
+            WHERE id = '#{params[:id]}';"
+          )
+          bypass_sign_in user
+          render plain: true
+        else
+          render plain: false
+        end
+      else
+        render plain: false
+      end
+    else
+      render plain: false
+    end
+  end
 
   # DELETE /resource
   # def destroy

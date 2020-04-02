@@ -25,7 +25,7 @@
     "react-bootstrap": "^1.0.0",
     "react-bootstrap-typeahead": "^5.0.0-alpha.1",
     "react-datetime": "^2.16.3",
-    "react-dom": "^16.13.0",
+    "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react_ujs": "^2.6.1",
     "secure-web-storage": "^1.0.2",

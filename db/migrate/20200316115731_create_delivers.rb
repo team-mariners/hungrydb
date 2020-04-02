@@ -10,7 +10,7 @@ class CreateDelivers < ActiveRecord::Migration[6.0]
       depart_to_restaurant_time timestamp,
       arrive_at_restaurant_time timestamp,
       depart_to_customer_time timestamp,
-      arrive_at_customer_time timestamp,
+      order_delivered_time timestamp,
       FOREIGN KEY (oid) REFERENCES Orders
         ON DELETE CASCADE,
       FOREIGN KEY (rider_id) REFERENCES Riders(user_id)

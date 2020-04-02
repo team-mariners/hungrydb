@@ -64,6 +64,17 @@ class RidersController < UsersController
       render json: result
     end
 
+    def get_deliveries
+      deliveries = ActiveRecord::Base.connection.exec_query(
+        "SELECT *
+        FROM Delivers
+        WHERE rider_id = #{current_user["id"]}"
+      ).to_a
+      render json: deliveries
+    end
+
+    private
+
     def get_clocked_in_data
       ActiveRecord::Base.connection.exec_query(
         "SELECT *

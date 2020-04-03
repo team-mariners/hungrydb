@@ -1,1 +1,6 @@
-<p>Placeholder</p>
+<%= react_component(
+    "users/Profile",
+    role: get_user_role(current_user.id),
+    currentUser: current_user,
+    roleAttributes: get_current_user_role_attributes(get_user_role(current_user.id))
+) %>

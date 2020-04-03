@@ -7,21 +7,24 @@ import OrderModal from '../../managers/manageOrder/OrderModal';
 import { dateTimeFormat2 } from '../../utilities/Constants';
 
 const Delivery = (props) => {    
+    const [isLoadOrder, loadOrder] = useState(false);
     const [isShowOrder, showOrder] = useState(false);    
-    const [order, setOrder] = useState(null);
+    const [order, setOrder] = useState(null);    
     
     useEffect(() => {
         // If the rider wants to view an order and the order has not been fetched yet
-        if (isShowOrder) {
+        if (isLoadOrder) {
             axios.get(`/rider/order/${props.delivery.oid}`)
-            .then(result => {
-                console.log(result);
-                setOrder(result.data);
-            }).catch(error => {
-                console.log(error);
-            });
+                .then(result => {
+                    console.log(result);
+                    setOrder(result.data);
+                    showOrder(true);
+                    loadOrder(false);
+                }).catch(error => {
+                    console.log(error);
+                });
         }
-    }, [isShowOrder]);
+    }, [isLoadOrder]);
 
     const orderTime = props.delivery.order_time.format(dateTimeFormat2);
     const departToRestaurantTime = !!props.delivery.depart_to_restaurant_time
@@ -38,8 +41,11 @@ const Delivery = (props) => {
             <CustomCard>
                 <div>
                     <p><b>Order ID: </b>{props.delivery.oid}</p>
+                    <p><b>Restaurant: </b>{props.delivery.restaurant_name}</p>
+                    <p><b>Restaurant Location: </b>{props.delivery.restaurant_address}</p>
                     <p><b>Customer Location: </b>{props.delivery.customer_location}</p>
-                    <p><b>Order Time: </b>{orderTime}</p>
+                    <p><b style={{textDecoration: "underline"}}>Time</b></p>
+                    <p><b>Order Time: </b>{orderTime}</p>                    
                     <p><b>Depart to Restaurant Time: </b>{departToRestaurantTime}</p>                
                     <p><b>Arrive at Restaurant Time: </b>{arriveAtRestaurantTime}</p>                                
                     <p><b>Depart to Customer Time: </b>{departToCustomerTime}</p>
@@ -47,7 +53,7 @@ const Delivery = (props) => {
                 </div>
 
                 <CardFooter>                
-                    <Button onClick={() => showOrder(true)}>View Order</Button>                
+                    <Button onClick={() => loadOrder(true)} disabled={isLoadOrder}>View Order</Button>                
                 </CardFooter>                        
             </CustomCard>                                    
 

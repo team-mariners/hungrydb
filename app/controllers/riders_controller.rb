@@ -75,13 +75,18 @@ class RidersController < UsersController
 
     def get_deliveries
       deliveries = ActiveRecord::Base.connection.exec_query(
-        "SELECT *
-        FROM Delivers
+        "SELECT *, 
+          (SELECT name FROM Restaurants WHERE id = (SELECT restaurant_id FROM Orders O WHERE O.oid = D.oid))
+            AS restaurant_name,
+          (SELECT address FROM Restaurants WHERE id = (SELECT restaurant_id FROM Orders O WHERE O.oid = D.oid))
+            AS restaurant_address
+        FROM Delivers D
         WHERE rider_id = #{current_user["id"]}"
       ).to_a
       render json: deliveries
     end
 
+    # Get the order of a delivery
     def get_order
       ActiveRecord::Base.connection.begin_db_transaction
       order = ActiveRecord::Base.connection.exec_query(

@@ -4,13 +4,10 @@ import Colors from './Colors';
 import Navbar from 'react-bootstrap/Navbar';
 import Logo from '../../../assets/images/thumbs-up-logo.png';
 import Nav from 'react-bootstrap/Nav';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 import secureStorage from '../utilities/HungrySecureStorage';
 
 /**
- * 
+ *
  * @param {*} props : The props are as follow:
  * isLoggedIn: set it to true if you want to display the logout button.
  */
@@ -32,7 +29,7 @@ const AppBar = (props) => {
     let profileButton = null;
     if (props.isLoggedIn == true) {
         logoutButton = <Nav.Link onClick={handleLogout} style={navLinkstyle}>Logout</Nav.Link>;
-        profileButton = <Nav.Link to="/profile" style={navLinkstyle}>Profile</Nav.Link>
+        profileButton = <React.Fragment><a className="nav-link" href="/profile" style={navLinkstyle}>Profile</a></React.Fragment>
     }
 
     return (

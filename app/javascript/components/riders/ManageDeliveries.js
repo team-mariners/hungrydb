@@ -1,7 +1,7 @@
 import React from 'react';
 import DeliveriesBoard from './delivery/DeliveriesBoard';
 
-const ManageDelivery = () => {    
+const ManageDeliveries = () => {    
     return (
         <div className="page">
             <h1>Deliveries</h1>            
@@ -10,4 +10,4 @@ const ManageDelivery = () => {
     )
 };
 
-export default ManageDelivery;
+export default ManageDeliveries;

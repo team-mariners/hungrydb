@@ -67,32 +67,6 @@ class RidersController < UsersController
         AND w_date = CURRENT_DATE;"
       )
 
-      intervals = ActiveRecord::Base.connection.exec_query(
-        "SELECT *
-        FROM working_intervals
-        WHERE workingDay::text = trim(to_char(CURRENT_TIMESTAMP, 'Day'))
-        AND wws_id = (
-          SELECT CASE (SELECT r_type FROM Riders WHERE user_id=3)
-            WHEN 'full_time' THEN (
-              SELECT wws_id
-              FROM weekly_work_schedules
-              WHERE w_type = 'monthly_work_schedule'
-              AND mws_id = (
-                SELECT mws_id
-                FROM monthly_work_schedules
-                WHERE rider_id = 3
-              )
-            )
-            WHEN 'part_time' THEN (
-              SELECT wws_id
-              FROM weekly_work_schedules
-              WHERE w_type = 'part_time_rider'
-              AND pt_rider_id = 3
-            )
-            END AS id                    
-        );"
-      )
-
       result = get_clocked_in_data
       ActiveRecord::Base.connection.commit_db_transaction
 
@@ -106,6 +80,26 @@ class RidersController < UsersController
         WHERE rider_id = #{current_user["id"]}"
       ).to_a
       render json: deliveries
+    end
+
+    def get_order
+      ActiveRecord::Base.connection.begin_db_transaction
+      order = ActiveRecord::Base.connection.exec_query(
+        "SELECT oid, payment_method, delivery_fee, (total_price - delivery_fee) AS total_cost,
+          (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name
+        FROM Orders
+        WHERE oid = #{params["id"]};"
+      ).to_a[0]
+
+      foods = ActiveRecord::Base.connection.exec_query(
+        "SELECT *
+        FROM (SELECT * FROM Comprises WHERE oid=#{params["id"]}) AS T 
+          JOIN Foods F ON (T.food_id = F.id);"
+      ).to_a
+      ActiveRecord::Base.connection.commit_db_transaction
+
+      order["foods"] = foods      
+      render json: order
     end
 
     private

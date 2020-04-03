@@ -3,6 +3,13 @@ import Modal from '../../utilities/Modal';
 import { dateTimeFormat } from '../../utilities/Constants';
 import Table from 'react-bootstrap/Table';
 
+/**
+ * 
+ * @param {*} props 
+ * order: the order object containing info to be displayed.
+ * isRider: if true, information for restaurant manager's use will not be displayed in the order modal.
+ * show, onClose: for the use of the modal component
+ */
 const OrderModal = (props) => {
     if (!props.order) {
         return null;
@@ -32,17 +39,27 @@ const OrderModal = (props) => {
         }
     }
 
+    const orderDateTime = props.isRider ? null: (
+        <p><b>Order date & time: </b>{props.order.date_time.format(dateTimeFormat)}</p>
+    );
+
+    const discountInformation = props.isRider ? null : (
+        <React.Fragment>            
+            <p><b>Points Offset: </b>{props.order.point_offset} points</p>
+            <p><b>Promocode: </b>{promocode}</p>
+            <p><b>Promo Percentage: </b>{!props.order.promo_percentage ? "-" : `${props.order.promo_percentage}%`}</p>
+            {review}
+        </React.Fragment>
+    );
+    
     return (
         <Modal {...props}>
             <h1>Order Details</h1>
             <p><b>Order id: </b>{props.order.oid}</p>
             <p><b>Customer: </b>{props.order.customer_name}</p>
-            <p><b>Order date & time: </b>{props.order.date_time.format(dateTimeFormat)}</p>
+            {orderDateTime}
             <p><b>Payment method: </b>{props.order.payment_method}</p>
-            <p><b>Points Offset: </b>{props.order.point_offset} points</p>
-            <p><b>Promocode: </b>{promocode}</p>
-            <p><b>Promo Percentage: </b>{!props.order.promo_percentage ? "-" : `${props.order.promo_percentage}%`}</p>
-            {review}
+            {discountInformation}
 
             <Table striped bordered className="my-4">
                 <thead>

@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       post 'clock_out', to: 'riders#clock_out'
       get 'deliveries', to: 'riders#index'
       get 'all_deliveries', to: 'riders#get_deliveries'
+      get 'order/:id', to: 'riders#get_order'
     end
 
     resources :restaurants, except: %i[new edit show destroy]

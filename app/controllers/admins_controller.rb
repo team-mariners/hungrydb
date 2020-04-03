@@ -21,10 +21,19 @@ class AdminsController < UsersController
     def updaterole
         if (params.has_key?(:userid) && params.has_key?(:oldrole) && params.has_key?(:newrole))
             if (helpers.get_user_role(params[:userid]) == params[:oldrole])
-                helpers.set_role(params[:userid], params[:newrole])
+                if (params[:newrole] == 'rider' && params.has_key?(:roleattr))
+                    # Create the rider's subclasses at the same time as the role assignment
+                    riderattr = params[:roleattr]
+                    create = helpers.create_rider(
+                        params[:userid],
+                        riderattr[:ridertype],
+                        riderattr[:salary]
+                    )
+                    render plain: create
+                elsif (params[:newrole] == 'manager' && params.has_key?(:roleattr) && params[:roleattr][:rupdate])
+                    helpers.set_role(params[:userid], params[:newrole])
 
-                # Create the restaurant at the same time as the role assignment
-                if (params[:newrole] == 'manager' && params.has_key?(:roleattr) && params[:roleattr][:rupdate])
+                    # Create the restaurant at the same time as the role assignment
                     restaurant = params[:roleattr]
                     create = helpers.create_restaurant(
                         restaurant[:rname],
@@ -33,9 +42,8 @@ class AdminsController < UsersController
                         params[:userid]
                     )
                     render plain: create
-                elsif (params[:newrole] == 'rider' && params.has_key?(:roleattr))
-                    render plain: true
                 else
+                    helpers.set_role(params[:userid], params[:newrole])
                     render plain: true
                 end
             else

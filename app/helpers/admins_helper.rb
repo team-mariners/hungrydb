@@ -98,6 +98,9 @@ module AdminsHelper
             return false
         elsif !is_valid_role?(role)
             return false
+        elsif role == 'rider'
+            # Creating rider should use create_rider() instead
+            return false
         end
 
         current_role = ActiveRecord::Base.connection.exec_query(
@@ -131,6 +134,72 @@ module AdminsHelper
         )
 
         ActiveRecord::Base.connection.commit_db_transaction();
+
+        return true
+    end
+
+    def create_rider(userid, type, salary)
+        if (type != 'full_time' && type != 'part_time')
+            return false
+        end
+
+        rider = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM riders
+            WHERE user_id = #{userid};"
+        ).first['count']
+
+        rider_part_time = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM part_time_riders
+            WHERE id = '#{userid}';"
+        ).first['count']
+
+        rider_full_time = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM full_time_riders
+            WHERE id = '#{userid}';"
+        ).first['count']
+
+        # Remove all entries from riders and subclasses
+        ActiveRecord::Base.connection.begin_db_transaction()
+
+        if (rider_part_time != 0)
+            ActiveRecord::Base.connection.exec_query(
+                "DELETE FROM part_time_riders
+                WHERE id = '#{userid}';"
+            )
+        end
+
+        if (rider_full_time != 0)
+            ActiveRecord::Base.connection.exec_query(
+                "DELETE FROM full_time_riders
+                WHERE id = '#{userid}';"
+            )
+        end
+
+        # Insert new values into riders and subclasses
+        if (rider == 0)
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
+                ('#{userid}', '#{type}', 'now', 'now');"
+            )
+        else
+            ActiveRecord::Base.connection.exec_query(
+                "UPDATE riders SET r_type = '#{type}'
+                WHERE user_id = '#{userid}';"
+            )
+        end
+
+        ActiveRecord::Base.connection.exec_query(
+            "INSERT INTO #{type}_riders VALUES
+            ('#{userid}', '#{type}', '#{salary}');"
+        )
+
+        # Update users table
+        ActiveRecord::Base.connection.exec_query(
+            "UPDATE users SET roles = 'rider'
+            WHERE id = #{userid};"
+        )
+
+        ActiveRecord::Base.connection.commit_db_transaction()
 
         return true
     end

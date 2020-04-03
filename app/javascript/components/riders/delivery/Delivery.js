@@ -9,7 +9,7 @@ import { dateTimeFormat2 } from '../../utilities/Constants';
 const Delivery = (props) => {    
     const [isLoadOrder, loadOrder] = useState(false);
     const [isShowOrder, showOrder] = useState(false);    
-    const [order, setOrder] = useState(null);    
+    const [order, setOrder] = useState(null);        
     
     useEffect(() => {
         // If the rider wants to view an order and the order has not been fetched yet

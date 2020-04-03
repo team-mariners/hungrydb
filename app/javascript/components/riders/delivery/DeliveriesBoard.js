@@ -14,8 +14,8 @@ const DeliveriesBoard = () => {
     const [deliveries, setDeliveries] = useState([]);
     const [visibleDeliveries, setVisibleDeliveries] = useState([]);
     const [deliveriesType, setDeliveriesType] = useState(DELIVERIES_TYPES.ongoing); 
-    
 
+    // Fetch all the deliveries of the rider
     useEffect(() => {
         Axios.get("/rider/all_deliveries")
             .then(result => {
@@ -34,9 +34,24 @@ const DeliveriesBoard = () => {
                 });
 
                 setDeliveries(result.data);
-                setVisibleDeliveries(result.data);
+                filerAndSetVisibleDeliveries(result.data);
             }).catch(error => console.log(error));
     }, []);
+
+    // Filter the deliveries accordingly
+    useEffect(() => {
+        filerAndSetVisibleDeliveries(deliveries);
+    }, [deliveriesType]);
+
+    const filerAndSetVisibleDeliveries = (deliveries) => {
+        let result = [];
+        if (DELIVERIES_TYPES.ongoing === deliveriesType) {
+            result = deliveries.filter(delivery => !delivery.order_delivered_time);
+        } else if (DELIVERIES_TYPES.complete === deliveriesType) {
+            result = deliveries.filter(delivery => !!delivery.order_delivered_time);
+        }
+        setVisibleDeliveries(result);
+    };
 
     const nav = [{ key: DELIVERIES_TYPES.ongoing, value: "Ongoing" },
         { key: DELIVERIES_TYPES.complete, value: "Complete" }];

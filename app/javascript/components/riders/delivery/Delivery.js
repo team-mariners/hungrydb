@@ -5,11 +5,14 @@ import CustomCard from '../../utilities/CustomCard/CustomCard';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
 import OrderModal from '../../managers/manageOrder/OrderModal';
 import { dateTimeFormat2 } from '../../utilities/Constants';
+import UpdateTime from './UpdateTime';
 
 const Delivery = (props) => {    
     const [isLoadOrder, loadOrder] = useState(false);
-    const [isShowOrder, showOrder] = useState(false);    
+    const [isShowOrder, showOrder] = useState(false);        
     const [order, setOrder] = useState(null);        
+
+    const [isShowUpdateTime, showUpdateTime] = useState(false);
     
     useEffect(() => {
         // If the rider wants to view an order and the order has not been fetched yet
@@ -36,6 +39,10 @@ const Delivery = (props) => {
     const orderDeliveredTime = !!props.delivery.order_delivered_time
         ? props.delivery.order_delivered_time.format(dateTimeFormat2) : "-";
 
+    const updateTimeButton = !!props.delivery.order_delivered_time 
+        ? null
+        : <Button className="mr-3" onClick={() => showUpdateTime(true)}>Update time</Button>;
+    
     return (
         <React.Fragment>
             <CustomCard>
@@ -53,6 +60,7 @@ const Delivery = (props) => {
                 </div>
 
                 <CardFooter>                
+                    {updateTimeButton}
                     <Button onClick={() => loadOrder(true)} disabled={isLoadOrder}>View Order</Button>                
                 </CardFooter>                        
             </CustomCard>                                    
@@ -62,6 +70,12 @@ const Delivery = (props) => {
                 order={order}
                 show={isShowOrder}    
                 onClose={() => showOrder(false)}/>
+            
+            <UpdateTime
+                id={props.delivery.oid}
+                show={isShowUpdateTime}
+                onClose={() => showUpdateTime(false)}
+                onTimeUpdated={props.onTimeUpdated}/>
         </React.Fragment>
     )
 };

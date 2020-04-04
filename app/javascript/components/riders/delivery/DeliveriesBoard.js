@@ -15,6 +15,8 @@ const DeliveriesBoard = () => {
     const [visibleDeliveries, setVisibleDeliveries] = useState([]);
     const [deliveriesType, setDeliveriesType] = useState(DELIVERIES_TYPES.ongoing); 
 
+    const [listItems, setListItems] = useState([]);
+
     // Fetch all the deliveries of the rider
     useEffect(() => {
         Axios.get("/rider/all_deliveries")
@@ -43,6 +45,21 @@ const DeliveriesBoard = () => {
         filerAndSetVisibleDeliveries(deliveries);
     }, [deliveriesType]);
 
+    useEffect(() => {
+        setListItems(visibleDeliveries.map(delivery => {
+            return (
+                <ListGroupItem key={delivery.oid}>
+                    <Delivery delivery={delivery} onTimeUpdated={onTimeUpdated}/>
+                </ListGroupItem>
+            )
+        }));
+    }, [visibleDeliveries])
+
+    const setDeliveriesAndVisibleDeliveries = (deliveries) => {
+        setDeliveries(deliveries);
+        filerAndSetVisibleDeliveries(deliveries);
+    };
+
     const filerAndSetVisibleDeliveries = (deliveries) => {
         let result = [];
         if (DELIVERIES_TYPES.ongoing === deliveriesType) {
@@ -53,16 +70,14 @@ const DeliveriesBoard = () => {
         setVisibleDeliveries(result);
     };
 
+    const onTimeUpdated = (id, updatedTime) => {         
+        const newDeliveries = [...deliveries];
+        newDeliveries.find(delivery => delivery.oid === id)[updatedTime.name] = moment(updatedTime.time);
+        setDeliveriesAndVisibleDeliveries(newDeliveries);        
+    };
+
     const nav = [{ key: DELIVERIES_TYPES.ongoing, value: "Ongoing" },
         { key: DELIVERIES_TYPES.complete, value: "Complete" }];
-
-    const listItems = visibleDeliveries.map(delivery => {
-        return (
-            <ListGroupItem key={delivery.oid}>
-                <Delivery delivery={delivery}/>
-            </ListGroupItem>
-        )
-    });
 
     return (
         <CustomList

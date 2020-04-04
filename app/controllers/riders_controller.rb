@@ -141,7 +141,7 @@ class RidersController < UsersController
       ).rows[0][0]
       ActiveRecord::Base.connection.commit_db_transaction
 
-      render json: {"#{target_column}" => time}
+      render json: {name: target_column, time: time}
     end
 
     private

@@ -8,6 +8,7 @@ class CreateUpdateOrderStatusTrigger < ActiveRecord::Migration[6.0]
           SET status = 'complete'
           WHERE O.oid = NEW.oid;
         END IF;
+        RETURN NULL;
       END;
       $$ LANGUAGE plpgsql;
 

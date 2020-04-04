@@ -10,7 +10,7 @@ const DeleteMenuSection = (props) => {
             console.log(result);
             props.onMenuSectionDeleted(props.currMenuSectionId);
         }).catch(error => {
-            props.alerts.showFailureAlert(getErrorMessage(error));
+            props.showFailureAlert(getErrorMessage(error));
         }).finally(() => {
             props.onClose();
         })

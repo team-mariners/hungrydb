@@ -13,15 +13,15 @@ const NavigationBar = () => {
     return (
         <AppBar isLoggedIn={true}>
             <NavDropdown title={statsTitle} id="basic-nav-dropdown">
-                <NavDropdown.Item as={NavLink} to="/manager/promo_stats">Promotions</NavDropdown.Item>
+                <NavDropdown.Item href="/manager/promo_stats">Promotions</NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link as={NavLink} to="/manager/orders" style={navLinkstyle}>Orders</Nav.Link>
+            <Nav.Link href="/manager/orders" style={navLinkstyle}>Orders</Nav.Link>
 
             <NavDropdown title={manageTitle} id="basic-nav-dropdown" >
-                <NavDropdown.Item as={NavLink} to="/manager/manage_menu">Menu</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/manager/manage_promo">Promotions</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/manager/manage_info">Restaurant Information</NavDropdown.Item>
+                <NavDropdown.Item href="/manager/manage_menu">Menu</NavDropdown.Item>
+                <NavDropdown.Item href="/manager/manage_promo">Promotions</NavDropdown.Item>
+                <NavDropdown.Item href="/manager/manage_info">Restaurant Information</NavDropdown.Item>
             </NavDropdown>
         </AppBar>
     )

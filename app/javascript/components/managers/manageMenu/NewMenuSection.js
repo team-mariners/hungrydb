@@ -18,7 +18,7 @@ const NewMenuSection = (props) => {
             console.log(result);
             props.onNewMenuSectionCreated(result.data);
         }).catch(error => {
-            props.alerts.showFailureAlert(getErrorMessage(error));
+            props.showFailureAlert(getErrorMessage(error));
         }).finally(() => {
             props.onClose();
         })

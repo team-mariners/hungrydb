@@ -103,7 +103,8 @@ class RidersController < UsersController
     foods = ActiveRecord::Base.connection.exec_query(
       "SELECT *
       FROM (SELECT * FROM Comprises WHERE oid=#{params["id"]}) AS T 
-        JOIN Foods F ON (T.food_id = F.id);"
+        JOIN Foods F ON (T.food_id = F.id)
+      ORDER BY F.id;"
     ).to_a
     ActiveRecord::Base.connection.commit_db_transaction
 

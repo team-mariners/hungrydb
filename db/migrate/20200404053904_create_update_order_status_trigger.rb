@@ -16,7 +16,7 @@ class CreateUpdateOrderStatusTrigger < ActiveRecord::Migration[6.0]
       CREATE TRIGGER update_order_status_trigger
         AFTER UPDATE OF order_delivered_time ON Delivers
         FOR EACH ROW
-        EXECUTE FUNCTION update_order_status();
+        EXECUTE PROCEDURE update_order_status();
     SQL
   end
 

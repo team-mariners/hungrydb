@@ -64,6 +64,7 @@ Rails.application.routes.draw do
       get 'deliveries', to: 'riders#index'
       get 'all_deliveries', to: 'riders#get_deliveries'
       get 'order/:id', to: 'riders#get_order'
+      post 'update_time/:id', to: 'riders#update_time'
     end
 
     resources :restaurants, except: %i[new edit show destroy]

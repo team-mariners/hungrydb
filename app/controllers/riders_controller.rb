@@ -1,4 +1,4 @@
-class RidersController < UsersController    
+class RidersController < UsersController
     def index
     end
 
@@ -73,6 +73,7 @@ class RidersController < UsersController
       render json: result
     end
 
+    # Get all the deliveries of the rider
     def get_deliveries
       deliveries = ActiveRecord::Base.connection.exec_query(
         "SELECT *, 
@@ -105,6 +106,42 @@ class RidersController < UsersController
 
       order["foods"] = foods      
       render json: order
+    end
+    
+    # SET the first null time field of the specified delivery entry to current time
+    def update_time
+      ActiveRecord::Base.connection.begin_db_transaction
+      target_column = ActiveRecord::Base.connection.exec_query(
+        "SELECT CASE 
+            WHEN depart_to_restaurant_time IS NULL THEN 'depart_to_restaurant_time'
+            WHEN arrive_at_restaurant_time IS NULL THEN 'arrive_at_restaurant_time'
+            WHEN depart_to_customer_time IS NULL THEN 'depart_to_customer_time'
+            WHEN order_delivered_time IS NULL THEN 'order_delivered_time'
+            ELSE NULL
+         END AS column_name
+        FROM Delivers
+        WHERE oid = #{params[:id]}"
+      ).rows[0][0]
+
+      if target_column.nil?
+        render json: "The delivery is already completed", status: 405
+        return
+      end
+
+      ActiveRecord::Base.connection.exec_query(
+        "UPDATE Delivers    
+        SET #{target_column} = CURRENT_TIMESTAMP
+        WHERE oid = #{params[:id]};"
+      )
+
+      time = ActiveRecord::Base.connection.exec_query(
+        "SELECT #{target_column}
+        FROM Delivers
+        WHERE oid = #{params[:id]}"
+      ).rows[0][0]
+      ActiveRecord::Base.connection.commit_db_transaction
+
+      render json: {"#{target_column}" => time}
     end
 
     private

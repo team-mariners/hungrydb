@@ -57,22 +57,22 @@ const ManagePromo = (props) => {
     };
 
     const handlePromoCreated = (newPromo) => {
-        momentiseDateTime(newPromo);
+        momentisePromotionDateTime(newPromo);
 
         const newPromotions = [...promotions, newPromo];       
         setPromotionsAndVisiblePromotions(newPromotions);
-        props.alerts.showSuccessAlert("New promotion created! =D");
+        props.showSuccessAlert("New promotion created! =D");
     };    
 
     const handlePromoEdited = (editedPromo) => {
-        momentiseDateTime(editedPromo);
+        momentisePromotionDateTime(editedPromo);
 
         const editedPromotions = [...promotions];
         const index = editedPromotions.findIndex(promotion => promotion.id === editedPromo.id);
         editedPromotions.splice(index, 1, editedPromo);
 
         setPromotionsAndVisiblePromotions(editedPromotions);
-        props.alerts.showSuccessAlert("Promotion edited! =D");
+        props.showSuccessAlert("Promotion edited! =D");
     };
 
     return (

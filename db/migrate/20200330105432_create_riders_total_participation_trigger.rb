@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRidersTotalParticipationTrigger < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
@@ -20,16 +22,17 @@ class CreateRidersTotalParticipationTrigger < ActiveRecord::Migration[6.0]
         raise notice 'id: %', id_retrieved;
         raise notice 'r_type: %', r_type_retrieved;
 
-        -- Check if there is a tuple in the subclasses of riders
-        IF r_type_retrieved = 'full_time' THEN
-          SELECT true INTO ok
+        -- Check if there is a tuple in either of the subclasses of riders
+        SELECT true INTO ok
+          WHERE EXISTS (
+            SELECT 1
             FROM full_time_riders
-            WHERE id = id_retrieved;
-        ELSE
-          SELECT true INTO ok
+            WHERE id = id_retrieved
+          ) OR EXISTS (
+            SELECT 1
             FROM part_time_riders
-            WHERE id = id_retrieved;
-        END IF;
+            WHERE id = id_retrieved
+          );
 
         -- Check whether there is still a tuple in riders
         IF NOT FOUND THEN

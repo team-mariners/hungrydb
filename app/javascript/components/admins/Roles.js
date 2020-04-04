@@ -12,8 +12,21 @@ const Roles = (props) => {
     const [manager, showManager] = useState(false);
     const [rider, showRider] = useState(false);
     const [role, setRole] = useState(props.userrole);
+    const [selectedRiderType, setSelectedRiderType] = useState('full_time');
 
     const existingRestaurant = props.existingRestaurant;
+    const riderTypes = ['full_time', 'part_time'];
+    const riderTypeNames = {
+        'full_time': 'Full time',
+        'part_time': 'Part time'
+    }
+    const riderTypeSalary = {
+        'full_time': 'Monthly Base Salary',
+        'part_time': 'Weekly Base Salary'
+    }
+    const riderTypeOptions = riderTypes.map((value) => {
+        return (<option key={value} value={value}>{riderTypeNames[value]}</option>);
+    });
 
     const validation = Yup.object({
         username: Yup.string()
@@ -23,14 +36,18 @@ const Roles = (props) => {
             .matches(/^\w+$/),
         rname: Yup.string(),
         rmincost: Yup.number().min(0),
-        raddress: Yup.string()
+        raddress: Yup.string(),
+        ritype: Yup.string().oneOf(riderTypes),
+        risalary: Yup.number().min(0)
     });
 
     const initialVals = {
         username: (props.username == null) ? '' : props.username,
         rname: (existingRestaurant == null) ? '' : existingRestaurant.name,
         rmincost: (existingRestaurant == null) ? 0.00 : existingRestaurant.min_order_cost,
-        raddress: (existingRestaurant == null) ? '' : existingRestaurant.address
+        raddress: (existingRestaurant == null) ? '' : existingRestaurant.address,
+        ritype: 'full_time',
+        risalary: ''
     };
 
     const handleSubmit = (values, formik) => {
@@ -43,6 +60,11 @@ const Roles = (props) => {
                     rname: values.rname,
                     rmincost: values.rmincost,
                     raddress: values.raddress
+                }
+            } else if (role == 'rider') {
+                rolespecific = {
+                    ridertype: selectedRiderType,
+                    salary: values.risalary
                 }
             }
 
@@ -80,18 +102,22 @@ const Roles = (props) => {
     }
 
     const handleChange = (event) => {
-        setRole(event.target.value);
+        setRole(event.currentTarget.value);
 
-        if (event.target.value == "manager") {
+        if (event.currentTarget.value == "manager") {
             showRider(false);
             showManager(true);
-        } else if (event.target.value == "rider") {
+        } else if (event.currentTarget.value == "rider") {
             showManager(false);
             showRider(true);
         } else {
             showManager(false);
             showRider(false);
         }
+    }
+
+    const handleRiderTypeChange = (event) => {
+        setSelectedRiderType(event.currentTarget.value);
     }
 
     const displayUsername = (formik) => {return (
@@ -105,7 +131,7 @@ const Roles = (props) => {
                     name="username"
                     value={formik.values.username}
                     onChange={formik.handleChange}
-                    isInvalid={formik.touched.identifier && !!formik.errors.identifier}
+                    isInvalid={formik.touched.username && !!formik.errors.username}
                     disabled={props.userid != null}
                 />
             </Col>
@@ -120,7 +146,7 @@ const Roles = (props) => {
             })
             roles.unshift("");
             const options = roles.map((value) => {
-                return (<option value={value}>{value}</option>);
+                return (<option key={value} value={value}>{value}</option>);
             })
 
             return (
@@ -129,7 +155,12 @@ const Roles = (props) => {
                         Select new role:
                     </Form.Label>
                     <Col sm={3}>
-                        <Form.Control name="role" value={formik.values.role} onChange={handleChange} as="select">
+                        <Form.Control
+                            name="role"
+                            value={formik.values.role}
+                            onChange={handleChange}
+                            as="select"
+                        >
                             {options}
                         </Form.Control>
                     </Col>
@@ -159,7 +190,7 @@ const Roles = (props) => {
                                 name="rname"
                                 value={formik.values.rname}
                                 onChange={formik.handleChange}
-                                isInvalid={formik.touched.identifier && !!formik.errors.identifier}
+                                isInvalid={formik.touched.rname && !!formik.errors.rname}
                                 disabled={existingRestaurant != null}
                             />
                         </Col>
@@ -169,19 +200,19 @@ const Roles = (props) => {
                             Minimum order cost:
                         </Form.Label>
                         <Col sm={3}>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control
-                                type="number"
-                                name="rmincost"
-                                value={formik.values.rmincost}
-                                onChange={formik.handleChange}
-                                isInvalid={formik.touched.identifier && !!formik.errors.identifier}
-                                disabled={existingRestaurant != null}
-                            />
-                        </InputGroup>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <Form.Control
+                                    type="number"
+                                    name="rmincost"
+                                    value={formik.values.rmincost}
+                                    onChange={formik.handleChange}
+                                    isInvalid={formik.touched.rmincost && !!formik.errors.rmincost}
+                                    disabled={existingRestaurant != null}
+                                />
+                            </InputGroup>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} controlId="formRestaurantAddress">
@@ -194,7 +225,7 @@ const Roles = (props) => {
                                 name="raddress"
                                 value={formik.values.raddress}
                                 onChange={formik.handleChange}
-                                isInvalid={formik.touched.identifier && !!formik.errors.identifier}
+                                isInvalid={formik.touched.raddress && !!formik.errors.raddress}
                                 disabled={existingRestaurant != null}
                             />
                         </Col>
@@ -203,7 +234,43 @@ const Roles = (props) => {
             )
         } else if (rider) {
             return (
-                <p>Placeholder for assigning a rider's schedule</p>
+                <React.Fragment>
+                    <Form.Group as={Row} controlId="formRiderType">
+                        <Form.Label column sm={2}>
+                            Rider type:
+                        </Form.Label>
+                        <Col sm={3}>
+                            <Form.Control
+                                name="ritype"
+                                value={selectedRiderType}
+                                onChange={handleRiderTypeChange}
+                                as="select"
+                            >
+                                {riderTypeOptions}
+                            </Form.Control>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId="formRiderSalary">
+                        <Form.Label column sm={2}>
+                            {riderTypeSalary[selectedRiderType]}
+                        </Form.Label>
+                        <Col sm={3}>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <Form.Control
+                                    type="number"
+                                    name="risalary"
+                                    value={formik.values.risalary}
+                                    onChange={formik.handleChange}
+                                    isInvalid={formik.touched.risalary && !!formik.errors.risalary}
+                                />
+                            </InputGroup>
+                        </Col>
+                    </Form.Group>
+                </React.Fragment>
             )
         } else {
             return;
@@ -234,7 +301,7 @@ const Roles = (props) => {
     )}
 
     return (
-        <React.Fragment>
+        <div className="p-3">
             <h2>Roles management</h2>
             <Formik
                 validationSchema={validation}
@@ -243,7 +310,7 @@ const Roles = (props) => {
             >
                 {(props) => displayForm(props)}
             </Formik>
-        </React.Fragment>
+        </div>
     )
 };
 

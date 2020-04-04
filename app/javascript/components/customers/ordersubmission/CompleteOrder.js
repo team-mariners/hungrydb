@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import AddressBox from './AddressBox';
 import PaymentMethod from './PaymentMethod';
 import axios from 'axios';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 class CompleteOrder extends React.Component {
     constructor(props) {
@@ -10,11 +11,11 @@ class CompleteOrder extends React.Component {
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handlePaymentChange = this.handlePaymentChange.bind(this);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
-        this.state = {address: "", paymentMethod: "cash", resMenu: {}};
+        this.state = { address: "", paymentMethod: "cash", resMenu: {} };
     }
 
     componentDidMount() {
-        axios.get("/api/v1/restaurants/" + sessionStorage.getItem('restaurant_id') + '/menu.json')
+        axios.get("/api/v1/restaurants/" + secureStorage.getItem('restaurant_id') + '/menu.json')
             .then(
                 (response) => {
                     let retrievedFoods = response.data.menu;
@@ -32,12 +33,12 @@ class CompleteOrder extends React.Component {
         if (typeof entered == "object") {
             entered = entered.label;
         }
-        this.setState({address: entered});
+        this.setState({ address: entered });
         console.log(entered);
     }
 
     handlePaymentChange(e) {
-        this.setState({paymentMethod: e.target.value.toLowerCase()});
+        this.setState({ paymentMethod: e.target.value.toLowerCase() });
         console.log(e.target.value.toLowerCase());
     }
 
@@ -52,25 +53,31 @@ class CompleteOrder extends React.Component {
             return;
         }
 
+        // In case user tampers with sessionStorage amountDue
+        if (!secureStorage.getItem('amount_due')) {
+            alert("An error has occurred. Please go back to cart and try to order again.");
+            return;
+        }
+
         let order = {};
-        order["promo_id"] = sessionStorage.getItem('used_promo_id')
-                            ? JSON.parse(sessionStorage.getItem('used_promo_id'))
-                            : "null";
-        order["restaurant_id"] = parseInt(sessionStorage.getItem('restaurant_id'));
-        order["point_offset"] = sessionStorage.getItem('points')
-                                ? parseInt(sessionStorage.getItem('points'))
-                                : 0;
+        order["promo_id"] = secureStorage.getItem('used_promo_id')
+            ? JSON.parse(secureStorage.getItem('used_promo_id'))
+            : "null";
+        order["restaurant_id"] = parseInt(secureStorage.getItem('restaurant_id'));
+        order["point_offset"] = secureStorage.getItem('points')
+            ? parseInt(secureStorage.getItem('points'))
+            : 0;
         order["payment_method"] = this.state.paymentMethod;
         order["delivery_fee"] = 3.00
-        order["total_price"] = sessionStorage.getItem('amount_due');
+        order["total_price"] = parseFloat(sessionStorage.getItem('amount_due'));
         order["status"] = "in progress";
-        order["foods"] = JSON.parse(sessionStorage.getItem('foods'));
+        order["foods"] = JSON.parse(secureStorage.getItem('foods'));
         order["customer_location"] = this.state.address;
         axios.post('/order', order)
             .then((result) => {
                 console.log(result);
                 alert("Your order has been placed." + "\nYou have earned "
-                        + Math.floor(sessionStorage.getItem('amount_due')) + " points!");
+                    + Math.floor(secureStorage.getItem('amount_due')) + " points!");
             }).catch((error) => {
                 console.log(error);
                 alert("Failed to place order!");
@@ -89,7 +96,7 @@ class CompleteOrder extends React.Component {
         }
         console.log(menuArray);
 
-        let orderedFoods = JSON.parse(sessionStorage.getItem("foods"));
+        let orderedFoods = JSON.parse(secureStorage.getItem("foods"));
         console.log(orderedFoods);
         for (let food in orderedFoods) {
             if (!menuArray.includes(food)) {
@@ -101,24 +108,31 @@ class CompleteOrder extends React.Component {
     }
 
     render() {
+        if (!secureStorage.getItem('restaurant_id') ||
+            !secureStorage.getItem('amount_due') ||
+            !secureStorage.getItem('foods')) {
+            { secureStorage.clear() }
+            return <h3>An error has occurred. Please place your order again.</h3>
+        }
+
         return (
             <div className="order-submission-container">
                 <h2>Please key in your address</h2>
                 <h6>Click on "New selection" in the dropdown after typing a new address</h6>
-                <br/>
+                <br />
                 <AddressBox onChangeAddress={this.handleAddressChange} />
-                <br/><br/><br/><br/>
+                <br /><br /><br /><br />
 
-                <h2>Amount Due: ${parseFloat(sessionStorage.getItem('amount_due')).toFixed(2)}</h2>
+                <h2>Amount Due: ${parseFloat(secureStorage.getItem('amount_due')).toFixed(2)}</h2>
                 <PaymentMethod onChangeMethod={this.handlePaymentChange} />
-                <br/><br/>
+                <br /><br />
 
-                <Button style={{display: "block", width: 200, margin: "auto"}}
-                        href="/customer/review_order" variant="primary" size="lg"
-                        onClick={this.handleSubmitOrder}>
+                <Button style={{ display: "block", width: 200, margin: "auto" }}
+                    href="/customer/review_order" variant="primary" size="lg"
+                    onClick={this.handleSubmitOrder}>
                     CONFIRM
                 </Button>
-                <br/>
+                <br />
             </div>
         )
     }

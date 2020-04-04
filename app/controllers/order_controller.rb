@@ -57,15 +57,9 @@ class OrderController < ApplicationController
       )
     end
 
-    # Deduct Customer used reward points and add after payment
-    ActiveRecord::Base.connection.exec_query(
-      "UPDATE Customers
-      SET reward_points = reward_points - #{stored_order['point_offset']}
-                          + #{stored_order['total_price'].to_i}
-      WHERE id = #{current_user.id}"
-    )
+    # Updates for Foods num_order, Promos num_redeemed and
+    # Customers rewardPoints handled with Triggers
 
-    used_promo = stored_order['promo_id'] ? stored_order['promo_id'] : "null"
     ActiveRecord::Base.connection.commit_db_transaction
   end
 end

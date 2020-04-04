@@ -4,8 +4,6 @@ import Modal from '../../utilities/Modal';
 import DishForm from './DishForm';
 import { getProcessedDishValues, getErrorMessage } from '../../helpers/FormHelpers';
 
-const csrfToken = document.querySelector('[name=csrf-token').content;
-axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 /**
  * 
@@ -32,7 +30,7 @@ const NewDish = (props) => {
                 console.log(result);
                 props.onDishCreated(result.data);
             }).catch((error) => {
-                props.alerts.showFailureAlert(getErrorMessage(error));
+                props.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             });

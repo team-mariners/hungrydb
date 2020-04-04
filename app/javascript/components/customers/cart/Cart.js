@@ -5,11 +5,12 @@ import CartItemTable from './CartItemTable';
 import CartPromoForm from './CartPromoForm';
 import CartPointsForm from './CartPointsForm';
 import Button from 'react-bootstrap/Button';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 class Cart extends React.Component {
     constructor(props) {
         super(props);
-        this.foods = JSON.parse(sessionStorage.getItem('foods'));
+        this.foods = JSON.parse(secureStorage.getItem('foods'));
         console.log(this.foods);
 
         this.handleDeleteItem = this.handleDeleteItem.bind(this)
@@ -22,14 +23,14 @@ class Cart extends React.Component {
 
         this.totalCost = 0;
         this.amountDue = 0;
-        this.discountPercentage = sessionStorage.getItem("discount_percent");
-        this.usedPromoCode = JSON.parse(sessionStorage.getItem("used_promo_code"));
-        this.usedPromoId = JSON.parse(sessionStorage.getItem("used_promo_id"));
-        this.points = sessionStorage.getItem("points") ? sessionStorage.getItem("points") : 0;
+        this.discountPercentage = secureStorage.getItem("discount_percent");
+        this.usedPromoCode = JSON.parse(secureStorage.getItem("used_promo_code"));
+        this.usedPromoId = JSON.parse(secureStorage.getItem("used_promo_id"));
+        this.points = secureStorage.getItem("points") ? secureStorage.getItem("points") : 0;
     }
 
     componentDidMount() {
-        axios.get('/api/v1/promotions/' + sessionStorage.getItem('restaurant_id')
+        axios.get('/api/v1/promotions/' + secureStorage.getItem('restaurant_id')
             + '/promotions.json')
             .then(
                 (response) => {
@@ -59,7 +60,7 @@ class Cart extends React.Component {
                 }
                 this.foods = Object.keys(temp).length === 0 ? null : temp;
                 console.log(this.foods);
-                sessionStorage.setItem("foods", JSON.stringify(this.foods));
+                secureStorage.setItem("foods", JSON.stringify(this.foods));
                 location.reload();
             }
         }
@@ -83,11 +84,11 @@ class Cart extends React.Component {
         for (let promo of promotionsList) {
             if (promo.promocode === this.state.entered_promo) {
                 let newPercentage = parseFloat(promo.percentage) / 100;
-                sessionStorage.setItem("discount_percent", newPercentage.toFixed(2));
+                secureStorage.setItem("discount_percent", newPercentage.toFixed(2));
 
-                sessionStorage.setItem("used_promo_code", JSON.stringify(promo.promocode));
+                secureStorage.setItem("used_promo_code", JSON.stringify(promo.promocode));
 
-                sessionStorage.setItem("used_promo_id", JSON.stringify(promo.id));
+                secureStorage.setItem("used_promo_id", JSON.stringify(promo.id));
 
                 alert(promo.promocode + " applied for " + promo.percentage + "% off!");
                 return;
@@ -104,14 +105,14 @@ class Cart extends React.Component {
 
     handleSubmitPoints(e) {
         if (parseInt(this.state.entered_points) >= 0) {
-            sessionStorage.setItem("points", this.state.entered_points);
+            secureStorage.setItem("points", this.state.entered_points);
         } else {
             e.preventDefault();
         }
     }
 
     handleSubmitOrder(e) {
-        if (this.totalCost < sessionStorage.getItem('restaurant_min')) {
+        if (this.totalCost < secureStorage.getItem('restaurant_min')) {
             alert("Your order cost is lower than the minimum required by the restaurant.");
             e.preventDefault();
         }
@@ -124,76 +125,80 @@ class Cart extends React.Component {
 
         if (!this.foods) {
             return <h3>Your cart is empty.</h3>
-        } else {
-            let items = [];
-            for (let item in this.foods) {
-                if (this.foods.hasOwnProperty(item)) {
-                    let foodDetails = this.foods[item];
-                    items.push(
-                        <CartItem foodName={item} foodDetails={foodDetails}
-                            onDeleteItem={this.handleDeleteItem} />
-                    )
-                    this.totalCost += foodDetails.price * foodDetails.quantity;
-                }
+        } else if (!secureStorage.getItem('restaurant_id') ||
+            !secureStorage.getItem('restaurant_name') ||
+            !secureStorage.getItem('restaurant_min')) {
+            { secureStorage.clear() }
+            return <h3>An error has occurred. Please place your order again.</h3>
+        }
+
+        let items = [];
+        for (let item in this.foods) {
+            if (this.foods.hasOwnProperty(item)) {
+                let foodDetails = this.foods[item];
+                items.push(
+                    <CartItem foodName={item} foodDetails={foodDetails}
+                        onDeleteItem={this.handleDeleteItem} />
+                )
+                this.totalCost += foodDetails.price * foodDetails.quantity;
             }
-            this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
-                                - this.points + 3)
-                            .toFixed(2);
-            return (
-                <div className='cart-container'>
-                    <div><br /></div>
-                    <h3>Ordering From: {sessionStorage.getItem('restaurant_name')}</h3>
-                    <h4>
-                        (minimum order ${parseFloat(
-                            sessionStorage.getItem('restaurant_min')).toFixed(2)}
+        }
+        this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
+            - this.points + 3).toFixed(2);
+        return (
+            <div className='cart-container'>
+                <div><br /></div>
+                <h3>Ordering From: {secureStorage.getItem('restaurant_name')}</h3>
+                <h4>
+                    (minimum order ${parseFloat(
+                    secureStorage.getItem('restaurant_min')).toFixed(2)}
                         )
                     </h4>
-                    <div><br /></div>
-                    <CartItemTable items={items} />
-                    <div><br /></div>
-                    
-                    <h4>
-                        Total: ${this.totalCost.toFixed(2)}
-                    </h4>
-                    <h4>
-                        Delivery Fee: $3.00
-                    </h4>
-                    <div><br /><br /></div>
-                    
-                    <CartPromoForm
-                        handleSubmit={this.handleSubmitPromo}
-                        handleInsertChange={this.handlePromoInsertChange} />
-                    <div><br /></div>
+                <div><br /></div>
+                <CartItemTable items={items} />
+                <div><br /></div>
 
-                    <h4>
-                        Discount: -${(this.totalCost * this.discountPercentage).toFixed(2)} ( 
+                <h4>
+                    Total: ${this.totalCost.toFixed(2)}
+                </h4>
+                <h4>
+                    Delivery Fee: $3.00
+                    </h4>
+                <div><br /><br /></div>
+
+                <CartPromoForm
+                    handleSubmit={this.handleSubmitPromo}
+                    handleInsertChange={this.handlePromoInsertChange} />
+                <div><br /></div>
+
+                <h4>
+                    Discount: -${(this.totalCost * this.discountPercentage).toFixed(2)} (
                         {this.discountPercentage * 100}%)
                     </h4>
-                    <div><br /><br /></div>
+                <div><br /><br /></div>
 
-                    <CartPointsForm
-                        points={this.props.points} amountDue={this.amountDue}
-                        handleSubmit={this.handleSubmitPoints}
-                        handleInsertChange={this.handlePointsInsertChange} />
-                    <div><br /></div>
+                <CartPointsForm
+                    points={this.props.points} amountDue={this.amountDue}
+                    handleSubmit={this.handleSubmitPoints}
+                    handleInsertChange={this.handlePointsInsertChange} />
+                <div><br /></div>
 
-                    <h4>
-                        Offset: -${parseInt(this.points).toFixed(2)}
-                    </h4>
-                    <div><br /><br /></div>
+                <h4>
+                    Offset: -${parseInt(this.points).toFixed(2)}
+                </h4>
+                <div><br /><br /></div>
 
-                    <h2 className='cart-amount-due'>
-                        Amount Due: ${this.amountDue}
-                    </h2>
-                    <div><br /></div>
-                    <Button href="/customer/complete_order" variant="primary" size="lg"
-                        onClick={this.handleSubmitOrder}>
-                            ORDER
+                <h2 className='cart-amount-due'>
+                    Amount Due: ${this.amountDue}
+                </h2>
+                <div><br /></div>
+                <Button href="/customer/complete-order" variant="primary" size="lg"
+                    onClick={this.handleSubmitOrder}>
+                    ORDER
                     </Button>
-                    <div><br /><br /></div>
-                </div>
-            )
-        }
+                <div><br /><br /></div>
+            </div>
+        )
     }
 }
 

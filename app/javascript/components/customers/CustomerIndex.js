@@ -11,6 +11,8 @@ import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
+import CompleteOrder from './ordersubmission/CompleteOrder';
+import secureStorage from '../utilities/HungrySecureStorage';
 
 class Index extends React.Component {
     constructor(props) {
@@ -19,7 +21,7 @@ class Index extends React.Component {
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
         this.handleRecordAmountDue = this.handleRecordAmountDue.bind(this);
         this.resetFoods = this.resetFoods.bind(this);
-        this.state = { orders: JSON.parse(sessionStorage.getItem('foods')) };
+        this.state = { orders: JSON.parse(secureStorage.getItem('foods')) };
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
@@ -29,7 +31,7 @@ class Index extends React.Component {
         console.log(numAvailable);
         if (newFood.f_name in updatedOrders) {
             let orderedQuantity = parseInt(updatedOrders[newFood.f_name]["quantity"])
-                                    + parseInt(newFood.quantity);
+                + parseInt(newFood.quantity);
             if (orderedQuantity <= numAvailable) {
                 updatedOrders[newFood.f_name]["quantity"] = orderedQuantity;
             } else {
@@ -45,7 +47,7 @@ class Index extends React.Component {
                 updatedOrders[newFood.f_name]["quantity"] = newFood.quantity;
                 updatedOrders[newFood.f_name]["id"] = newFood.id;
             } else {
-                alert("Your order has exceeded the available number.");
+                alert("Your order has exceeded the available number in stock.");
                 e.preventDefault();
                 return false;
             }
@@ -54,17 +56,17 @@ class Index extends React.Component {
 
         this.setState({ orders: updatedOrders });
         // Persist order info in local browser storage
-        sessionStorage.setItem('foods', JSON.stringify(updatedOrders));
-        console.log(sessionStorage.getItem('foods'));
+        secureStorage.setItem('foods', JSON.stringify(updatedOrders));
+        console.log(secureStorage.getItem('foods'));
         return true;
     }
 
     resetFoods() {
-        this.setState({ orders: JSON.parse(sessionStorage.getItem('foods')) });
+        this.setState({ orders: JSON.parse(secureStorage.getItem('foods')) });
     }
 
     handleRecordAmountDue(latestAmount) {
-        sessionStorage.setItem('amount_due', latestAmount);
+        secureStorage.setItem('amount_due', latestAmount);
     }
 
     render() {
@@ -77,18 +79,18 @@ class Index extends React.Component {
                 <Route exact path="/customer/order"
                     render={() => <Restaurants onResetOrder={this.resetFoods} />} />
 
-                <Route exact path={ "/customer/order/:rid/menu" }>
+                <Route exact path={"/customer/order/:rid/menu"}>
                     <Menu onSubmitOrder={this.handleSubmitOrder} />
                 </Route>
 
-                <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews/>} />
-                
+                <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews />} />
+
                 <Route exact path="/customer/cart">
                     <Cart orders={this.state.orders} points={this.props.info.points}
-                            onAmountDueSubmit={this.handleRecordAmountDue} />
+                        onAmountDueSubmit={this.handleRecordAmountDue} />
                 </Route>
-                <Route exact path="/customer/complete_order" render={() => <CompleteOrder /> } />
-                <Route exact path="/customer/review_order" render={() => <Review /> } />
+                <Route exact path="/customer/complete_order" render={() => <CompleteOrder />} />
+                <Route exact path="/customer/review_order" render={() => <Review />} />
 
                 <Route exact path="/customer/history" render={() => <OrderHistory />} />
                 <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />

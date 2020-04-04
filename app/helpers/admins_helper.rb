@@ -148,32 +148,39 @@ module AdminsHelper
             WHERE user_id = #{userid};"
         ).first['count']
 
-        rider_part_time = ActiveRecord::Base.connection.exec_query(
-            "SELECT COUNT(*) FROM part_time_riders
-            WHERE id = '#{userid}';"
-        ).first['count']
-
-        rider_full_time = ActiveRecord::Base.connection.exec_query(
-            "SELECT COUNT(*) FROM full_time_riders
-            WHERE id = '#{userid}';"
-        ).first['count']
-
-        # Remove all entries from riders and subclasses
         ActiveRecord::Base.connection.begin_db_transaction()
 
-        if (rider_part_time != 0)
-            ActiveRecord::Base.connection.exec_query(
-                "DELETE FROM part_time_riders
-                WHERE id = '#{userid}';"
-            )
-        end
+        # Remove all tuples from rider subclasses
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM part_time_riders
+            WHERE id = '#{userid}';"
+        )
 
-        if (rider_full_time != 0)
-            ActiveRecord::Base.connection.exec_query(
-                "DELETE FROM full_time_riders
-                WHERE id = '#{userid}';"
-            )
-        end
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM full_time_riders
+            WHERE id = '#{userid}';"
+        )
+
+        # Remove existing work schedules
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM weekly_work_schedules
+            WHERE pt_rider_id = '#{userid}';"
+        )
+
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM weekly_work_schedules
+            WHERE mws_id = (SELECT mws_id FROM monthly_work_schedules WHERE rider_id = '#{userid}');"
+        )
+
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM monthly_work_schedules
+            WHERE rider_id = '#{userid}';"
+        )
+
+        # Remove existing attendance records
+        ActiveRecord::Base.connection.exec_query(
+            "DELETE FROM Attendance WHERE id = '#{userid}';"
+        )
 
         # Insert new values into riders and subclasses
         if (rider == 0)
@@ -192,6 +199,24 @@ module AdminsHelper
             "INSERT INTO #{type}_riders VALUES
             ('#{userid}', '#{type}', '#{salary}');"
         )
+
+        # Insert new values into work schedules
+        if (type == 'part_time')
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO weekly_work_schedules(w_type, pt_rider_id)
+                VALUES ('part_time_rider', '#{userid}');"
+            )
+        else
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO monthly_work_schedules(rider_id)
+                VALUES ('#{userid}');"
+            )
+
+            ActiveRecord::Base.connection.exec_query(
+                "INSERT INTO weekly_work_schedules(w_type, mws_id)
+                VALUES ('monthly_work_schedule', (SELECT mws_id FROM monthly_work_schedules WHERE rider_id = '#{userid}'));"
+            )
+        end
 
         # Update users table
         ActiveRecord::Base.connection.exec_query(

@@ -76,17 +76,17 @@ const ManageMenu = (props) => {
     const handleDishCreated = (newDish) => {
         const newDishes = [...dishes, newDish];
         setDishesAndVisibleDishes(newDishes);
-        props.alerts.showSuccessAlert("New dish created! =D");
+        props.showSuccessAlert("New dish created! =D");
     };
 
     const handleDishDeactivated = (deactivatedDish) => {
         updateDishes(deactivatedDish.id, deactivatedDish);
-        props.alerts.showSuccessAlert(`Dish ${deactivatedDish.is_active? "Activated" : "Deactivated"}! =D`);
+        props.showSuccessAlert(`Dish ${deactivatedDish.is_active? "Activated" : "Deactivated"}! =D`);
     };
 
     const handleDishEdited = (id, editedDish) => {
         updateDishes(id, editedDish);
-        props.alerts.showSuccessAlert("Dish edited! =D");
+        props.showSuccessAlert("Dish edited! =D");
     };
 
     const updateDishes = (id, editedDish) => {
@@ -111,7 +111,7 @@ const ManageMenu = (props) => {
     const handleNewMenuSectionCreated = (newMenuSection) => {
         const newMenuSections = [...menuSections, newMenuSection];
         setMenuSections(newMenuSections);
-        props.alerts.showSuccessAlert("New menu section created!");
+        props.showSuccessAlert("New menu section created!");
     }
 
     const handleMenuSectionEdited = (editedMenuSection) => {
@@ -131,7 +131,7 @@ const ManageMenu = (props) => {
 
         setMenuSections(newMenuSections);
         setDishesAndVisibleDishes(newDishes);
-        props.alerts.showSuccessAlert("Menu section edited!");
+        props.showSuccessAlert("Menu section edited!");
     }
 
     const handleMenuSectionDeleted = (url_id) => {
@@ -142,7 +142,7 @@ const ManageMenu = (props) => {
         
         props.history.replace("/manager/manage_menu");
         setCurrMenuSectionId(undefined);
-        props.alerts.showSuccessAlert("Menu section deleted!");
+        props.showSuccessAlert("Menu section deleted!");
     }
 
     return (

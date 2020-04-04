@@ -21,7 +21,7 @@ const EditMenuSection = (props) => {
                 console.log(result);
                 props.onMenuSectionEdited(result.data);
             }).catch(error => {
-                props.alerts.showFailureAlert(getErrorMessage(error));
+                props.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             })

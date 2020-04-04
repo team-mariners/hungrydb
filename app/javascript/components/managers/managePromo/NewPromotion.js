@@ -24,7 +24,8 @@ const NewPromotion = (props) => {
             console.log(result);
             props.onPromoCreated(result.data);            
         }).catch(error => {
-            props.alerts.showFailureAlert(getErrorMessage(error));
+            console.log(error);
+            props.showFailureAlert(getErrorMessage(error));
         }).finally(() => {
             props.onClose();
         })

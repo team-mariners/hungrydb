@@ -34,7 +34,7 @@ const EditPromotion = (props) => {
                 props.onPromoEdited(result.data);
             }).catch(error => {
                 console.log(error);
-                props.alerts.showFailureAlert(getErrorMessage(error));
+                props.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             });

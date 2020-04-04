@@ -23,14 +23,13 @@ class RestaurantSelection extends React.Component {
             if (!this.confirmChangeRestaurant(currentOrderRestaurant)) {
                 e.preventDefault();
                 return;
-            } else {
-                // Clears sessionStorage and resets order if no restaurant name
-                // in sessionStorage or customer chooses to change restaurant
-                secureStorage.clear();
             }
+            // Clears sessionStorage and resets order if no restaurant name
+            // in sessionStorage or customer chooses to change restaurant
+            secureStorage.clear();
+            this.props.onResetOrder();
+            this.setSessionRestaurantInfo();
         }
-        this.props.onResetOrder();
-        this.setSessionRestaurantInfo();
     }
 
     confirmChangeRestaurant(currentOrderRestaurant) {

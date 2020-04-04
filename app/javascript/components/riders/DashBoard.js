@@ -16,7 +16,7 @@ const DashBoard = (props) => {
             console.log(result);
             if (!!result.data) {
                 setClockedInData(result.data);
-            }
+            }            
         }).catch(error => {
             console.log(error);
         });    
@@ -27,7 +27,8 @@ const DashBoard = (props) => {
             <h1>Hello {props.current_user.username}!</h1>
             <TimeRecorder
                 clockedInData={clockedInData}
-                setClockedInData={setClockedInData}/>                
+                setClockedInData={setClockedInData}
+                {...props}/>                
         </div>
     )
 };

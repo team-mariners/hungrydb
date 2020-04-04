@@ -1,16 +1,19 @@
+import { NavLink } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import React from 'react';
 import AppBar from '../../global/AppBar';
+import Colors from '../../global/Colors';
 
 const RiderNaviBar = () => {
+    const navLinkstyle = Colors.navbarLink;
+
     return (
-        <AppBar>
+        <AppBar isLoggedIn={true}>
             <Nav className="justify-content-end">
-                <Nav.Link href="/rider" style={{ color: 'white' }}>Home</Nav.Link>
-                <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link>
-                <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link>
-                <Nav.Link href="/rider" style={{ color: 'white' }}>Profile</Nav.Link>
-                <Nav.Link href="/" style={{ color: 'white' }}>Log out</Nav.Link>
+                {/* <Nav.Link href="/rider" style={navLinkstyle}>Home</Nav.Link> */}
+                <Nav.Link href="/rider/deliveries" style={navLinkstyle}>Deliveries</Nav.Link>
+                {/* <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link> */}
+                {/* <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link> */}
             </Nav>
         </AppBar>
     )

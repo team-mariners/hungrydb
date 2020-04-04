@@ -10,11 +10,11 @@ const TimeRecorder = (props) => {
 
     const clockInTime = !props.clockedInData.clock_in
         ? "-" 
-        : moment(props.clockedInData.clock_in, "HH:mm").format("HH:mm a");
+        : moment(props.clockedInData.clock_in, "HH:mm").format("h:mm a");
 
     const clockOutTime = !props.clockedInData.clock_out
         ? "-" 
-        : moment(props.clockedInData.clock_out, "HH:mm").format("HH:mm a");
+        : moment(props.clockedInData.clock_out, "HH:mm").format("h:mm a");
     
     const totalHoursWorked = !props.clockedInData.total_hours && props.clockedInData.total_hours !== 0
         ? "-"

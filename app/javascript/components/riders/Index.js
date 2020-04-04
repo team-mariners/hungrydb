@@ -46,7 +46,7 @@ const Index = (props) => {
                 {alertMessage}
             </Alert>
             <Switch>
-                <Route exact path="/" render={() => <DashBoard {...props}/>}/>
+                <Route exact path="/" render={() => <DashBoard {...props} {...alerts}/>}/>
                 <Route exact path="/rider/deliveries" render={() => <ManageDeliveries {...alerts}/>}/>
             </Switch>            
         </Router>

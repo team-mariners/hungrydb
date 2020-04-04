@@ -1,6 +1,5 @@
 class RidersController < UsersController
-    def index
-    end
+    def index; end
 
     def check_clocked_in        
       result = get_clocked_in_data

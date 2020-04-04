@@ -4,8 +4,9 @@ import Button from 'react-bootstrap/Button';
 import CustomCard from '../../utilities/CustomCard/CustomCard';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
 import OrderModal from '../../managers/manageOrder/OrderModal';
-import { dateTimeFormat2 } from '../../utilities/Constants';
 import UpdateTime from './UpdateTime';
+import { dateTimeFormat2 } from '../../utilities/Constants';
+import { getErrorMessage } from '../../helpers/FormHelpers';
 
 const Delivery = (props) => {    
     const [isLoadOrder, loadOrder] = useState(false);
@@ -23,8 +24,9 @@ const Delivery = (props) => {
                     setOrder(result.data);
                     showOrder(true);
                     loadOrder(false);
-                }).catch(error => {
+                }).catch(error => {                    
                     console.log(error);
+                    props.showFailureAlert(getErrorMessage(error));
                 });
         }
     }, [isLoadOrder]);
@@ -75,7 +77,8 @@ const Delivery = (props) => {
                 id={props.delivery.oid}
                 show={isShowUpdateTime}
                 onClose={() => showUpdateTime(false)}
-                onTimeUpdated={props.onTimeUpdated}/>
+                onTimeUpdated={props.onTimeUpdated}
+                {...props}/>
         </React.Fragment>
     )
 };

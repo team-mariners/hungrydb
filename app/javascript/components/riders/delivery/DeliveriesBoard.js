@@ -5,7 +5,7 @@ import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import CustomList from '../../utilities/CustomList';
 import Delivery from './Delivery';
 
-const DeliveriesBoard = () => {
+const DeliveriesBoard = (props) => {
     const DELIVERIES_TYPES = {
         ongoing: "ongoing",
         complete: "complete"
@@ -49,7 +49,7 @@ const DeliveriesBoard = () => {
         setListItems(visibleDeliveries.map(delivery => {
             return (
                 <ListGroupItem key={delivery.oid}>
-                    <Delivery delivery={delivery} onTimeUpdated={onTimeUpdated}/>
+                    <Delivery delivery={delivery} onTimeUpdated={onTimeUpdated} {...props}/>
                 </ListGroupItem>
             )
         }));
@@ -73,7 +73,8 @@ const DeliveriesBoard = () => {
     const onTimeUpdated = (id, updatedTime) => {         
         const newDeliveries = [...deliveries];
         newDeliveries.find(delivery => delivery.oid === id)[updatedTime.name] = moment(updatedTime.time);
-        setDeliveriesAndVisibleDeliveries(newDeliveries);        
+        setDeliveriesAndVisibleDeliveries(newDeliveries);                                
+        props.showSuccessAlert("Update success!");
     };
 
     const nav = [{ key: DELIVERIES_TYPES.ongoing, value: "Ongoing" },

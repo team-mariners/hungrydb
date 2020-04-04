@@ -1,11 +1,11 @@
 import React from 'react';
 import DeliveriesBoard from './delivery/DeliveriesBoard';
 
-const ManageDeliveries = () => {    
+const ManageDeliveries = (props) => {    
     return (
         <div className="page">
             <h1>Deliveries</h1>            
-            <DeliveriesBoard/>
+            <DeliveriesBoard {...props}/>
         </div>        
     )
 };

@@ -76,7 +76,8 @@ class CompleteOrder extends React.Component {
         axios.post('/order', order)
             .then((result) => {
                 console.log(result);
-                alert("Your order has been placed." + "\nYou have earned "
+                alert("Your order has been placed." + "\nYou used "
+                    + Math.floor(secureStorage.getItem('points')) + " and earned "
                     + Math.floor(secureStorage.getItem('amount_due')) + " points!");
             }).catch((error) => {
                 console.log(error);

@@ -6,33 +6,50 @@ import FoodReview from './FoodReview';
 import Button from 'react-bootstrap/Button';
 import secureStorage from '../../utilities/HungrySecureStorage';
 
-const Review = (props) => {
-    
-    let foodObject = JSON.parse(sessionStorage.getItem('foods'));
-    let foodList = [];
-    for (let food in foodObject) {
-        if (foodObject.hasOwnProperty(food)) {
-            foodList.push(<ListGroup.Item>{ food }</ListGroup.Item>);
-        }
+class Review extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChangeRiderRating = this.handleChangeRiderRating.bind(this);
+        this.handleChangeFoodReview = this.handleChangeFoodReview.bind(this);
+        this.state = {riderRating: null, foodReview: null}
     }
 
-    return (
-        <Form className="review-form" onSubmit={() => secureStorage.clear()}>
+    handleChangeRiderRating(value) {
+        console.log(value);
+        let changedValue = value ? parseInt(value) : null;
+        this.setState({riderRating: changedValue});
+    }
 
-            <RiderRating />
-            <div><br /><br /><br /></div>
+    handleChangeFoodReview(e) {
+        console.log(e.target.value);
+        this.setState({foodReview: e.target.value})
+    }
 
-            <FoodReview foodList={foodList}/>
-            <div><br /><br /><br /></div>
+    render() {
+        let foodObject = JSON.parse(secureStorage.getItem('foods'));
+        let foodList = [];
+        for (let food in foodObject) {
+            if (foodObject.hasOwnProperty(food)) {
+                foodList.push(<ListGroup.Item>{food}</ListGroup.Item>);
+            }
+        }
+        return (
+            <Form className="review-form" onSubmit={() => secureStorage.clear()}>
 
-            <div className="review-form-buttons">
-                <div><Button variant="success" type="submit" size="lg" onClick>Submit</Button></div>
-                <div><Button variant="light" type="submit" size="lg">No Thanks</Button></div>
-            </div>
+                <RiderRating onRatingChange={this.handleChangeRiderRating} />
+                <div><br /><br /><br /><br /></div>
 
-            <div><br /><br /><br /></div>
+                <FoodReview foodList={foodList} onReviewChange={this.handleChangeFoodReview} />
+                <div><br /><br /><br /></div>
 
-            {/* <div className="mb-3">
+                <div className="review-form-buttons">
+                    <div><Button variant="success" type="submit" size="lg" onClick={() => secureStorage.clear()}>Submit</Button></div>
+                    <div><Button variant="light" type="submit" size="lg" onClick={() => secureStorage.clear()}>No Thanks</Button></div>
+                </div>
+
+                <div><br /><br /><br /></div>
+
+                {/* <div className="mb-3">
                 <input type="radio" id="one" name="rating" value="one"/>
                 <label for="one">1</label>
 
@@ -52,8 +69,9 @@ const Review = (props) => {
                     5
                 </label>
             </div> */}
-        </Form>
-    )
+            </Form>
+        )
+    }
 }
 
 export default Review;

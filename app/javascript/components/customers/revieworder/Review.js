@@ -4,7 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import RiderRating from './RiderRating';
 import FoodReview from './FoodReview';
 import Button from 'react-bootstrap/Button';
-// import secureStorage from '../../utilities/HungrySecureStorage';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 const Review = (props) => {
     
@@ -17,7 +17,7 @@ const Review = (props) => {
     }
 
     return (
-        <Form className="review-form">
+        <Form className="review-form" onSubmit={() => secureStorage.clear()}>
 
             <RiderRating />
             <div><br /><br /><br /></div>
@@ -26,7 +26,7 @@ const Review = (props) => {
             <div><br /><br /><br /></div>
 
             <div className="review-form-buttons">
-                <div><Button variant="success" type="submit" size="lg">Submit</Button></div>
+                <div><Button variant="success" type="submit" size="lg" onClick>Submit</Button></div>
                 <div><Button variant="light" type="submit" size="lg">No Thanks</Button></div>
             </div>
 

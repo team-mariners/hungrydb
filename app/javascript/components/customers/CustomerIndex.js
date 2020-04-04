@@ -11,7 +11,6 @@ import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
-import CompleteOrder from './ordersubmission/CompleteOrder';
 import secureStorage from '../utilities/HungrySecureStorage';
 
 class Index extends React.Component {

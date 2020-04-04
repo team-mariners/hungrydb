@@ -192,7 +192,7 @@ class Cart extends React.Component {
                     Amount Due: ${this.amountDue}
                 </h2>
                 <div><br /></div>
-                <Button href="/customer/complete-order" variant="primary" size="lg"
+                <Button href="/customer/complete_order" variant="primary" size="lg"
                     onClick={this.handleSubmitOrder}>
                     ORDER
                     </Button>

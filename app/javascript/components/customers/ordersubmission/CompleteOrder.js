@@ -69,7 +69,7 @@ class CompleteOrder extends React.Component {
             : 0;
         order["payment_method"] = this.state.paymentMethod;
         order["delivery_fee"] = 3.00
-        order["total_price"] = parseFloat(sessionStorage.getItem('amount_due'));
+        order["total_price"] = parseFloat(secureStorage.getItem('amount_due'));
         order["status"] = "in progress";
         order["foods"] = JSON.parse(secureStorage.getItem('foods'));
         order["customer_location"] = this.state.address;

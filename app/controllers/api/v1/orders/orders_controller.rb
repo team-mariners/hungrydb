@@ -44,8 +44,8 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
         WHERE oid IN (#{order_ids.join(",")})
       )    
       SELECT *
-      FROM T JOIN Foods  ON (T.food_id = Foods.id)
-      ORDER BY T.oid;"      
+      FROM T JOIN Foods F ON (T.food_id = F.id)
+      ORDER BY T.oid, F.id;"      
     ).to_a  
     ActiveRecord::Base.connection.commit_db_transaction
 

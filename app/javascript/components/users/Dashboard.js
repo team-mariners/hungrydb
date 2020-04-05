@@ -34,8 +34,8 @@ const Dashboard = (props) => {
     })
 
     const validationCustomer = Yup.object({
-        can: Yup.number().integer().max(9999999999999999).required(),
-        cvv: Yup.number().integer().max(999).required()
+        can: Yup.number().integer().max(9999999999999999),
+        cvv: Yup.number().integer().max(999)
     })
 
     const handleSubmit = (values, formik) => {
@@ -230,6 +230,9 @@ const Dashboard = (props) => {
                             onChange={formik.handleChange}
                             isInvalid={formik.touched.can && !!formik.errors.can}
                         />
+                        <Form.Text className="text-muted">
+                            Leave both fields blank if you wish to remove your credit card from our systems.
+                        </Form.Text>
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="formCvv" sm={1}>

@@ -19,7 +19,7 @@ const ToggleDish = (props) => {
                 console.log(props.dish);
                 props.onDishDeactivated(props.dish);
             }).catch(error => {
-                props.alerts.showFailureAlert(getErrorMessage(error));
+                props.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             })

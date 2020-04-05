@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 const LoginForm = (props) => {
     /*
@@ -43,7 +44,7 @@ const LoginForm = (props) => {
 
             formik.setSubmitting(false);
         });
-        sessionStorage.clear();
+        secureStorage.clear();
     };
 
     return (

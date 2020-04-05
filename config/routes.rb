@@ -12,8 +12,7 @@ Rails.application.routes.draw do
     post 'signup', to: 'users/registrations#create'
 
     get 'profile', to: 'users/registrations#edit'
-    patch 'profile', to: 'users/registrations#update'
-    put 'profile', to: 'users/registrations#update'
+    post 'profile', to: 'users/registrations#update'
 
     get 'rider', to: 'pages#rider'
     get 'jobs', to: 'pages#jobs'
@@ -26,6 +25,7 @@ Rails.application.routes.draw do
 
     scope '/admin' do
       get 'dashboard', to: 'admins#index'
+      get 'promotions', to: 'admins#index'
       get 'roles', to: 'admins#index'
       get 'roles/:id', to: 'admins#index'
       get 'statistics', to: 'admins#index'
@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
       post 'updaterole', to: 'admins#updaterole'
+      post 'fdspromo', to: 'admins#fdspromo'
     end
 
     scope '/manager' do
@@ -56,10 +57,14 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    scope '/rider' do            
+    scope '/rider' do      
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
       post 'clock_out', to: 'riders#clock_out'
+      get 'deliveries', to: 'riders#index'
+      get 'all_deliveries', to: 'riders#get_deliveries'
+      get 'order/:id', to: 'riders#get_order'
+      post 'update_time/:id', to: 'riders#update_time'
     end
 
     resources :restaurants, except: %i[new edit show destroy]

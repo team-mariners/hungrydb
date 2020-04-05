@@ -30,7 +30,7 @@ const EditDish = (props) => {
                 console.log(result);
                 props.onDishEdited(props.dish.id, result.data);
             }).catch(error => {
-                props.alerts.showFailureAlert(getErrorMessage(error));
+                props.showFailureAlert(getErrorMessage(error));
             }).finally(() => {
                 props.onClose();
             });

@@ -71,6 +71,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
         else
           render plain: false
         end
+      elsif params.has_key?(:can) && params.has_key?(:cvv)
+        if (!helpers.user_has_role?(params[:id], 'customer'))
+          render plain: false
+        else
+          can = (params[:can] == '') ? "NULL" : params[:can]
+          cvv = (params[:cvv] == '') ? "NULL" : params[:cvv]
+          ActiveRecord::Base.connection.exec_query(
+            "UPDATE customers SET
+            can = #{can}, cvv = #{cvv},
+            updated_at = 'now'
+            WHERE user_id = #{params[:id]};"
+          )
+          render plain: true
+        end
       else
         render plain: false
       end

@@ -25,7 +25,7 @@ class ReviewController < ApplicationController
               #{filtered_params['rider_rating']},
               '#{filtered_params['food_review']}')"
     )
-    
+
     ActiveRecord::Base.connection.commit_db_transaction
   end
 end

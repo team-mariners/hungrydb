@@ -18,7 +18,8 @@ const FoodReview = (props) => {
             </ListGroup>
             <div><br /></div>
 
-            <FormControl as="textarea" rows="5" style={{width: "70%"}}
+            <FormControl as="textarea" rows="5" placeholder="In 1000 characters or less"
+                style={{width: "70%"}}
                 onChange={props.onReviewChange} />
         </React.Fragment>
     )

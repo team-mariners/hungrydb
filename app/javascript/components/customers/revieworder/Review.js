@@ -35,6 +35,12 @@ class Review extends React.Component {
             return;
         }
 
+        if (this.state.foodReview.length > 1000) {
+            alert("Your food review exceeds 1000 characters!");
+            e.preventDefault();
+            return;
+        }
+
         let review = {};
         review["oid"] = document.cookie.split("=")[1];
         review["rider_id"] = 3;
@@ -43,7 +49,7 @@ class Review extends React.Component {
                                 : "null";
         review["food_review"] = this.state.foodReview
                                 ? this.state.foodReview
-                                : "null";
+                                : "";
 
         axios.post('/review', review)
             .then((result) => {
@@ -72,6 +78,7 @@ class Review extends React.Component {
                 <div><br /><br /><br /><br /></div>
 
                 <FoodReview foodList={foodList} onReviewChange={this.handleChangeFoodReview} />
+                <p style={{marginTop: 10}}>{this.state.foodReview.length}/1000 characters</p>
                 <div><br /><br /><br /></div>
 
                 <div className="review-form-buttons">

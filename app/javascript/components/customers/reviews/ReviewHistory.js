@@ -38,7 +38,7 @@ class ReviewHistory extends React.Component {
                         {reviews.length == 0 ? "You have not made any reviews." : "Review History"}
                     </h4>
                     <div><br/></div>
-                    <ListGroup style={{ width: "80%", marginLeft: "auto", marginRight: "auto" }}>
+                    <ListGroup style={{marginLeft: "auto", marginRight: "auto", width: "70%"}}>
                         {reviews}
                     </ListGroup>
                     <div><br/></div>

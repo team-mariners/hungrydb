@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'
 import Colors from '../../global/Colors'
 import AppBar from '../../global/AppBar';
 import Nav from 'react-bootstrap/Nav';

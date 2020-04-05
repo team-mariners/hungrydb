@@ -18,6 +18,11 @@ const Dashboard = (props) => {
         confirmPassword: ''
     }
 
+    const initialCustomerVals = {
+        can: (props.roleAttributes.can == null) ? '' : props.roleAttributes.can,
+        cvv: (props.roleAttributes.cvv == null) ? '' : props.roleAttributes.cvv
+    }
+
     const validation = Yup.object({
         email: Yup.string().email().required()
     });
@@ -26,6 +31,11 @@ const Dashboard = (props) => {
         curPassword: Yup.string().min(8).max(20).matches(/^\S+$/).required(),
         newPassword: Yup.string().min(8).max(20).matches(/^\S+$/).required(),
         confirmPassword: Yup.string().oneOf([Yup.ref('newPassword')]).required()
+    })
+
+    const validationCustomer = Yup.object({
+        can: Yup.number().integer().max(9999999999999999).required(),
+        cvv: Yup.number().integer().max(999).required()
     })
 
     const handleSubmit = (values, formik) => {
@@ -64,6 +74,23 @@ const Dashboard = (props) => {
                 })
                 // Wait a while before reloading as the server is unable to catch up
                 setTimeout(() => { window.location.assign(window.location); }, 500);
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleCustomerSubmit = (values, formik) => {
+        axios.post('/profile', {
+            id: props.currentUser.id,
+            can: values.can,
+            cvv: values.cvv
+        }).then((response) => {
+            if (response.data == false) {
+                const message = "Could not update customer's credit card information!";
+                console.log(message);
+            } else {
+                window.location.assign(window.location);
             }
         }).catch((error) => {
             console.log(error);
@@ -168,6 +195,62 @@ const Dashboard = (props) => {
         )
     }
 
+    const displayForCustomer = () => {
+        if (props.role == 'customer') {
+            return (
+                <React.Fragment>
+                    <br />
+                    <h4>Update credit card information</h4>
+                    <Formik
+                        validationSchema={validationCustomer}
+                        initialValues={initialCustomerVals}
+                        onSubmit={handleCustomerSubmit}
+                    >
+                        {(props) => displayCustomerForm(props)}
+                    </Formik>
+                </React.Fragment>
+            )
+        } else {
+            return;
+        }
+    }
+
+    const displayCustomerForm = (formik) => {
+        return (
+            <Form onSubmit={formik.handleSubmit}>
+                <Form.Row>
+                    <Form.Group as={Col} controlId="formCan" sm={3}>
+                        <Form.Label>
+                            Credit card number
+                        </Form.Label>
+                        <Form.Control
+                            type="tel"
+                            name="can"
+                            value={formik.values.can}
+                            onChange={formik.handleChange}
+                            isInvalid={formik.touched.can && !!formik.errors.can}
+                        />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formCvv" sm={1}>
+                        <Form.Label>
+                            CVV
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="cvv"
+                            value={formik.values.cvv}
+                            onChange={formik.handleChange}
+                            isInvalid={formik.touched.cvv && !!formik.errors.cvv}
+                        />
+                    </Form.Group>
+                </Form.Row>
+
+                <Button type="submit">Update credit card information</Button>
+            </Form>
+        )
+    }
+
     return (
         <div className="p-3">
             <h2>Your profile</h2>
@@ -179,7 +262,8 @@ const Dashboard = (props) => {
             >
                 {(props) => displayInfoForm(props)}
             </Formik>
-            <p></p>
+            <br />
+            <h4>Update password</h4>
             <Formik
                 validationSchema={validationPassword}
                 initialValues={initialPasswordVals}
@@ -187,6 +271,7 @@ const Dashboard = (props) => {
             >
                 {(props) => displayPasswordForm(props)}
             </Formik>
+            {displayForCustomer()}
         </div>
     )
 };

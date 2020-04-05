@@ -61,5 +61,7 @@ class OrderController < ApplicationController
     # Customers rewardPoints handled with Triggers
 
     ActiveRecord::Base.connection.commit_db_transaction
+
+    cookies[:oid] = stored_order['oid']
   end
 end

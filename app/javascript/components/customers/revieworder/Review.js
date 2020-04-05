@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import RiderRating from './RiderRating';
@@ -11,7 +12,9 @@ class Review extends React.Component {
         super(props);
         this.handleChangeRiderRating = this.handleChangeRiderRating.bind(this);
         this.handleChangeFoodReview = this.handleChangeFoodReview.bind(this);
-        this.state = {riderRating: null, foodReview: null}
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {riderRating: null, foodReview: ""}
+        console.log(document.cookie)
     }
 
     handleChangeRiderRating(value) {
@@ -25,6 +28,35 @@ class Review extends React.Component {
         this.setState({foodReview: e.target.value})
     }
 
+    handleSubmit(e) {
+        if (!this.state.riderRating && !this.state.foodReview) {
+            alert("Your must review at least the rider or the food");
+            e.preventDefault();
+            return;
+        }
+
+        let review = {};
+        review["oid"] = document.cookie.split("=")[1];
+        review["rider_id"] = 3;
+        review["rider_rating"] = this.state.riderRating
+                                ? this.state.riderRating
+                                : "null";
+        review["food_review"] = this.state.foodReview
+                                ? this.state.foodReview
+                                : "null";
+
+        axios.post('/review', review)
+            .then((result) => {
+                console.log(result);
+                alert("Your review has been submitted");
+            }).catch((error) => {
+                console.log(error);
+                alert("Failed to submit review!");
+            })
+
+        secureStorage.clear();
+    }
+
     render() {
         let foodObject = JSON.parse(secureStorage.getItem('foods'));
         let foodList = [];
@@ -34,41 +66,31 @@ class Review extends React.Component {
             }
         }
         return (
-            <Form className="review-form" onSubmit={() => secureStorage.clear()}>
+            <Form className="review-form">
 
-                <RiderRating onRatingChange={this.handleChangeRiderRating} />
+                <RiderRating riderName="rider" onRatingChange={this.handleChangeRiderRating} />
                 <div><br /><br /><br /><br /></div>
 
                 <FoodReview foodList={foodList} onReviewChange={this.handleChangeFoodReview} />
                 <div><br /><br /><br /></div>
 
                 <div className="review-form-buttons">
-                    <div><Button variant="success" type="submit" size="lg" onClick={() => secureStorage.clear()}>Submit</Button></div>
-                    <div><Button variant="light" type="submit" size="lg" onClick={() => secureStorage.clear()}>No Thanks</Button></div>
+                    <div>
+                        <Button variant="success" type="submit" size="lg" href="/"
+                            onClick={this.handleSubmit}>
+                            Submit
+                        </Button>
+                    </div>
+                    
+                    <div>
+                        <Button variant="light" type="submit" size="lg" href="/"
+                            onClick={() => secureStorage.clear()}>
+                            Skip
+                        </Button>
+                    </div>
                 </div>
 
                 <div><br /><br /><br /></div>
-
-                {/* <div className="mb-3">
-                <input type="radio" id="one" name="rating" value="one"/>
-                <label for="one">1</label>
-
-                <input type="radio" id="two" name="rating" value="two"/>
-                <label for="two">2</label>
-                
-                <input type="radio" id="three" name="rating" value="three"/>
-                <label for="three">3</label>
-
-                <label>
-                    <input type="radio" name="rating" value="four"/>
-                    4
-                </label>
-
-                <label>
-                    <input type="radio" name="rating" value="five"/>
-                    5
-                </label>
-            </div> */}
             </Form>
         )
     }

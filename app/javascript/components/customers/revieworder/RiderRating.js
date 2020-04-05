@@ -17,17 +17,17 @@ class RiderRating extends React.Component {
         this.props.onRatingChange(value);
     }
 
-    handleReset() {
+    handleReset(e) {
         this.setState({rating: 0});
         this.props.onRatingChange(null);
+        e.preventDefault();
     }
 
     render() {
         return (
             <React.Fragment>
                 <h2 className='review-rider-title'>
-                    {/* Placeholder name */}
-                Rate Rider: rider
+                    Rate Rider: {this.props.riderName}
                 </h2>
 
                 <div className='rider-rating-container'>
@@ -41,9 +41,9 @@ class RiderRating extends React.Component {
                         initialRating={this.state.rating}
                     />
 
+                    {/* Non-refreshing button type */}
                     <button className='rider-rating-reset-button'
                         onClick={this.handleReset}>Reset</button>
-                    {/* TODO: Allow reset */}
                 </div>
             </React.Fragment>
         )

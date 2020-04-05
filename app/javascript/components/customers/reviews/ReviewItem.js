@@ -1,10 +1,16 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ReviewModal from './ReviewModal.js';
+import Rating from 'react-rating';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as faStarO } from '@fortawesome/free-regular-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+
 
 class ReviewItem extends React.Component {
     constructor(props) {
         super(props);
+        this.review = this.props.review;
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleHideModal = this.handleHideModal.bind(this);
         this.state = { showModal: false };
@@ -22,7 +28,7 @@ class ReviewItem extends React.Component {
         return (
             <React.Fragment>
                 <ReviewModal show={this.state.showModal} onClose={this.handleHideModal}
-                    review={this.props.review} />
+                    review={this.review} />
 
                 <button onClick={this.handleShowModal}>
                     <ListGroup.Item variant="success" style={{
@@ -31,25 +37,30 @@ class ReviewItem extends React.Component {
                     }}>
                         <h4 className='review-list-item'>
                             {this.props.nameShown == "restaurant"
-                                ? this.props.review.restaurant_name
-                                : this.props.review.customer_name}
+                                ? this.review.restaurant_name
+                                : this.review.customer_name}
                         </h4>
 
                         <p className='review-list-item'>
-                            {this.props.review.food_review
-                                ? this.props.review.food_review.substr(0, 100)
+                            {this.review.food_review
+                                ? this.review.food_review.substr(0, 100)
                                 : "Not reviewed"}
                         </p>
 
                         <h4 className='review-list-item'>
-                            {this.props.review.rider_name}
+                            {this.review.rider_name}
                         </h4>
 
-                        <p className='review-list-item'>
-                            {this.props.review.rider_rating
-                                ? this.props.review.rider_rating + " stars"
-                                : "No rating"}
-                        </p>
+                        {this.review.rider_rating
+                            ? <Rating
+                                stop={this.review.rider_rating}
+                                initialRating={this.review.rider_rating}
+                                // emptySymbol needs to be kept for formatting reasons
+                                emptySymbol={<FontAwesomeIcon icon={faStarO} />}
+                                fullSymbol={<FontAwesomeIcon icon={faStar} />}
+                                readonly
+                              />
+                            : "No rating"}
                     </ListGroup.Item>
                 </button>
             </React.Fragment>

@@ -1,6 +1,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
+import Rating from 'react-rating';
+import { faStar as faStarO } from '@fortawesome/free-regular-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * A general modal dialog which can be used by other components.
@@ -50,23 +53,31 @@ class ReviewModal extends React.Component {
                     <section className='review-modal-content' >
                         {this.closeButton}
                         
-                        <h2>
+                        <h3>
                             {this.props.nameShown == "restaurant"
                                 ? this.review.restaurant_name
                                 : this.review.customer_name}
-                        </h2>
+                        </h3>
 
                         <pre style={{fontFamily: "Verdana"}}>
                             {this.foodReviewSplit70Char}
                         </pre>
                         <div><br /><br /></div>
 
-                        <h2>{this.review.rider_name}</h2>
-                        <p>
-                            {this.props.review.rider_rating
-                                ? this.props.review.rider_rating + " stars"
-                                : "No rating"}
-                        </p>
+                        <h3>{this.review.rider_name}</h3>
+
+                        {this.review.rider_rating
+                            ? <Rating
+                                stop={this.review.rider_rating}
+                                initialRating={this.review.rider_rating}
+                                // emptySymbol needs to be kept for formatting reasons
+                                emptySymbol={<FontAwesomeIcon icon={faStarO}
+                                    style={{ color: "#ffe400" }} className="fa-2x" />}
+                                fullSymbol={<FontAwesomeIcon icon={faStar}
+                                    style={{ color: "#ffe400" }} className="fa-2x" />}
+                                readonly
+                              />
+                            : "No rating"}
                     </section>
                 </div>
             )

@@ -76,7 +76,7 @@ module RidersHelper
     protected
     def get_weekly_comission
         return ActiveRecord::Base.connection.exec_query(
-            "SELECT COUNT(*)*comission
+            "SELECT COUNT(*) * 1.2
             FROM Riders R join (Delivers D join Orders O
                 on D.oid = O.oid) on R.user_id = D.rider_id
             WHERE D.depart_to_customer_time >= now() - interval '1 week'
@@ -90,7 +90,7 @@ module RidersHelper
     protected
     def get_monthly_comission
         return ActiveRecord::Base.connection.exec_query(
-            "SELECT COUNT(*)*comission
+            "SELECT COUNT(*) * 1.2
             FROM Riders R join (Delivers D join Orders O
                 on D.oid = O.oid) on R.user_id = D.rider_id
             WHERE D.depart_to_customer_time >= now() - interval '1 month'
@@ -102,17 +102,12 @@ module RidersHelper
     protected
     def get_base_salary
         return ActiveRecord::Base.connection.exec_query(
-            "SELECT CASE
-                WHEN R.user_id = ftr.id then ftr.monthlyBaseSalary
-                WHEN R.user_id = ptr.id then ptr.weeklyBaseSalary
-            end as salary
-            FROM Riders R, full_time_riders ftr, part_time_riders ptr
-            WHERE R.user_id = #{current_user["id"]}
-            and
-            (R.user_id = ftr.id
-            or R.user_id = ptr.id)
-            ;"
-        ).first['salary']
+            "SELECT CASE r_type
+                WHEN 'full_time' THEN (SELECT monthlyBaseSalary FROM full_time_riders WHERE id = R.user_id)
+                WHEN 'part_time' THEN (SELECT weeklyBaseSalary FROM part_time_riders WHERE id = R.user_id)
+             END as base_salary
+            FROM Riders R
+            WHERE user_id = #{current_user["id"]};"
+        )
     end
-
 end

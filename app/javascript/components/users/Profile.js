@@ -10,7 +10,7 @@ const Profile = (props) => {
             <Route exact path="/profile">
                 <Dashboard
                     currentUser={props.currentUser}
-                    role={props.userrole}
+                    role={props.role}
                     roleAttributes={props.roleAttributes}
                 />
             </Route>

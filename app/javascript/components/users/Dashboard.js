@@ -86,6 +86,9 @@ const Dashboard = (props) => {
                             isInvalid={formik.touched.username && !!formik.errors.username}
                             disabled={true}
                         />
+                        <Form.Text className="text-muted">
+                            Your username is permanent and cannot be changed.
+                        </Form.Text>
                     </Col>
                 </Form.Group>
 

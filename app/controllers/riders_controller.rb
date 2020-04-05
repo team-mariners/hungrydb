@@ -148,6 +148,15 @@ class RidersController < UsersController
     render json: {name: target_column, time: time}
   end
 
+  def get_monthly_salary_summary
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT (base_salary + commission) AS salary, commission
+      FROM rider_salaries
+      WHERE start_date = '#{params[:start_date]}'
+      AND rider_id = #{current_user["id"]};"
+    )
+  end
+
   private
 
   def get_clocked_in_data

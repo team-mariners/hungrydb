@@ -49,7 +49,7 @@ const Index = (props) => {
             <Switch>
                <Route exact path="/" render={() => <DashBoard {...props} {...alerts}/>}/>
                <Route exact path="/rider/deliveries" render={() => <ManageDeliveries {...alerts}/>}/>
-               <Route exact path="/rider/stats" render={() => <SalarySummaryPage/>}/>
+               <Route exact path="/rider/monthly_salary_summary" render={() => <SalarySummaryPage/>}/>
             </Switch>            
         </Router>
     )

@@ -6,6 +6,11 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO constants(c_key, value) VALUES ('COMMISSION', 1.2)"
+)
+
 # Create test users with multiple roles
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO users(username, encrypted_password, email, roles, created_at, updated_at) VALUES
@@ -42,8 +47,14 @@ test_rider_1 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO full_time_riders(id, monthlyBaseSalary) VALUES
-    (#{test_rider_1["user_id"]}, #{MONTHLY_BASE_SALARY});"
+    "INSERT INTO full_time_riders(id, monthlyBaseSalary)
+    VALUES (#{test_rider_1["user_id"]}, #{MONTHLY_BASE_SALARY});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES (#{test_rider_1["user_id"]}, date_trunc('month', CURRENT_DATE),
+        date_trunc('month', CURRENT_DATE) + interval '1 month - 1 day', #{MONTHLY_BASE_SALARY});"
 )
 ActiveRecord::Base.connection.commit_db_transaction
 
@@ -287,7 +298,7 @@ ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Orders(customer_id, promo_id, restaurant_id, point_offset,
                         payment_method, delivery_fee, total_price, date_time, status)
-    VALUES (1, 1, 1, 3, 'cash', 3, 7.52, '2020-03-10T11:45:08.000Z'::timestamp, 'complete');"
+    VALUES (1, 1, 1, 3, 'cash', 3, 7.52, CURRENT_TIMESTAMP, 'complete');"
 )
 
 test_order_1 = ActiveRecord::Base.connection.exec_query(

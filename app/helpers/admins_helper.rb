@@ -252,6 +252,93 @@ module AdminsHelper
         return true
     end
 
+    def get_full_time_schedule_matrix
+        intervals = ActiveRecord::Base.connection.exec_query(
+            "SELECT workingday, starthour, endhour, COUNT(*)
+            FROM working_intervals wi JOIN weekly_work_schedules wws
+            ON (wi.wws_id = wws.wws_id)
+            WHERE mws_id IS NOT NULL
+            GROUP BY workingday, starthour, endhour
+            ORDER BY workingday, starthour;"
+        )
+
+        return get_schedule_matrix(intervals)
+    end
+
+    def get_part_time_schedule_matrix
+        intervals = ActiveRecord::Base.connection.exec_query(
+            "SELECT workingday, starthour, endhour, COUNT(*)
+            FROM working_intervals wi JOIN weekly_work_schedules wws
+            ON (wi.wws_id = wws.wws_id)
+            WHERE pt_rider_id IS NOT NULL
+            GROUP BY workingday, starthour, endhour
+            ORDER BY workingday, starthour;"
+        )
+
+        return get_schedule_matrix(intervals)
+    end
+
+    def get_rider_schedule_matrix(userid)
+        if (!user_has_role?(userid, 'rider'))
+            return false
+        end
+
+        rtype = ActiveRecord::Base.connection.exec_query(
+            "SELECT r_type FROM riders
+            WHERE user_id = '#{userid}';"
+        ).first['r_type']
+
+        if (rtype == 'part_time')
+            intervals = ActiveRecord::Base.connection.exec_query(
+                "SELECT workingday, starthour, endhour, COUNT(*)
+                FROM working_intervals wi JOIN weekly_work_schedules wws
+                ON (wi.wws_id = wws.wws_id)
+                WHERE pt_rider_id = '#{userid}'
+                GROUP BY workingday, starthour, endhour
+                ORDER BY workingday, starthour;"
+            )
+        else
+            intervals = ActiveRecord::Base.connection.exec_query(
+                "SELECT workingday, starthour, endhour, COUNT(*)
+                FROM working_intervals wi
+                JOIN weekly_work_schedules wws ON (wi.wws_id = wws.wws_id)
+                JOIN monthly_work_schedules mws ON (wws.mws_id = mws.mws_id)
+                WHERE rider_id = '#{userid}'
+                GROUP BY workingday, starthour, endhour
+                ORDER BY workingday, starthour;"
+            )
+        end
+
+        return get_schedule_matrix(intervals)
+    end
+
+    def get_schedule_matrix(intervals)
+        # A week will start from Monday to Sunday and each day is 10AM to 10PM
+        matrix = Array.new(7) { Array.new(12, 0) }
+
+        for i in 0..6 do
+            for j in 0..11 do
+                time = (Time.parse('10:00') + j.hours).strftime('%R')
+                matrix[i][j] = get_interval_count(intervals, i, time)
+            end
+        end
+
+        return matrix
+    end
+
+    def get_interval_count(intervals, day, start)
+        dow = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        count = 0
+
+        for i in 0..(intervals.length - 1) do
+            if (intervals[i]['workingday'] == dow[day] && intervals[i]['starthour'] <= start && intervals[i]['endhour'] > start)
+                count += intervals[i]['count']
+            end
+        end
+
+        return count
+    end
+
     protected
     def get_users_count
         return ActiveRecord::Base.connection.exec_query(

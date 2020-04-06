@@ -11,6 +11,18 @@ else
     existingRestaurant = nil
 end
 
+if params.has_key?(:rid)
+    riderUsername = get_user_name(params[:rid])
+    partTimeSchedule = nil
+    fullTimeSchedule = nil
+    riderSchedule = get_rider_schedule_matrix(params[:rid])
+else
+    riderUsername = nil
+    partTimeSchedule = get_part_time_schedule_matrix
+    fullTimeSchedule = get_full_time_schedule_matrix
+    riderSchedule = nil
+end
+
 react_component(
     'admins/Index',
     currentUser: current_user,
@@ -21,6 +33,10 @@ react_component(
     rolesUserrole: rolesUserrole,
     rolesAvailable: rolesAvailable,
     existingRestaurant: existingRestaurant,
-    allPromos: get_all_fds_promos
+    allPromos: get_all_fds_promos,
+    riderUsername: riderUsername,
+    partTimeSchedule: partTimeSchedule,
+    fullTimeSchedule: fullTimeSchedule,
+    riderSchedule: riderSchedule
 )
 %>

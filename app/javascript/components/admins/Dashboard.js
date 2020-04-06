@@ -10,6 +10,7 @@ const Dashboard = (props) => {
             <ul>
                 <li><Link to="/admin/promotions">HungryDB promotions</Link></li>
                 <li><Link to="/admin/roles">Roles management</Link></li>
+                <li><Link to="/admin/schedule">Rider schedule</Link></li>
                 <li><Link to="/admin/statistics">Statistics</Link></li>
             </ul>
        </div>

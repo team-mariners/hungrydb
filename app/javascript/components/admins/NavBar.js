@@ -10,6 +10,7 @@ const NavBar = () => {
         <AppBar isLoggedIn={true}>
             <Nav.Link href="/admin/promotions" style={navLinkStyle}>Promotions</Nav.Link>
             <Nav.Link href="/admin/roles" style={navLinkStyle}>Roles management</Nav.Link>
+            <Nav.Link href="/admin/schedule" style={navLinkStyle}>Rider schedule</Nav.Link>
             <Nav.Link href="/admin/statistics" style={navLinkStyle}>Statistics</Nav.Link>
         </AppBar>
     )

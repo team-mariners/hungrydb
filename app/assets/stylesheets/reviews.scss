@@ -3,3 +3,12 @@
     text-align: center;
     text-decoration: underline;
 }
+
+#review-list-item {
+    color: black;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100px;
+}

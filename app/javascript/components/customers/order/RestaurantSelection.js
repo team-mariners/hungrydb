@@ -23,22 +23,23 @@ class RestaurantSelection extends React.Component {
             if (!this.confirmChangeRestaurant(currentOrderRestaurant)) {
                 e.preventDefault();
                 return;
+            } else {
+                // Clears sessionStorage and resets order if no restaurant name
+                // in sessionStorage or customer chooses to change restaurant
+                secureStorage.clear();
             }
         }
-        // Clears sessionStorage and resets order if no restaurant name
-        // in sessionStorage or customer chooses to change restaurant
-        secureStorage.clear();
         this.props.onResetOrder();
         this.setSessionRestaurantInfo();
     }
 
     confirmChangeRestaurant(currentOrderRestaurant) {
         return confirm("WARNING: You can only order from ONE restaurant."
-                        + "\n\nYou have placed orders from "
-                        + currentOrderRestaurant.toUpperCase()
-                        + ". Your current orders will be removed if you choose another restaurant."
-                        + "\n\nAre you sure you want to choose "
-                        + this.restaurant.name.toUpperCase() + "?");
+            + "\n\nYou have placed orders from "
+            + currentOrderRestaurant.toUpperCase()
+            + ". Your current orders will be removed if you choose another restaurant."
+            + "\n\nAre you sure you want to choose "
+            + this.restaurant.name.toUpperCase() + "?");
     }
 
     setSessionRestaurantInfo() {
@@ -53,7 +54,7 @@ class RestaurantSelection extends React.Component {
                 <div className='restaurant-media'>
                     {/* Store the currently selected restaurant in sessionStorage */}
                     <Link to={this.menu_url} className='restaurant-media-link'
-                    onClick={this.handleSelectRestaurant} >
+                        onClick={this.handleSelectRestaurant} >
                         <Media>
                             <img
                                 width={130}

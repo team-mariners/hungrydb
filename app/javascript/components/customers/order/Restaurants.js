@@ -14,7 +14,7 @@ class Restaurants extends React.Component {
                 (response) => {
                     const retrieved_restaurants = response.data.restaurants;
                     this.setState({ restaurants: retrieved_restaurants });
-                    console.log("Restaurants: " + retrieved_restaurants);
+                    console.log(retrieved_restaurants);
                 })
             .catch(error => {
                 console.log(error)

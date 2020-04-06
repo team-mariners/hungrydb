@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrdersController < ApplicationController
+class OrderController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
@@ -61,5 +61,7 @@ class OrdersController < ApplicationController
     # Customers rewardPoints handled with Triggers
 
     ActiveRecord::Base.connection.commit_db_transaction
+
+    cookies[:oid] = stored_order['oid']
   end
 end

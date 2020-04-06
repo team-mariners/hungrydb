@@ -7,7 +7,8 @@ class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
             "SELECT COUNT(*) as total_orders, COALESCE(SUM(total_price - delivery_fee), 0) as total_cost
             FROM Orders
             WHERE restaurant_id = #{@restaurant["id"]}
-            AND date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}';"
+            AND date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}'
+            AND status = 'complete'"
         ).rows[0]
 
         popular_dishes = ActiveRecord::Base.connection.exec_query(
@@ -18,6 +19,7 @@ class Api::V1::Statistics::StatisticsController < Api::V1::BaseController
                 FROM Orders
                 WHERE restaurant_id = #{@restaurant["id"]}
                 AND date_time BETWEEN '#{params["startDate"]}' AND '#{params["endDate"]}'
+                AND status = 'complete'
             )
             GROUP BY food_id
             ORDER BY SUM(quantity) DESC

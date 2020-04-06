@@ -28,10 +28,12 @@ Rails.application.routes.draw do
       get 'promotions', to: 'admins#index'
       get 'roles', to: 'admins#index'
       get 'roles/:id', to: 'admins#index'
+      get 'schedule', to: 'admins#index'
+      get 'schedule/:rid', to: 'admins#index'
       get 'statistics', to: 'admins#index'
 
-      get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
+      post 'getriderid', to: 'admins#getriderid'
       post 'updaterole', to: 'admins#updaterole'
       post 'fdspromo', to: 'admins#fdspromo'
     end
@@ -58,7 +60,7 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    scope '/rider' do      
+    scope '/rider' do
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
       post 'clock_out', to: 'riders#clock_out'

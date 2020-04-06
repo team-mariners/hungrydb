@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import NavBar from './NavBar';
 import Promotions from './Promotions';
 import Roles from './Roles';
+import Schedule from './Schedule';
 import Statistics from './Statistics';
 
 const Index = (props) => {
@@ -30,6 +31,15 @@ const Index = (props) => {
                     userrole={props.rolesUserrole}
                     rolesAvailable={props.rolesAvailable}
                     existingRestaurant={props.existingRestaurant}
+                />
+            </Route>
+            <Route path="/admin/schedule">
+                <Schedule
+                    userid={props.params.rid}
+                    username={props.riderUsername}
+                    partTimeSchedule={props.partTimeSchedule}
+                    fullTimeSchedule={props.fullTimeSchedule}
+                    riderSchedule={props.riderSchedule}
                 />
             </Route>
             <Route exact path="/admin/statistics">

@@ -53,6 +53,11 @@ ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES (#{test_rider_1["user_id"]}, '2020-03-01', '2020-03-31', #{MONTHLY_BASE_SALARY});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
     VALUES (#{test_rider_1["user_id"]}, date_trunc('month', CURRENT_DATE),
         date_trunc('month', CURRENT_DATE) + interval '1 month - 1 day', #{MONTHLY_BASE_SALARY});"
 )

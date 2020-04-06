@@ -28,12 +28,12 @@ const MonthSummary = (props) => {
 
                 <tbody>
                     <tr>
-                        <td><b>Total Orders</b></td>
+                        <td><b>Total Completed Orders</b></td>
                         <td>{props.summary.total_orders}</td>
                     </tr>
 
                     <tr>
-                        <td><b>Total Orders Earning (Excluding Delivery)</b></td>
+                        <td><b>Total Completed Orders Earning (Excluding Delivery)</b></td>
                         <td>$ {parseFloat(props.summary.total_cost).toFixed(2)}</td>
                     </tr>
 

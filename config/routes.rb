@@ -23,10 +23,12 @@ Rails.application.routes.draw do
       get 'promotions', to: 'admins#index'
       get 'roles', to: 'admins#index'
       get 'roles/:id', to: 'admins#index'
+      get 'schedule', to: 'admins#index'
+      get 'schedule/:rid', to: 'admins#index'
       get 'statistics', to: 'admins#index'
 
-      get 'getuserid', to: 'admins#getuserid'
       post 'getuserid', to: 'admins#getuserid'
+      post 'getriderid', to: 'admins#getriderid'
       post 'updaterole', to: 'admins#updaterole'
       post 'fdspromo', to: 'admins#fdspromo'
     end

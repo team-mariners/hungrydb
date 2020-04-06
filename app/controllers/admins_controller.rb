@@ -18,6 +18,19 @@ class AdminsController < UsersController
         end
     end
 
+    def getriderid
+        if params.has_key?(:username)
+            userid = helpers.get_user_id(params[:username])
+            if (userid && helpers.user_has_role?(userid, 'rider'))
+                render plain: userid
+            else
+                render plain: false
+            end
+        else
+            render plain: false
+        end
+    end
+
     def updaterole
         if (params.has_key?(:userid) && params.has_key?(:oldrole) && params.has_key?(:newrole))
             if (helpers.get_user_role(params[:userid]) == params[:oldrole])

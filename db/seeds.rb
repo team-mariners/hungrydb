@@ -85,18 +85,18 @@ ActiveRecord::Base.connection.exec_query(
     ((SELECT id FROM users WHERE username = 'rider2'), 'part_time', 'now', 'now');"
 )
 
-test_rider_2 = ActiveRecord::Base.connection.exec_query(
+test_pt_rider_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT * FROM riders WHERE user_id = (SELECT id FROM users WHERE username = 'rider2');"
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO part_time_riders(id, weekly_base_salary)
-    VALUES (#{test_rider_2["user_id"]}, #{WEEKLY_BASE_SALARY});"
+    VALUES (#{test_pt_rider_1["user_id"]}, #{WEEKLY_BASE_SALARY});"
 )
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
-    VALUES (#{test_rider_2["user_id"]}, date_trunc('week', CURRENT_DATE),
+    VALUES (#{test_pt_rider_1["user_id"]}, date_trunc('week', CURRENT_DATE),
         date_trunc('week', CURRENT_DATE) + interval '1 week - 1 day', #{WEEKLY_BASE_SALARY});"
 )
 ActiveRecord::Base.connection.commit_db_transaction
@@ -384,7 +384,7 @@ in_progress_order_1 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time)
-    VALUES (#{in_progress_order_1['oid']}, #{test_rider_2["user_id"]}, 'Bikini Bottom',
+    VALUES (#{in_progress_order_1['oid']}, #{test_pt_rider_1["user_id"]}, 'Bikini Bottom',
             CURRENT_TIMESTAMP)"
 )
 
@@ -481,14 +481,15 @@ for i in 0..4 do
 end
 
 # ---------------------------------------------- Weekly Work Schedules -----------------------------------------------
+# For part time rider 1
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO weekly_work_schedules(w_type, pt_rider_id)
-    VALUES('part_time_rider', #{test_rider_2["user_id"]})"
+    VALUES('part_time_rider', #{test_pt_rider_1["user_id"]})"
 )
 
 test_wws_pt_1 = ActiveRecord::Base.connection.exec_query(
     "SELECT * FROM weekly_work_schedules 
-    WHERE pt_rider_id = #{test_rider_2["user_id"]}"
+    WHERE pt_rider_id = #{test_pt_rider_1["user_id"]}"
 ).to_a[0]
 
 # Mon 1100 - 1500; Wed 1300 - 1700; Fri 1100 - 1500
@@ -514,4 +515,16 @@ for i in 0..4 do
         "INSERT INTO Attendance(id, w_date, clock_in, clock_out, total_hours)
         VALUES(#{test_rider_1["user_id"]}, '#{date}', '#{clock_in}', '#{clock_out}', 8)"
     )    
+end
+
+# Part time rider 1
+for i in 0..2 do
+    date = (Date.parse('2020-04-06') + (i * 2).days).strftime('%F')
+    clock_in = (Time.parse('11:00') + ((i % 2) * 2).hours).strftime('%R') 
+    clock_out = (Time.parse('15:00') + ((i % 2) * 2).hours).strftime('%R')        
+    
+    ActiveRecord::Base.connection.exec_query(
+        "INSERT INTO Attendance(id, w_date, clock_in, clock_out, total_hours)
+        VALUES(#{test_pt_rider_1["user_id"]}, '#{date}', '#{clock_in}', '#{clock_out}', 4)"
+    )
 end

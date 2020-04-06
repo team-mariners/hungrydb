@@ -17,12 +17,13 @@ ActiveRecord::Base.connection.exec_query(
     ('customer', '#{Devise::Encryptor.digest(User, "12345678")}', 'customer@example.com', 'customer', 'now', 'now'),
     ('JohnDoe', '#{Devise::Encryptor.digest(User, "12345678")}', 'johnDoe@example.com', 'customer', 'now', 'now'),
     ('rider', '#{Devise::Encryptor.digest(User, "12345678")}', 'rider@example.com', 'rider', 'now', 'now'),
+    ('rider2', '#{Devise::Encryptor.digest(User, "12345678")}', 'rider2@example.com', 'rider', 'now', 'now'),
     ('manager', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager@example.com', 'manager', 'now', 'now'),
     ('manager2', '#{Devise::Encryptor.digest(User, "12345678")}', 'manager2@example.com', 'manager', 'now', 'now'),
     ('admin', '#{Devise::Encryptor.digest(User, "12345678")}', 'admin@example.com', 'admin', 'now', 'now');"
 )
 
-# Users with customer role
+# ------------------------------------------------ Customers -------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO customers(user_id, created_at, updated_at, reward_points) VALUES
     ((SELECT id FROM users WHERE username = 'customer'), 'now', 'now', 50);"
@@ -33,9 +34,21 @@ ActiveRecord::Base.connection.exec_query(
     ((SELECT id FROM users WHERE username = 'JohnDoe'), 'now', 'now', 50);"
 )
 
-MONTHLY_BASE_SALARY = 1200
+test_customer_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT *
+    FROM customers
+    WHERE user_id = (SELECT id FROM users WHERE username = 'customer');"
+).to_a[0]
 
-# Users with rider role
+test_customer_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT *
+    FROM customers
+    WHERE user_id = (SELECT id FROM users WHERE username = 'JohnDoe');"
+).to_a[0]
+
+# ------------------------------------------------ Full Time Riders ---------------------------------------------------
+MONTHLY_BASE_SALARY = 1200
+# Test rider 1
 ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
@@ -63,30 +76,44 @@ ActiveRecord::Base.connection.exec_query(
 )
 ActiveRecord::Base.connection.commit_db_transaction
 
-# Users with manager role
+# ------------------------------------------------ Part Time Riders ---------------------------------------------------
+WEEKLY_BASE_SALARY = 200
+# Test rider 2 (part time)
+ActiveRecord::Base.connection.begin_db_transaction
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
+    ((SELECT id FROM users WHERE username = 'rider2'), 'part_time', 'now', 'now');"
+)
+
+test_rider_2 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM riders WHERE user_id = (SELECT id FROM users WHERE username = 'rider2');"
+).to_a[0]
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO part_time_riders(id, weekly_base_salary)
+    VALUES (#{test_rider_2["user_id"]}, #{WEEKLY_BASE_SALARY});"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES (#{test_rider_2["user_id"]}, date_trunc('week', CURRENT_DATE),
+        date_trunc('week', CURRENT_DATE) + interval '1 week - 1 day', #{WEEKLY_BASE_SALARY});"
+)
+ActiveRecord::Base.connection.commit_db_transaction
+
+# ------------------------------------------------- Managers ----------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO managers(user_id, created_at, updated_at) VALUES
     ((SELECT id FROM users WHERE username = 'manager'), 'now', 'now'),
     ((SELECT id FROM users WHERE username = 'manager2'), 'now', 'now');"
 )
 
-# Users with admin role
+# -------------------------------------------------- Admin ------------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO admins(user_id, created_at, updated_at) VALUES
     ((SELECT id FROM users WHERE username = 'admin'), 'now', 'now');"
 )
 
-test_customer_1 = ActiveRecord::Base.connection.exec_query(
-    "SELECT *
-    FROM customers
-    WHERE user_id = (SELECT id FROM users WHERE username = 'customer');"
-).to_a[0]
-
-test_customer_2 = ActiveRecord::Base.connection.exec_query(
-    "SELECT *
-    FROM customers
-    WHERE user_id = (SELECT id FROM users WHERE username = 'JohnDoe');"
-).to_a[0]
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------
 test_manager_1 = ActiveRecord::Base.connection.exec_query(
@@ -357,7 +384,7 @@ in_progress_order_1 = ActiveRecord::Base.connection.exec_query(
 
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO Delivers(oid, rider_id, customer_location, order_time)
-    VALUES (#{in_progress_order_1['oid']}, (SELECT id FROM users WHERE username = 'rider'), 'Bikini Bottom',
+    VALUES (#{in_progress_order_1['oid']}, #{test_rider_2["user_id"]}, 'Bikini Bottom',
             CURRENT_TIMESTAMP)"
 )
 
@@ -412,7 +439,7 @@ ActiveRecord::Base.connection.exec_query(
 )
 ActiveRecord::Base.connection.commit_db_transaction
 
-# ---------------------------------------------- Work Schedules ---------------------------------------------------
+# ---------------------------------------------- Monthly Work Schedules -----------------------------------------------
 # Rider 1
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO monthly_work_schedules(rider_id)
@@ -450,6 +477,29 @@ for i in 0..4 do
     ActiveRecord::Base.connection.exec_query(
         "INSERT INTO working_intervals(workingDay, startHour, endHour, wws_id)
         VALUES('#{day}', '#{start_hour_2}', '#{end_hour_2}', #{test_wws_1["wws_id"]})"
+    )
+end
+
+# ---------------------------------------------- Weekly Work Schedules -----------------------------------------------
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO weekly_work_schedules(w_type, pt_rider_id)
+    VALUES('part_time_rider', #{test_rider_2["user_id"]})"
+)
+
+test_wws_pt_1 = ActiveRecord::Base.connection.exec_query(
+    "SELECT * FROM weekly_work_schedules 
+    WHERE pt_rider_id = #{test_rider_2["user_id"]}"
+).to_a[0]
+
+# Mon 1100 - 1500; Wed 1300 - 1700; Fri 1100 - 1500
+for i in 0..2 do
+    day = (Date.parse('2020-04-06') + (i * 2).days).strftime('%A')
+    start_hour = (Time.parse('11:00') + ((i % 2) * 2).hours).strftime('%R') 
+    end_hour = (Time.parse('15:00') + ((i % 2) * 2).hours).strftime('%R')        
+    
+    ActiveRecord::Base.connection.exec_query(
+        "INSERT INTO working_intervals(workingDay, startHour, endHour, wws_id)
+        VALUES('#{day}', '#{start_hour}', '#{end_hour}', #{test_wws_pt_1["wws_id"]})"
     )
 end
 

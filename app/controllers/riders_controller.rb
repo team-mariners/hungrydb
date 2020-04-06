@@ -153,7 +153,7 @@ class RidersController < UsersController
     salary = ActiveRecord::Base.connection.exec_query(
       "SELECT (base_salary + commission) AS salary, commission
       FROM rider_salaries
-      WHERE start_date = '#{params[:start_date]}'
+      WHERE start_date BETWEEN '#{params[:start_date]}' AND '#{params[:end_date]}'
       AND rider_id = #{current_user["id"]};"
     ).to_a[0] 
 

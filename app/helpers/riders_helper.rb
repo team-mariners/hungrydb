@@ -1,4 +1,19 @@
 module RidersHelper
+    def get_rider_info_bundle
+        rider = current_user.attributes
+
+        puts rider
+        
+        rider_type = ActiveRecord::Base.connection.exec_query(
+            "SELECT r_type
+            FROM riders
+            WHERE user_id = #{rider["id"]};"
+        ).to_a[0]["r_type"]
+
+        rider["r_type"] = rider_type        
+        return rider
+    end
+
     def get_riders_statistics
         output = {
             numWeeklyOrder: get_weekly_orders_count,
@@ -104,7 +119,7 @@ module RidersHelper
         return ActiveRecord::Base.connection.exec_query(
             "SELECT CASE r_type
                 WHEN 'full_time' THEN (SELECT monthlyBaseSalary FROM full_time_riders WHERE id = R.user_id)
-                WHEN 'part_time' THEN (SELECT weeklyBaseSalary FROM part_time_riders WHERE id = R.user_id)
+                WHEN 'part_time' THEN (SELECT weekly_base_salary FROM part_time_riders WHERE id = R.user_id)
              END as base_salary
             FROM Riders R
             WHERE user_id = #{current_user["id"]};"

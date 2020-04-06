@@ -7,7 +7,7 @@ class CreatePartTimeRiders < ActiveRecord::Migration[6.0]
       r_type rider_type NOT NULL DEFAULT 'part_time'
         CONSTRAINT part_time_riders_r_type
         CHECK (r_type = 'part_time'),
-      weeklyBaseSalary numeric NOT NULL,             
+      weekly_base_salary numeric NOT NULL,             
       FOREIGN KEY(id, r_type) REFERENCES riders(user_id, r_type)
         MATCH FULL
         ON DELETE CASCADE

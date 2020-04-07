@@ -148,7 +148,7 @@ class RidersController < UsersController
     render json: {name: target_column, time: time}
   end
 
-  def get_monthly_salary_summary
+  def get_salary_summary_data
     ActiveRecord::Base.connection.begin_db_transaction
     salary = ActiveRecord::Base.connection.exec_query(
       "SELECT (base_salary + commission) AS salary, commission

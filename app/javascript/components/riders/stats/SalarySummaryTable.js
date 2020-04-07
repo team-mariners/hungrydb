@@ -26,7 +26,7 @@ const SalarySummaryTable = (props) => {
                 </tr>
 
                 <tr>
-                    <td>Total number of orders</td>
+                    <td>Total number of completed orders</td>
                     <td>{props.summary.total_completed_orders}</td>
                 </tr>
 

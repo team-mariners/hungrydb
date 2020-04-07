@@ -29,7 +29,7 @@ const SalarySummaryPage = (props) => {
             endDate = moment(week).endOf('week').add(1, 'days').format(dateFormat);            
         }
 
-        axios.get(`/rider/monthly_salary_summary/?start_date=${startDate}&end_date=${endDate}`)
+        axios.get(`/rider/fetch_salary_summary/?start_date=${startDate}&end_date=${endDate}`)
             .then(result => {
                 console.log(result);
                 setSummary(result.data);

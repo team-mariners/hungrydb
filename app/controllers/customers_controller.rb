@@ -22,4 +22,6 @@ class CustomersController < UsersController
   def reviews; end
 
   def promotions; end
+
+  def order_in_progress; end
 end

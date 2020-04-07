@@ -11,6 +11,7 @@ import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
+import ReadOnlyCart from './readonlycart/ReadOnlyCart';
 import secureStorage from '../utilities/HungrySecureStorage';
 
 class Index extends React.Component {
@@ -20,7 +21,8 @@ class Index extends React.Component {
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
         this.handleRecordAmountDue = this.handleRecordAmountDue.bind(this);
         this.resetFoods = this.resetFoods.bind(this);
-        this.state = { orders: JSON.parse(secureStorage.getItem('foods')) };
+        this.state = {orders: JSON.parse(secureStorage.getItem('foods'))};
+        console.log("Active order present: " + secureStorage.getItem('active_order_present'));
     }
 
     // State passed upward from FoodModal through MenuItem & Menu to this
@@ -69,33 +71,43 @@ class Index extends React.Component {
     }
 
     render() {
-        return (
-            <Router>
-                <CustomerNavBar />
-                {/* <h6>{JSON.stringify(props.info)}</h6> */}
-                <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
+        if (secureStorage.getItem('active_order_present')) {
+            window.location.href = "/customer/order_in_progress";
+            return (
+                <Router>
+                    <Route exact path="/customer/order_in_progress" render={() => <ReadOnlyCart />} />
+                </Router>
+            )
+        } else {
+            return (
+                <Router>
+                    <CustomerNavBar />
+                    {/* <h6>{JSON.stringify(props.info)}</h6> */}
+                    <Route exact path="/" render={() => <Dashboard currentUser={this.props.info} />} />
 
-                <Route exact path="/customer/order"
-                    render={() => <Restaurants onResetOrder={this.resetFoods} />} />
+                    <Route exact path="/customer/order"
+                        render={() => <Restaurants onResetOrder={this.resetFoods} />} />
 
-                <Route exact path={"/customer/order/:rid/menu"}>
-                    <Menu onSubmitOrder={this.handleSubmitOrder} />
-                </Route>
+                    <Route exact path={"/customer/order/:rid/menu"}>
+                        <Menu onSubmitOrder={this.handleSubmitOrder} />
+                    </Route>
 
-                <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews />} />
+                    <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews />} />
 
-                <Route exact path="/customer/cart">
-                    <Cart orders={this.state.orders} points={this.props.info.points}
-                        onAmountDueSubmit={this.handleRecordAmountDue} />
-                </Route>
-                <Route exact path="/customer/complete_order" render={() => <CompleteOrder />} />
-                <Route exact path="/customer/review_order" render={() => <Review />} />
+                    <Route exact path="/customer/cart">
+                        <Cart orders={this.state.orders} points={this.props.info.points}
+                            onAmountDueSubmit={this.handleRecordAmountDue} />
+                    </Route>
 
-                <Route exact path="/customer/history" render={() => <OrderHistory />} />
-                <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
-                <Route exact path="/customer/promotions" render={() => <PromosPage />} />
-            </Router>
-        )
+                    <Route exact path="/customer/complete_order" render={() => <CompleteOrder />} />
+                    <Route exact path="/customer/review_order" render={() => <Review />} />
+
+                    <Route exact path="/customer/history" render={() => <OrderHistory />} />
+                    <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
+                    <Route exact path="/customer/promotions" render={() => <PromosPage />} />
+                </Router>
+            )
+        }
     }
 }
 

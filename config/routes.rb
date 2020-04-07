@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
+      get 'order_in_progress', to: 'customers#order_in_progress'
     end
 
     scope '/rider' do      

@@ -68,7 +68,7 @@ class CompleteOrder extends React.Component {
             ? parseFloat(secureStorage.getItem('points_offset'))
             : 0;
         order["payment_method"] = this.state.paymentMethod;
-        order["delivery_fee"] = 3.00
+        order["delivery_fee"] = secureStorage.getItem('delivery_fee');
         order["total_price"] = parseFloat(secureStorage.getItem('total_price'));
         order["status"] = "in progress";
         order["foods"] = JSON.parse(secureStorage.getItem('foods'));

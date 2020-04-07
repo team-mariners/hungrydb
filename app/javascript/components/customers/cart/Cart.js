@@ -28,6 +28,8 @@ class Cart extends React.Component {
         this.usedPromoId = JSON.parse(secureStorage.getItem("used_promo_id"));
         this.pointsOffset = secureStorage.getItem("points_offset")
                             ? secureStorage.getItem("points_offset") : 0;
+
+        this.deliveryFee = this.setDeliveryFee();
     }
 
     componentDidMount() {
@@ -42,6 +44,23 @@ class Cart extends React.Component {
             .catch(error => {
                 console.log(error);
             })
+    }
+
+    setDeliveryFee() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let day = date.getDate();
+        let morningPeakStart = new Date(year, month, day, 11);
+        let morningPeakEnd = new Date(year, month, day, 14);
+        let eveningPeakStart = new Date(year, month, day, 18);
+        let eveningPeakEnd = new Date(year, month, day, 21);
+        if ((date >= morningPeakStart && date <= morningPeakEnd) ||
+            (date >= eveningPeakStart && date <= eveningPeakEnd)) {
+            return 5.00;
+        } else {
+            return 3.00;
+        }
     }
 
     handleDeleteItem(foodName) {
@@ -117,7 +136,7 @@ class Cart extends React.Component {
             alert("Your order cost is lower than the minimum required by the restaurant.");
             e.preventDefault();
         }
-        this.props.onOrderSubmit(this.totalCost + 3, this.amountDue);
+        this.props.onOrderSubmit(this.totalCost, this.deliveryFee, this.amountDue);
     }
 
     render() {
@@ -144,8 +163,8 @@ class Cart extends React.Component {
                 this.totalCost += foodDetails.price * foodDetails.quantity;
             }
         }
-        this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
-            - this.pointsOffset + 3).toFixed(2);
+        this.amountDue = (this.totalCost + this.deliveryFee - this.totalCost * this.discountPercentage
+            - this.pointsOffset).toFixed(2);
         return (
             <div className='cart-container'>
                 <div><br /></div>
@@ -182,12 +201,12 @@ class Cart extends React.Component {
                 <div><br /></div>
 
                 <h4>
-                    Offset (10 cents/point): -${parseInt(this.pointsOffset).toFixed(2)}
+                    Offset (10 cents/point): -${parseFloat(this.pointsOffset).toFixed(2)}
                 </h4>
                 <div><br /><br /><br /><br /></div>
 
                 <h4>
-                    Delivery Fee: $3.00
+                    Delivery Fee: ${this.deliveryFee.toFixed(2)}
                 </h4>
 
                 <h2 className='cart-amount-due'>

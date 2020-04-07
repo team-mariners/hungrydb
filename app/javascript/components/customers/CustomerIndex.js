@@ -64,8 +64,9 @@ class Index extends React.Component {
         this.setState({ orders: JSON.parse(secureStorage.getItem('foods')) });
     }
 
-    handleRecordCosts(latestTotalPrice, latestAmount) {
-        secureStorage.setItem('total_price', latestTotalPrice);
+    handleRecordCosts(latestTotalCost, latestDeliveryFee, latestAmount) {
+        secureStorage.setItem('total_price', latestTotalCost + latestDeliveryFee);
+        secureStorage.setItem('delivery_fee', latestDeliveryFee);
         secureStorage.setItem('amount_due', latestAmount);
     }
 

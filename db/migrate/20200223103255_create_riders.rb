@@ -9,7 +9,6 @@ class CreateRiders < ActiveRecord::Migration[6.0]
       r_type rider_type NOT NULL,
       currLocation varchar(300),
       status varchar(300) NOT NULL DEFAULT '',
-      comission numeric NOT NULL DEFAULT 0,
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       UNIQUE(user_id, r_type),

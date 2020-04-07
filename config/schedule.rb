@@ -25,3 +25,11 @@ require File.expand_path('../config/environment', __dir__)
 every :day, at: Time.zone.parse('12:00am') do
     rake "database:reset_num_orders"
 end
+
+every :month do
+    rake "database:create_full_time_riders_salary"
+end
+
+every :week do
+    rake "database:create_part_time_riders_salary"
+end

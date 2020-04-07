@@ -24,7 +24,7 @@ const DashBoard = (props) => {
 
     return (
         <div className="p-3">
-            <h1>Hello {props.current_user.username}!</h1>
+            <h1>Hello {props.info.username}!</h1>
             <TimeRecorder
                 clockedInData={clockedInData}
                 setClockedInData={setClockedInData}

@@ -11,6 +11,7 @@ const RiderNaviBar = () => {
             <Nav className="justify-content-end">
                 {/* <Nav.Link href="/rider" style={navLinkstyle}>Home</Nav.Link> */}
                 <Nav.Link href="/rider/deliveries" style={navLinkstyle}>Deliveries</Nav.Link>
+                <Nav.Link href="/rider/salary_summary" style={navLinkstyle}>Stats</Nav.Link>
                 {/* <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link> */}
                 {/* <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link> */}
             </Nav>

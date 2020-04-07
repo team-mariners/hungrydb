@@ -46,6 +46,12 @@ const DeliveriesBoard = (props) => {
     }, [deliveriesType]);
 
     useEffect(() => {
+        if (visibleDeliveries.length === 0) {
+            console.log("No more visible items");
+            setListItems([]);
+            return;
+        }
+
         setListItems(visibleDeliveries.map(delivery => {
             return (
                 <ListGroupItem key={delivery.oid}>

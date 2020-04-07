@@ -11,6 +11,7 @@ import ReviewHistory from './reviews/ReviewHistory';
 import PromosPage from './promotions/PromosPage';
 import Restaurants from './order/Restaurants';
 import RestaurantReviews from './order/RestaurantReviews';
+import FoodReviews from './order/FoodReviews';
 import secureStorage from '../utilities/HungrySecureStorage';
 
 class Index extends React.Component {
@@ -83,6 +84,7 @@ class Index extends React.Component {
                 </Route>
 
                 <Route exact path="/restaurants/:rid/reviews" render={() => <RestaurantReviews />} />
+                <Route exact path="/food/:food_name/reviews" render={() => <FoodReviews />} />
 
                 <Route exact path="/customer/cart">
                     <Cart orders={this.state.orders} points={this.props.info.points}

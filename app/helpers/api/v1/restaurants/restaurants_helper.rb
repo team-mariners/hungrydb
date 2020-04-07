@@ -38,7 +38,7 @@ module Api::V1::Restaurants::RestaurantsHelper
     curr_res_review_query = "SELECT R.oid, R.rider_id, R.rider_rating, R.food_review
                             FROM Reviews R INNER JOIN Orders O
                                  ON R.oid = O.oid and O.restaurant_id = #{rid}
-                            ORDER BY O.date_time"
+                            ORDER BY O.date_time DESC"
     ActiveRecord::Base.connection.execute(curr_res_review_query)
   end
 end

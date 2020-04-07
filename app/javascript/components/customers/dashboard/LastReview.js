@@ -1,5 +1,6 @@
 import React from 'react';
 import ReviewItem from '../reviews/ReviewItem';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 class LastReview extends React.Component {
     constructor(props) {
@@ -31,7 +32,9 @@ class LastReview extends React.Component {
             return (
                 <React.Fragment>
                     <h3>Previous Review:</h3>
-                    <ReviewItem review={this.state.lastReview} nameShown={"restaurant"}/>
+                    <ListGroup style={{marginLeft: "auto", marginRight: "auto"}}>
+                        <ReviewItem review={this.state.lastReview} nameShown={"restaurant"} />
+                    </ListGroup>
                     <br />
                     <a href="customer/reviews">See more reviews</a>
                 </React.Fragment>

@@ -13,6 +13,7 @@ class Review extends React.Component {
         this.handleChangeRiderRating = this.handleChangeRiderRating.bind(this);
         this.handleChangeFoodReview = this.handleChangeFoodReview.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSkip = this.handleSkip.bind(this);
         this.state = {riderRating: null, foodReview: ""}
         console.log(document.cookie)
     }
@@ -61,6 +62,12 @@ class Review extends React.Component {
             })
 
         secureStorage.clear();
+        document.cookie = "oid=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    }
+
+    handleSkip() {
+        secureStorage.clear();
+        document.cookie = "oid=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     }
 
     render() {
@@ -91,7 +98,7 @@ class Review extends React.Component {
                     
                     <div>
                         <Button variant="light" type="submit" size="lg" href="/"
-                            onClick={() => secureStorage.clear()}>
+                            onClick={this.handleSkip}>
                             Skip
                         </Button>
                     </div>

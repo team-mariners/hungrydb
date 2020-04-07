@@ -9,10 +9,8 @@ const RiderNaviBar = () => {
     return (
         <AppBar isLoggedIn={true}>
             <Nav className="justify-content-end">
-                {/* <Nav.Link href="/rider" style={navLinkstyle}>Home</Nav.Link> */}
                 <Nav.Link href="/rider/deliveries" style={navLinkstyle}>Deliveries</Nav.Link>
-                {/* <Nav.Link href="/jobs" style={{ color: 'white' }}>Job</Nav.Link> */}
-                {/* <Nav.Link href="/jobsHistory" style={{ color: 'white' }}>Orders</Nav.Link> */}
+                <Nav.Link href="/rider/schedule" style={navLinkstyle}>Schedule</Nav.Link>
             </Nav>
         </AppBar>
     )

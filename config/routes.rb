@@ -61,13 +61,14 @@ Rails.application.routes.draw do
     end
 
     scope '/rider' do
+      get 'schedule', to: 'riders#schedule'
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
       post 'clock_out', to: 'riders#clock_out'
       get 'deliveries', to: 'riders#index'
       get 'all_deliveries', to: 'riders#get_deliveries'
       get 'order/:id', to: 'riders#get_order'
-      post 'update_time/:id', to: 'riders#update_time'
+      post 'update_time/:id', to: 'riders#update_time'      
     end
 
     resources :restaurants, except: %i[new edit show destroy]

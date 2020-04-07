@@ -18,7 +18,7 @@ class Index extends React.Component {
         super(props);
         console.log(props);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
-        this.handleRecordAmountDue = this.handleRecordAmountDue.bind(this);
+        this.handleRecordCosts = this.handleRecordCosts.bind(this);
         this.resetFoods = this.resetFoods.bind(this);
         this.state = { orders: JSON.parse(secureStorage.getItem('foods')) };
     }
@@ -64,7 +64,9 @@ class Index extends React.Component {
         this.setState({ orders: JSON.parse(secureStorage.getItem('foods')) });
     }
 
-    handleRecordAmountDue(latestAmount) {
+    handleRecordCosts(latestTotalCost, latestDeliveryFee, latestAmount) {
+        secureStorage.setItem('total_price', latestTotalCost + latestDeliveryFee);
+        secureStorage.setItem('delivery_fee', latestDeliveryFee);
         secureStorage.setItem('amount_due', latestAmount);
     }
 
@@ -86,7 +88,7 @@ class Index extends React.Component {
 
                 <Route exact path="/customer/cart">
                     <Cart orders={this.state.orders} points={this.props.info.points}
-                        onAmountDueSubmit={this.handleRecordAmountDue} />
+                        onOrderSubmit={this.handleRecordCosts} />
                 </Route>
                 <Route exact path="/customer/complete_order" render={() => <CompleteOrder />} />
                 <Route exact path="/customer/review_order" render={() => <Review />} />

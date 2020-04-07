@@ -64,12 +64,12 @@ class CompleteOrder extends React.Component {
             ? JSON.parse(secureStorage.getItem('used_promo_id'))
             : "null";
         order["restaurant_id"] = parseInt(secureStorage.getItem('restaurant_id'));
-        order["point_offset"] = secureStorage.getItem('points')
-            ? parseInt(secureStorage.getItem('points'))
+        order["point_offset"] = secureStorage.getItem('points_offset')
+            ? parseFloat(secureStorage.getItem('points_offset'))
             : 0;
         order["payment_method"] = this.state.paymentMethod;
-        order["delivery_fee"] = 3.00
-        order["total_price"] = parseFloat(secureStorage.getItem('amount_due'));
+        order["delivery_fee"] = secureStorage.getItem('delivery_fee');
+        order["total_price"] = parseFloat(secureStorage.getItem('total_price'));
         order["status"] = "in progress";
         order["foods"] = JSON.parse(secureStorage.getItem('foods'));
         order["customer_location"] = this.state.address;
@@ -77,7 +77,7 @@ class CompleteOrder extends React.Component {
             .then((result) => {
                 console.log(result);
                 alert("Your order has been placed." + "\nYou used "
-                    + Math.floor(secureStorage.getItem('points')) + " and earned "
+                    + parseInt(secureStorage.getItem('points_offset') * 10) + " and earned "
                     + Math.floor(secureStorage.getItem('amount_due')) + " points!");
             }).catch((error) => {
                 console.log(error);
@@ -111,7 +111,8 @@ class CompleteOrder extends React.Component {
     render() {
         if (!secureStorage.getItem('restaurant_id') ||
             !secureStorage.getItem('amount_due') ||
-            !secureStorage.getItem('foods')) {
+            !secureStorage.getItem('foods') ||
+            !secureStorage.getItem('total_price')) {
             { secureStorage.clear() }
             return <h3>An error has occurred. Please place your order again.</h3>
         }

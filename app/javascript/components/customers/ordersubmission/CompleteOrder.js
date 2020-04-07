@@ -69,7 +69,7 @@ class CompleteOrder extends React.Component {
             : 0;
         order["payment_method"] = this.state.paymentMethod;
         order["delivery_fee"] = 3.00
-        order["total_price"] = parseFloat(secureStorage.getItem('amount_due'));
+        order["total_price"] = parseFloat(secureStorage.getItem('total_price'));
         order["status"] = "in progress";
         order["foods"] = JSON.parse(secureStorage.getItem('foods'));
         order["customer_location"] = this.state.address;
@@ -111,7 +111,8 @@ class CompleteOrder extends React.Component {
     render() {
         if (!secureStorage.getItem('restaurant_id') ||
             !secureStorage.getItem('amount_due') ||
-            !secureStorage.getItem('foods')) {
+            !secureStorage.getItem('foods') ||
+            !secureStorage.getItem('total_price')) {
             { secureStorage.clear() }
             return <h3>An error has occurred. Please place your order again.</h3>
         }

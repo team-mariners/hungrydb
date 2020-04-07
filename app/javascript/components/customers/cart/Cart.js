@@ -116,7 +116,7 @@ class Cart extends React.Component {
             alert("Your order cost is lower than the minimum required by the restaurant.");
             e.preventDefault();
         }
-        this.props.onAmountDueSubmit(this.amountDue);
+        this.props.onOrderSubmit(this.totalCost + 3, this.amountDue);
     }
 
     render() {

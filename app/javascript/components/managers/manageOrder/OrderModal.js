@@ -14,7 +14,7 @@ const OrderModal = (props) => {
     if (!props.order) {
         return null;
     }
-
+    
     const tableRows = props.order.foods.map(food => {
         return (
             <tr key={food.food_id}>
@@ -39,8 +39,8 @@ const OrderModal = (props) => {
         }
     }
 
-    const orderDateTime = props.isRider ? null: (
-        <p><b>Order date & time: </b>{props.order.date_time.format(dateTimeFormat)}</p>
+    const riderName = props.isRider ? null : (
+        <p><b>Rider: </b>{props.order.rider_name}</p>
     );
 
     const discountInformation = props.isRider ? null : (
@@ -51,15 +51,18 @@ const OrderModal = (props) => {
             {review}
         </React.Fragment>
     );
+
+    console.log(props.order);
     
     return (
         <Modal {...props}>
             <h1>Order Details</h1>
             <p><b>Order id: </b>{props.order.oid}</p>
             <p><b>Customer: </b>{props.order.customer_name}</p>
-            {orderDateTime}
+            <p><b>Order date & time: </b>{props.order.date_time.format(dateTimeFormat)}</p>
             <p><b>Payment method: </b>{props.order.payment_method}</p>
             {discountInformation}
+            {riderName}
 
             <Table striped bordered className="my-4">
                 <thead>

@@ -5,6 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 import RiderNaviBar from './common/RiderNaviBar';
 import DashBoard from './DashBoard';
 import ManageDeliveries from './ManageDeliveries';
+import WorkSchedulePage from './WorkSchedulePage';
 import SalarySummaryPage from './SalarySummaryPage';
 
 const csrfToken = document.querySelector('[name=csrf-token').content;
@@ -50,6 +51,7 @@ const Index = (props) => {
                <Route exact path="/" render={() => <DashBoard {...props} {...alerts}/>}/>
                <Route exact path="/rider/deliveries" render={() => <ManageDeliveries {...alerts}/>}/>
                <Route exact path="/rider/salary_summary" render={() => <SalarySummaryPage {...props}/>}/>
+               <Route exact path="/rider/schedule" render={() => <WorkSchedulePage {...props}/>}/>
             </Switch>            
         </Router>
     )

@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
     scope '/rider' do      
       get 'deliveries', to: 'riders#index'
+      get 'schedule', to: 'riders#schedule'
       get 'salary_summary', to: 'riders#index'
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'

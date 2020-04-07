@@ -32,6 +32,7 @@ class LastReview extends React.Component {
                 <React.Fragment>
                     <h3>Previous Review:</h3>
                     <ReviewItem review={this.state.lastReview} nameShown={"restaurant"}/>
+                    <br />
                     <a href="customer/reviews">See more reviews</a>
                 </React.Fragment>
             )

@@ -47,7 +47,6 @@ const DeliveriesBoard = (props) => {
 
     useEffect(() => {
         if (visibleDeliveries.length === 0) {
-            console.log("No more visible items");
             setListItems([]);
             return;
         }

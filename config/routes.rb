@@ -13,11 +13,6 @@ Rails.application.routes.draw do
 
     get 'profile', to: 'users/registrations#edit'
     post 'profile', to: 'users/registrations#update'
-
-    get 'rider', to: 'pages#rider'
-    get 'jobs', to: 'pages#jobs'
-    get 'jobsHistory', to: 'pages#jobsHistory'
-
   end
 
   authenticated :user do
@@ -60,15 +55,17 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    scope '/rider' do
+    scope '/rider' do      
+      get 'deliveries', to: 'riders#index'
       get 'schedule', to: 'riders#schedule'
+      get 'salary_summary', to: 'riders#index'
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
-      post 'clock_out', to: 'riders#clock_out'
-      get 'deliveries', to: 'riders#index'
+      post 'clock_out', to: 'riders#clock_out'      
       get 'all_deliveries', to: 'riders#get_deliveries'
       get 'order/:id', to: 'riders#get_order'
       post 'update_time/:id', to: 'riders#update_time'      
+      get 'fetch_salary_summary', to: 'riders#get_salary_summary_data'
     end
 
     resources :restaurants, except: %i[new edit show destroy]

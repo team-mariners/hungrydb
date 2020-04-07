@@ -94,7 +94,7 @@ class RidersController < UsersController
   def get_order
     ActiveRecord::Base.connection.begin_db_transaction
     order = ActiveRecord::Base.connection.exec_query(
-      "SELECT oid, payment_method, delivery_fee, (total_price - delivery_fee) AS total_cost,
+      "SELECT oid, date_time, payment_method, delivery_fee, (total_price - delivery_fee) AS total_cost,
         (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name
       FROM Orders
       WHERE oid = #{params["id"]};"
@@ -146,6 +146,41 @@ class RidersController < UsersController
     ActiveRecord::Base.connection.commit_db_transaction
 
     render json: {name: target_column, time: time}
+  end
+
+  def get_salary_summary_data
+    ActiveRecord::Base.connection.begin_db_transaction
+    salary = ActiveRecord::Base.connection.exec_query(
+      "SELECT (base_salary + commission) AS salary, commission
+      FROM rider_salaries
+      WHERE start_date BETWEEN '#{params[:start_date]}' AND '#{params[:end_date]}'
+      AND rider_id = #{current_user["id"]};"
+    ).to_a[0] 
+
+    salary = salary.nil? ? {salary: nil, commission: nil} : salary
+
+    total_completed_orders = ActiveRecord::Base.connection.exec_query(
+      "SELECT count(*) AS total_completed_orders
+      FROM Orders
+      WHERE oid IN (
+        SELECT oid
+        FROM Delivers
+        WHERE rider_id = #{current_user["id"]}
+      )
+      AND status = 'complete'
+      AND date_time BETWEEN '#{params["start_date"]}' AND '#{params["end_date"]}';"
+    ).to_a[0]    
+
+    total_hours_worked = ActiveRecord::Base.connection.exec_query(
+      "SELECT COALESCE(sum(total_hours), 0) AS total_hours_worked
+      FROM attendance
+      WHERE id = #{current_user["id"]}
+      AND w_date BETWEEN '#{params["start_date"]}' AND '#{params["end_date"]}';"
+    ).to_a[0]
+    ActiveRecord::Base.connection.commit_db_transaction
+
+    render json: {**(salary.symbolize_keys), **(total_completed_orders.symbolize_keys),
+      **(total_hours_worked.symbolize_keys)}
   end
 
   private

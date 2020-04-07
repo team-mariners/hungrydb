@@ -5,7 +5,11 @@ import Alert from 'react-bootstrap/Alert';
 import RiderNaviBar from './common/RiderNaviBar';
 import DashBoard from './DashBoard';
 import ManageDeliveries from './ManageDeliveries';
+<<<<<<< HEAD
 import WorkSchedulePage from './WorkSchedulePage';
+=======
+import SalarySummaryPage from './SalarySummaryPage';
+>>>>>>> origin/master
 
 const csrfToken = document.querySelector('[name=csrf-token').content;
 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
@@ -47,9 +51,15 @@ const Index = (props) => {
                 {alertMessage}
             </Alert>
             <Switch>
+<<<<<<< HEAD
                 <Route exact path="/" render={() => <DashBoard {...props} {...alerts}/>}/>
                 <Route exact path="/rider/deliveries" render={() => <ManageDeliveries {...alerts}/>}/>
                 <Route exact path="/rider/schedule" render={() => <WorkSchedulePage {...props}/>}/>
+=======
+               <Route exact path="/" render={() => <DashBoard {...props} {...alerts}/>}/>
+               <Route exact path="/rider/deliveries" render={() => <ManageDeliveries {...alerts}/>}/>
+               <Route exact path="/rider/salary_summary" render={() => <SalarySummaryPage {...props}/>}/>
+>>>>>>> origin/master
             </Switch>            
         </Router>
     )

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import moment from 'moment-timezone';
 import Button from 'react-bootstrap/Button';
 import CustomCard from '../../utilities/CustomCard/CustomCard';
 import CardFooter from '../../utilities/CustomCard/CardFooter';
@@ -19,8 +20,8 @@ const Delivery = (props) => {
         // If the rider wants to view an order and the order has not been fetched yet
         if (isLoadOrder) {
             axios.get(`/rider/order/${props.delivery.oid}`)
-                .then(result => {
-                    console.log(result);
+                .then(result => {                    
+                    result.data.date_time = moment(result.date_time);
                     setOrder(result.data);
                     showOrder(true);
                     loadOrder(false);

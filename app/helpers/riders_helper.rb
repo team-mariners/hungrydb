@@ -13,4 +13,9 @@ module RidersHelper
         rider["r_type"] = rider_type        
         return rider
     end
+
+    def get_rider_schedule
+        # From admin helpers
+        return get_rider_schedule_matrix(current_user["id"])
+    end
 end

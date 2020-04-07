@@ -118,7 +118,7 @@ module RidersHelper
     def get_base_salary
         return ActiveRecord::Base.connection.exec_query(
             "SELECT CASE r_type
-                WHEN 'full_time' THEN (SELECT monthlyBaseSalary FROM full_time_riders WHERE id = R.user_id)
+                WHEN 'full_time' THEN (SELECT monthly_base_salary FROM full_time_riders WHERE id = R.user_id)
                 WHEN 'part_time' THEN (SELECT weekly_base_salary FROM part_time_riders WHERE id = R.user_id)
              END as base_salary
             FROM Riders R

@@ -7,7 +7,7 @@ class CreateFullTimeRiders < ActiveRecord::Migration[6.0]
       r_type rider_type NOT NULL DEFAULT 'full_time'
         CONSTRAINT full_time_riders_r_type
         CHECK (r_type = 'full_time'),
-      monthlyBaseSalary numeric NOT NULL,    
+      monthly_base_salary numeric NOT NULL,    
       FOREIGN KEY(id, r_type) REFERENCES riders(user_id, r_type)
         MATCH FULL
         ON DELETE CASCADE

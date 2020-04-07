@@ -60,7 +60,7 @@ test_rider_1 = ActiveRecord::Base.connection.exec_query(
 ).to_a[0]
 
 ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO full_time_riders(id, monthlyBaseSalary)
+    "INSERT INTO full_time_riders(id, monthly_base_salary)
     VALUES (#{test_rider_1["user_id"]}, #{MONTHLY_BASE_SALARY});"
 )
 

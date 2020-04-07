@@ -94,7 +94,7 @@ class RidersController < UsersController
   def get_order
     ActiveRecord::Base.connection.begin_db_transaction
     order = ActiveRecord::Base.connection.exec_query(
-      "SELECT oid, payment_method, delivery_fee, (total_price - delivery_fee) AS total_cost,
+      "SELECT oid, date_time, payment_method, delivery_fee, (total_price - delivery_fee) AS total_cost,
         (SELECT username FROM Users WHERE id = Orders.customer_id) AS customer_name
       FROM Orders
       WHERE oid = #{params["id"]};"

@@ -11,7 +11,7 @@ const CartPointsForm = (props) => {
                     ? props.points
                     : parseInt(props.amountDue);
 
-    let infotext = "Use Points (You can use " + maxPoints + ")";
+    let infotext = "Use Points: (You can use " + maxPoints + ")";
 
     return (
         <Form inline onSubmit={props.handleSubmit}>

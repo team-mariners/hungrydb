@@ -9,7 +9,6 @@ const FoodReview = (props) => {
     return (
         <React.Fragment>
             <h2 className='review-food-title'>
-                {/* Placeholder name */}
                 Review food from {secureStorage.getItem('restaurant_name')}
             </h2>
 

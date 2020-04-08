@@ -26,7 +26,10 @@ class Cart extends React.Component {
         this.discountPercentage = secureStorage.getItem("discount_percent");
         this.usedPromoCode = JSON.parse(secureStorage.getItem("used_promo_code"));
         this.usedPromoId = JSON.parse(secureStorage.getItem("used_promo_id"));
-        this.points = secureStorage.getItem("points") ? secureStorage.getItem("points") : 0;
+        this.pointsOffset = secureStorage.getItem("points_offset")
+                            ? secureStorage.getItem("points_offset") : 0;
+
+        this.deliveryFee = this.setDeliveryFee();
     }
 
     componentDidMount() {
@@ -41,6 +44,23 @@ class Cart extends React.Component {
             .catch(error => {
                 console.log(error);
             })
+    }
+
+    setDeliveryFee() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let day = date.getDate();
+        let morningPeakStart = new Date(year, month, day, 11);
+        let morningPeakEnd = new Date(year, month, day, 14);
+        let eveningPeakStart = new Date(year, month, day, 18);
+        let eveningPeakEnd = new Date(year, month, day, 21);
+        if ((date >= morningPeakStart && date <= morningPeakEnd) ||
+            (date >= eveningPeakStart && date <= eveningPeakEnd)) {
+            return 5.00;
+        } else {
+            return 3.00;
+        }
     }
 
     handleDeleteItem(foodName) {
@@ -105,7 +125,7 @@ class Cart extends React.Component {
 
     handleSubmitPoints(e) {
         if (parseInt(this.state.entered_points) >= 0) {
-            secureStorage.setItem("points", this.state.entered_points);
+            secureStorage.setItem("points_offset", this.state.entered_points / 10);
         } else {
             e.preventDefault();
         }
@@ -116,7 +136,7 @@ class Cart extends React.Component {
             alert("Your order cost is lower than the minimum required by the restaurant.");
             e.preventDefault();
         }
-        this.props.onAmountDueSubmit(this.amountDue);
+        this.props.onOrderSubmit(this.totalCost, this.deliveryFee, this.amountDue);
     }
 
     render() {
@@ -143,8 +163,8 @@ class Cart extends React.Component {
                 this.totalCost += foodDetails.price * foodDetails.quantity;
             }
         }
-        this.amountDue = (this.totalCost - this.totalCost * this.discountPercentage
-            - this.points + 3).toFixed(2);
+        this.amountDue = (this.totalCost + this.deliveryFee - this.totalCost * this.discountPercentage
+            - this.pointsOffset).toFixed(2);
         return (
             <div className='cart-container'>
                 <div><br /></div>
@@ -161,10 +181,7 @@ class Cart extends React.Component {
                 <h4>
                     Total: ${this.totalCost.toFixed(2)}
                 </h4>
-                <h4>
-                    Delivery Fee: $3.00
-                    </h4>
-                <div><br /><br /></div>
+                <div><br /><br /><br /></div>
 
                 <CartPromoForm
                     handleSubmit={this.handleSubmitPromo}
@@ -175,7 +192,7 @@ class Cart extends React.Component {
                     Discount: -${(this.totalCost * this.discountPercentage).toFixed(2)} (
                         {this.discountPercentage * 100}%)
                     </h4>
-                <div><br /><br /></div>
+                <div><br /><br /><br /></div>
 
                 <CartPointsForm
                     points={this.props.points} amountDue={this.amountDue}
@@ -184,9 +201,13 @@ class Cart extends React.Component {
                 <div><br /></div>
 
                 <h4>
-                    Offset: -${parseInt(this.points).toFixed(2)}
+                    Offset (10 cents/point): -${parseFloat(this.pointsOffset).toFixed(2)}
                 </h4>
-                <div><br /><br /></div>
+                <div><br /><br /><br /><br /></div>
+
+                <h4>
+                    Delivery Fee: ${this.deliveryFee.toFixed(2)}
+                </h4>
 
                 <h2 className='cart-amount-due'>
                     Amount Due: ${this.amountDue}

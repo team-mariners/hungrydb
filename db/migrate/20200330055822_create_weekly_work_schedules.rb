@@ -15,12 +15,12 @@ class CreateWeeklyWorkSchedules < ActiveRecord::Migration[6.0]
       CREATE TABLE weekly_work_schedules (            
         wws_id bigint PRIMARY KEY DEFAULT nextval('wws_id_seq'),
         w_type wws_type NOT NULL,
-        pt_rider_id bigint REFERENCES part_time_riders ON DELETE CASCADE
+        pt_rider_id bigint UNIQUE REFERENCES part_time_riders ON DELETE CASCADE
           CONSTRAINT wws_pt_rider_id 
           CHECK(((w_type <> 'part_time_rider') AND (pt_rider_id IS NULL))
             OR ((w_type = 'part_time_rider') AND (pt_rider_id IS NOT NULL))
           ),        
-        mws_id bigint REFERENCES monthly_work_schedules ON DELETE CASCADE               
+        mws_id bigint UNIQUE REFERENCES monthly_work_schedules ON DELETE CASCADE               
           CONSTRAINT wws_mws_id
           CHECK(((w_type <> 'monthly_work_schedule') AND (mws_id IS NULL))
             OR ((w_type = 'monthly_work_schedule') AND (mws_id IS NOT NULL))

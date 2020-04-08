@@ -1,4 +1,4 @@
-class CreateFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
+class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
   # For full-time riders, check if each work day consist of 8 work hours
   # comprising of two 4-hour periods with an hour break in between
   def up

@@ -6,6 +6,7 @@ import ReadOnlyCartPromoDisplay from '../readonlycart/ReadOnlyCartPromoDisplay';
 import ReadOnlyCartPointsDisplay from '../readonlycart/ReadOnlyCartPointsDisplay';
 import secureStorage from '../../utilities/HungrySecureStorage';
 import CustomerNavBar from '../CustomerNavBar';
+import Button from 'react-bootstrap/Button';
 
 class ReadOnlyCart extends React.Component {
     constructor(props) {
@@ -84,6 +85,11 @@ class ReadOnlyCart extends React.Component {
                     <h2 className='cart-amount-due'>
                         Paid: ${secureStorage.getItem('amount_due')}
                     </h2>
+                    <div><br /><br /></div>
+
+                    <Button href="/customer/review_order" variant="danger" size="lg">
+                        COMPLETE
+                    </Button>
                     <div><br /><br /></div>
                 </div>
             </React.Fragment>

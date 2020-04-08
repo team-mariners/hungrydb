@@ -32,7 +32,7 @@ class LastReview extends React.Component {
             return (
                 <React.Fragment>
                     <h3>Previous Review:</h3>
-                    <ListGroup style={{marginLeft: "auto", marginRight: "auto"}}>
+                    <ListGroup style={{marginLeft: "auto", marginRight: "auto", width: "375px"}}>
                         <ReviewItem review={this.state.lastReview} nameShown={"restaurant"} />
                     </ListGroup>
                     <a href="customer/reviews">See more reviews</a>

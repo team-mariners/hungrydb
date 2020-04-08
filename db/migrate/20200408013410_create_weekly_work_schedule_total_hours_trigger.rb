@@ -1,4 +1,5 @@
 class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
+  # Check if the total number of hours in each weekly work schedule is at least 10 and at most 48
   def up
     execute <<-SQL
       CREATE OR REPLACE FUNCTION check_weekly_work_schedule_duration() RETURNS TRIGGER AS $$

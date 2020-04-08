@@ -66,6 +66,10 @@ class Review extends React.Component {
     }
 
     handleSkip() {
+        if (!confirm("Confirm Skip Review?")) {
+            e.preventDefault();
+            return;
+        }
         secureStorage.clear();
         document.cookie = "oid=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     }

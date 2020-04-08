@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post 'getriderid', to: 'admins#getriderid'
       post 'updaterole', to: 'admins#updaterole'
       post 'fdspromo', to: 'admins#fdspromo'
+      post 'getstatistics', to: 'admins#getstatistics'
     end
 
     scope '/manager' do
@@ -55,16 +56,16 @@ Rails.application.routes.draw do
       get 'promotions', to: 'customers#promotions'
     end
 
-    scope '/rider' do      
+    scope '/rider' do
       get 'deliveries', to: 'riders#index'
       get 'schedule', to: 'riders#schedule'
       get 'salary_summary', to: 'riders#index'
       get 'check_clocked_in', to: 'riders#check_clocked_in'
       post 'clock_in', to: 'riders#clock_in'
-      post 'clock_out', to: 'riders#clock_out'      
+      post 'clock_out', to: 'riders#clock_out'
       get 'all_deliveries', to: 'riders#get_deliveries'
       get 'order/:id', to: 'riders#get_order'
-      post 'update_time/:id', to: 'riders#update_time'      
+      post 'update_time/:id', to: 'riders#update_time'
       get 'fetch_salary_summary', to: 'riders#get_salary_summary_data'
     end
 

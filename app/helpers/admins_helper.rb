@@ -339,6 +339,173 @@ module AdminsHelper
         return count
     end
 
+    def get_site_statistics(yearmonth)
+        parts = yearmonth.split("-")
+        if parts.length != 2
+            return false
+        end
+
+        year = parts[0]
+        month = parts[1]
+
+        newCustomers = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM users
+            WHERE roles = 'customer'
+            AND date_part('year', updated_at) = '#{year}'
+            AND date_part('month', updated_at) = '#{month}';"
+        ).first['count']
+
+        numOrders = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM orders
+            WHERE status = 'complete'
+            AND date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['count']
+
+        costOrders = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(SUM(total_price), 0) FROM orders
+            WHERE status = 'complete'
+            AND date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['coalesce']
+
+        output = {
+            newCustomers: newCustomers,
+            numOrders: numOrders,
+            costOrders: costOrders
+        }
+
+        return output
+    end
+
+    def get_delivery_statistics(yearmonth)
+        parts = yearmonth.split("-")
+        if parts.length != 2
+            return false
+        end
+
+        year = parts[0]
+        month = parts[1]
+
+        numOrders = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM delivers
+            WHERE order_delivered_time IS NOT NULL
+            AND date_part('year', order_time) = '#{year}'
+            AND date_part('month', order_time) = '#{month}';"
+        ).first['count']
+
+        numHours = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(SUM(total_hours), 0) FROM attendance
+            WHERE date_part('year', w_date) = '#{year}'
+            AND date_part('month', w_date) = '#{month}';"
+        ).first['coalesce']
+
+        numSalary = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(SUM(base_salary + commission), 0) AS salary FROM rider_salaries
+            WHERE date_part('year', start_date) = '#{year}'
+            AND date_part('month', start_date) = '#{month}';"
+        ).first['salary']
+
+        avgDelivery = ActiveRecord::Base.connection.exec_query(
+            "SELECT AVG(order_delivered_time - order_time) FROM delivers
+            WHERE order_delivered_time IS NOT NULL
+            AND date_part('year', order_time) = '#{year}'
+            AND date_part('month', order_time) = '#{month}';"
+        ).first['avg']
+
+        numRatings = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(rider_rating) FROM reviews rev
+            JOIN orders ord ON (ord.oid = rev.oid)
+            WHERE date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['count']
+
+        avgRating = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(AVG(rider_rating), 0) FROM reviews rev
+            JOIN orders ord ON (ord.oid = rev.oid)
+            WHERE date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['coalesce']
+
+        output = {
+            numOrders: numOrders,
+            numHours: numHours,
+            numSalary: numSalary,
+            avgDelivery: avgDelivery,
+            numRatings: numRatings,
+            avgRating: avgRating
+        }
+
+        return output
+    end
+
+    def get_delivery_statistics_for_rider(userid, yearmonth)
+        parts = yearmonth.split("-")
+        if parts.length != 2
+            return false
+        end
+
+        year = parts[0]
+        month = parts[1]
+
+        numOrders = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(*) FROM delivers
+            WHERE order_delivered_time IS NOT NULL
+            AND rider_id = '#{userid}'
+            AND date_part('year', order_time) = '#{year}'
+            AND date_part('month', order_time) = '#{month}';"
+        ).first['count']
+
+        numHours = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(SUM(total_hours), 0) FROM attendance
+            WHERE id = '#{userid}'
+            AND date_part('year', w_date) = '#{year}'
+            AND date_part('month', w_date) = '#{month}';"
+        ).first['coalesce']
+
+        numSalary = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(SUM(base_salary + commission), 0) AS salary FROM rider_salaries
+            WHERE rider_id = '#{userid}'
+            AND date_part('year', start_date) = '#{year}'
+            AND date_part('month', start_date) = '#{month}';"
+        ).first['salary']
+
+        avgDelivery = ActiveRecord::Base.connection.exec_query(
+            "SELECT AVG(order_delivered_time - order_time) FROM delivers
+            WHERE rider_id = '#{userid}'
+            AND order_delivered_time IS NOT NULL
+            AND date_part('year', order_time) = '#{year}'
+            AND date_part('month', order_time) = '#{month}';"
+        ).first['avg']
+
+        numRatings = ActiveRecord::Base.connection.exec_query(
+            "SELECT COUNT(rider_rating) FROM reviews rev
+            JOIN orders ord ON (ord.oid = rev.oid)
+            WHERE rider_id = '#{userid}'
+            AND date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['count']
+
+        avgRating = ActiveRecord::Base.connection.exec_query(
+            "SELECT COALESCE(AVG(rider_rating), 0) FROM reviews rev
+            JOIN orders ord ON (ord.oid = rev.oid)
+            WHERE rider_id = '#{userid}'
+            AND date_part('year', date_time) = '#{year}'
+            AND date_part('month', date_time) = '#{month}';"
+        ).first['coalesce']
+
+        output = {
+            numOrders: numOrders,
+            numHours: numHours,
+            numSalary: numSalary,
+            avgDelivery: avgDelivery,
+            numRatings: numRatings,
+            avgRating: avgRating
+        }
+
+        return output
+    end
+
     protected
     def get_users_count
         return ActiveRecord::Base.connection.exec_query(

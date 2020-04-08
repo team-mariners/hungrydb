@@ -82,4 +82,22 @@ class AdminsController < UsersController
             render plain: false
         end
     end
+
+    def getstatistics
+        if (params.has_key?(:type))
+            if (params[:type] == 'site' && params.has_key?(:month))
+                render json: helpers.get_site_statistics(params[:month])
+            elsif (params[:type] == 'delivery' && params.has_key?(:month))
+                if (params.has_key?(:riderid) && params[:riderid] != '')
+                    render json: helpers.get_delivery_statistics_for_rider(params[:riderid], params[:month])
+                else
+                    render json: helpers.get_delivery_statistics(params[:month])
+                end
+            else
+                render plain: false
+            end
+        else
+            render plain: false
+        end
+    end
 end

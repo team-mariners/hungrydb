@@ -73,6 +73,7 @@ Rails.application.routes.draw do
     get 'restaurants/:rid/reviews', to: 'restaurants#reviews'
 
     resources :foods, except: [:new, :edit, :show, :destroy]
+    get 'food/:food_name/reviews', to: 'food#reviews'
     resources :menu_sections, except: [:new, :edit, :show]
     resources :promotions, except: [:new, :edit, :show]
     resources :order, only: %i[create]
@@ -95,6 +96,10 @@ Rails.application.routes.draw do
         resources :restaurants, only: %i[index]
         get '/:id/menu', to: 'restaurants#menu'
         get '/:id/reviews', to: 'restaurants#reviews'
+      end
+
+      namespace :food do
+        get '/:food_name/reviews', to: 'food#reviews'
       end
 
       namespace :promotions do

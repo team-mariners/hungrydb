@@ -4,6 +4,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
 import Rating from 'react-rating';
 import { faStar as faStarO } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 /**
  * A general modal dialog which can be used by other components.
@@ -48,6 +49,8 @@ class ReviewModal extends React.Component {
         if (!this.props.show) {
             return null;
         } else {
+            let foodsList = this.review.foods.map(
+                (food) => <ListGroup.Item>{food["f_name"]}</ListGroup.Item>);
             return (
                 <div className="overlay">
                     <section className='review-modal-content' >
@@ -58,6 +61,11 @@ class ReviewModal extends React.Component {
                                 ? this.review.restaurant_name
                                 : this.review.customer_name}
                         </h3>
+
+                        <ListGroup horizontal style={{fontSize: 14}}>
+                            {foodsList}
+                        </ListGroup>
+                        <div><br /></div>
 
                         <pre style={{fontFamily: "Verdana"}}>
                             {this.foodReviewSplit70Char}
@@ -78,6 +86,7 @@ class ReviewModal extends React.Component {
                                 readonly
                               />
                             : "No rating"}
+                        <div><br /></div>
                     </section>
                 </div>
             )

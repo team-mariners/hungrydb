@@ -1,47 +1,46 @@
 # frozen_string_literal: true
 
 class DeviseCreateUsers < ActiveRecord::Migration[6.0]
-  def change
-    create_table :users do |t|
-      ## Database authenticatable
-      t.string :username,           null: false, default: ""
-      t.string :email,              null: false, default: ""
-      t.string :encrypted_password, null: false, default: ""
-      t.string :roles,              default: ""
+  def up
+    execute "CREATE SEQUENCE users_id_seq
+      START WITH 1
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      CACHE 1;"
 
-      ## Recoverable
-      t.string   :reset_password_token
-      t.datetime :reset_password_sent_at
+    execute "CREATE TABLE users (
+      id bigint NOT NULL DEFAULT nextval('users_id_seq'),
+      username character varying DEFAULT ''::character varying NOT NULL,
+      email character varying DEFAULT ''::character varying NOT NULL,
+      encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+      roles character varying DEFAULT ''::character varying,
+      reset_password_token character varying,
+      reset_password_sent_at timestamp without time zone,
+      remember_created_at timestamp without time zone,
+      sign_in_count integer DEFAULT 0 NOT NULL,
+      current_sign_in_at timestamp without time zone,
+      last_sign_in_at timestamp without time zone,
+      current_sign_in_ip inet,
+      last_sign_in_ip inet,
+      created_at timestamp(6) without time zone NOT NULL,
+      updated_at timestamp(6) without time zone NOT NULL,
+      PRIMARY KEY(id)
+    );"
 
-      ## Rememberable
-      t.datetime :remember_created_at
+    execute "ALTER SEQUENCE users_id_seq OWNED BY users.id;"
 
-      ## Trackable
-      t.integer  :sign_in_count, default: 0, null: false
-      t.datetime :current_sign_in_at
-      t.datetime :last_sign_in_at
-      t.inet     :current_sign_in_ip
-      t.inet     :last_sign_in_ip
+    execute "CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);"
 
-      ## Confirmable
-      # t.string   :confirmation_token
-      # t.datetime :confirmed_at
-      # t.datetime :confirmation_sent_at
-      # t.string   :unconfirmed_email # Only if using reconfirmable
+    execute "CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);"
 
-      ## Lockable
-      # t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
-      # t.string   :unlock_token # Only if unlock strategy is :email or :both
-      # t.datetime :locked_at
+    execute "CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);"
+  end
 
-
-      t.timestamps null: false
-    end
-
-    add_index :users, :username,             unique: true
-    add_index :users, :email,                unique: true
-    add_index :users, :reset_password_token, unique: true
-    # add_index :users, :confirmation_token,   unique: true
-    # add_index :users, :unlock_token,         unique: true
+  def down
+    execute "DROP TABLE users;"
+    execute "DROP INDEX index_users_on_email;"
+    execute "DROP INDEX index_users_on_reset_password_token;"
+    execute "DROP INDEX index_users_on_username;"
   end
 end

@@ -73,7 +73,7 @@ class OrderController < ApplicationController
 
     # 1. AvailableRiders: FullTimeRiders or PartTimeRiders that are working today at this time.
     # 2. RidersPriorDeliveryTime:
-    #    i) Get latest completed delivery times for all Riders (if latest time is null 
+    #    i) Get latest completed delivery times for all Riders (if latest time is null
     #       but they are present in Delivers table, they are in the midst of delivering).
     #    ii) AvailableRiders who are not in Delivers (never delivered) found with
     #        RidersWithoutDeliveries subquery have their latest delivery
@@ -120,7 +120,7 @@ class OrderController < ApplicationController
       )"
 
     selected_rider_id = ActiveRecord::Base.connection.exec_query(earliest_rider_query)
-                        .to_a[0]['rider_id']
+                                          .to_a[0]['rider_id']
 
     assign_rider_command =
       "UPDATE Delivers
@@ -141,5 +141,5 @@ class OrderController < ApplicationController
     #       GROUP BY rider_id
     #       HAVING MAX(order_delivered_time) IS DISTINCT FROM null
     #       )
-    end
+  end
 end

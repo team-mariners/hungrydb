@@ -17,8 +17,8 @@ class Api::V1::Customer::CustomerController < Api::V1::BaseController
 
   def orders
     orders_array = []
-    orders = helpers.retrieve_customer_orders().to_a
-    
+    orders = helpers.retrieve_customer_orders.to_a
+
     orders.each do |order|
       current_order = order['oid']
       order['customer_name'] = helpers.retrieve_order_customer(current_order)

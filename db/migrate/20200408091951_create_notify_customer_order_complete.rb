@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateNotifyCustomerOrderComplete < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
@@ -13,7 +15,7 @@ class CreateNotifyCustomerOrderComplete < ActiveRecord::Migration[6.0]
         SELECT username INTO rider_name
         FROM Users U
         WHERE U.id = NEW.rider_id;
-        
+
         PERFORM pg_notify ('user_' || cust_id::TEXT || '_channel', rider_name);
         RETURN NULL;
       END;

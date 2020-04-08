@@ -11,7 +11,7 @@ class AddressBox extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/orders/orders.json')
+        axios.get('/api/v1/customer/orders.json')
             .then(
                 (response) => {
                     const retrieved_orders = response.data.orders;

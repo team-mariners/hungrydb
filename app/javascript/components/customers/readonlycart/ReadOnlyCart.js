@@ -21,6 +21,17 @@ class ReadOnlyCart extends React.Component {
             ? secureStorage.getItem("points_offset") : 0;
     }
 
+    // Reload page to trigger listening for database notification of order completion
+    componentWillMount() {
+        this.refreshId = setInterval(() => {
+            window.location.reload();
+        }, 10000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.refreshId);
+    }
+
     render() {
         // Prevent erratic increment of totalCost on re-render
         this.totalCost = 0;

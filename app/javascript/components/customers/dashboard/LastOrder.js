@@ -9,7 +9,7 @@ class LastOrder extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/v1/orders/orders.json')
+        fetch('/api/v1/customer/orders.json')
             .then(res => res.json())
             .then(
                 (response) => {

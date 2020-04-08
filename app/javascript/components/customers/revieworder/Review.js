@@ -14,19 +14,19 @@ class Review extends React.Component {
         this.handleChangeFoodReview = this.handleChangeFoodReview.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSkip = this.handleSkip.bind(this);
-        this.state = {riderRating: null, foodReview: ""}
+        this.state = { riderRating: null, foodReview: "" }
         console.log(document.cookie)
     }
 
     handleChangeRiderRating(value) {
         console.log(value);
         let changedValue = value ? parseInt(value) : null;
-        this.setState({riderRating: changedValue});
+        this.setState({ riderRating: changedValue });
     }
 
     handleChangeFoodReview(e) {
         console.log(e.target.value);
-        this.setState({foodReview: e.target.value})
+        this.setState({ foodReview: e.target.value })
     }
 
     handleSubmit(e) {
@@ -46,11 +46,11 @@ class Review extends React.Component {
         review["oid"] = document.cookie.split("=")[1];
         review["rider_id"] = 3;
         review["rider_rating"] = this.state.riderRating
-                                ? this.state.riderRating
-                                : "null";
+            ? this.state.riderRating
+            : "null";
         review["food_review"] = this.state.foodReview
-                                ? this.state.foodReview
-                                : "";
+            ? this.state.foodReview
+            : "";
 
         axios.post('/review', review)
             .then((result) => {
@@ -85,7 +85,7 @@ class Review extends React.Component {
                 <div><br /><br /><br /><br /></div>
 
                 <FoodReview foodList={foodList} onReviewChange={this.handleChangeFoodReview} />
-                <p style={{marginTop: 10}}>{this.state.foodReview.length}/1000 characters</p>
+                <p style={{ marginTop: 10 }}>{this.state.foodReview.length}/1000 characters</p>
                 <div><br /><br /><br /></div>
 
                 <div className="review-form-buttons">
@@ -95,7 +95,7 @@ class Review extends React.Component {
                             Submit
                         </Button>
                     </div>
-                    
+
                     <div>
                         <Button variant="light" type="submit" size="lg" href="/"
                             onClick={this.handleSkip}>

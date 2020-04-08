@@ -49,7 +49,7 @@ Rails.application.routes.draw do
       get 'order/:rid/menu', to: 'customers#order'
       get 'cart', to: 'customers#cart'
       get 'complete_order', to: 'customers#complete_order'
-      get 'review_order', to: 'customers#review'
+      get 'review_order', to: 'customers#review', as: :customer_review_order
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'

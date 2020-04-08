@@ -23,7 +23,8 @@ class CreateWorkingIntervals < ActiveRecord::Migration[6.0]
         CONSTRAINT start_and_end_on_hour
           CHECK ((EXTRACT(MINUTE FROM startHour) = 0) AND (EXTRACT(MINUTE FROM endHour) = 0)),
         CONSTRAINT end_hour CHECK (endhour > startHour),
-        CONSTRAINT operating_hours CHECK (startHour >= time '10:00' AND endHour <= time '22:00')
+        CONSTRAINT operating_hours CHECK (startHour >= time '10:00' AND endHour <= time '22:00'),
+        UNIQUE(workingDay, startHour, endHour, wws_id)        
       );
 
       ALTER SEQUENCE wi_id_seq OWNED BY working_intervals.wi_id;

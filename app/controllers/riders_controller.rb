@@ -1,46 +1,46 @@
-class RidersController < UsersController  
+class RidersController < UsersController
   before_action do
     verify_role!('rider')
   end
-  
-  def index; end    
 
-  def check_clocked_in        
+  def index; end
+
+  def check_clocked_in
     result = get_clocked_in_data
     render json: result
   end
 
-  def clock_in   
+  def clock_in
     result = nil;
-      
-    ActiveRecord::Base.connection.begin_db_transaction    
+
+    ActiveRecord::Base.connection.begin_db_transaction
     ActiveRecord::Base.connection.exec_query(
       "INSERT INTO attendance(id, w_date, clock_in)
-      VALUES(#{current_user["id"]}, CURRENT_DATE, CURRENT_TIME);"      
+      VALUES(#{current_user["id"]}, CURRENT_DATE, CURRENT_TIME);"
     )
-  
+
     result = get_clocked_in_data
     ActiveRecord::Base.connection.commit_db_transaction
-  
+
     render json: result
   end
 
   def clock_out
     result = nil
 
-    ActiveRecord::Base.connection.begin_db_transaction          
-    # The common table expression calculates the total hours the rider worked so far today by summing up 
-    # all the work intervals at the current day which the start_time is AFTER OR EQUAL to the clock in time       
-    # and the endTime is BEFORE OR EQUAL to the clock out time. 
+    ActiveRecord::Base.connection.begin_db_transaction
+    # The common table expression calculates the total hours the rider worked so far today by summing up
+    # all the work intervals at the current day which the start_time is AFTER OR EQUAL to the clock in time
+    # and the endTime is BEFORE OR EQUAL to the clock out time.
     # After that, assign the total number of hours worked to the corresponding attendance entry.
-    ActiveRecord::Base.connection.exec_query(        
+    ActiveRecord::Base.connection.exec_query(
       "WITH T AS (
         SELECT SUM(date_part('hour', endHour - startHour)) as totalHours
         FROM working_intervals
         WHERE workingDay::text = trim(to_char(CURRENT_TIMESTAMP, 'Day'))
         AND startHour >= (
-          SELECT clock_in 
-          FROM attendance 
+          SELECT clock_in
+          FROM attendance
           WHERE id =#{current_user["id"]} AND w_date = CURRENT_DATE)
         AND endHour <= CURRENT_TIME
         AND wws_id = (
@@ -61,7 +61,7 @@ class RidersController < UsersController
               WHERE w_type = 'part_time_rider'
               AND pt_rider_id = #{current_user["id"]}
             )
-            END AS id                    
+            END AS id
         )
       )
       UPDATE attendance
@@ -79,7 +79,7 @@ class RidersController < UsersController
   # Get all the deliveries of the rider
   def get_deliveries
     deliveries = ActiveRecord::Base.connection.exec_query(
-      "SELECT *, 
+      "SELECT *,
         (SELECT name FROM Restaurants WHERE id = (SELECT restaurant_id FROM Orders O WHERE O.oid = D.oid))
           AS restaurant_name,
         (SELECT address FROM Restaurants WHERE id = (SELECT restaurant_id FROM Orders O WHERE O.oid = D.oid))
@@ -102,21 +102,21 @@ class RidersController < UsersController
 
     foods = ActiveRecord::Base.connection.exec_query(
       "SELECT *
-      FROM (SELECT * FROM Comprises WHERE oid=#{params["id"]}) AS T 
+      FROM (SELECT * FROM Comprises WHERE oid=#{params["id"]}) AS T
         JOIN Foods F ON (T.food_id = F.id)
       ORDER BY F.id;"
     ).to_a
     ActiveRecord::Base.connection.commit_db_transaction
 
-    order["foods"] = foods      
+    order["foods"] = foods
     render json: order
   end
-  
+
   # SET the first null time field of the specified delivery entry to current time
   def update_time
     ActiveRecord::Base.connection.begin_db_transaction
     target_column = ActiveRecord::Base.connection.exec_query(
-      "SELECT CASE 
+      "SELECT CASE
           WHEN depart_to_restaurant_time IS NULL THEN 'depart_to_restaurant_time'
           WHEN arrive_at_restaurant_time IS NULL THEN 'arrive_at_restaurant_time'
           WHEN depart_to_customer_time IS NULL THEN 'depart_to_customer_time'
@@ -133,7 +133,7 @@ class RidersController < UsersController
     end
 
     ActiveRecord::Base.connection.exec_query(
-      "UPDATE Delivers    
+      "UPDATE Delivers
       SET #{target_column} = CURRENT_TIMESTAMP
       WHERE oid = #{params[:id]};"
     )
@@ -155,7 +155,7 @@ class RidersController < UsersController
       FROM rider_salaries
       WHERE start_date BETWEEN '#{params[:start_date]}' AND '#{params[:end_date]}'
       AND rider_id = #{current_user["id"]};"
-    ).to_a[0] 
+    ).to_a[0]
 
     salary = salary.nil? ? {salary: nil, commission: nil} : salary
 
@@ -169,7 +169,7 @@ class RidersController < UsersController
       )
       AND status = 'complete'
       AND date_time BETWEEN '#{params["start_date"]}' AND '#{params["end_date"]}';"
-    ).to_a[0]    
+    ).to_a[0]
 
     total_hours_worked = ActiveRecord::Base.connection.exec_query(
       "SELECT COALESCE(sum(total_hours), 0) AS total_hours_worked

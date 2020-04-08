@@ -8,6 +8,7 @@ class MenuItem extends React.Component {
         super(props);
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleHideModal = this.handleHideModal.bind(this);
+        this.review_url = "/food/" + this.props.food.f_name + "/reviews";
         this.state = {showModal: false};
     }
 
@@ -41,6 +42,7 @@ class MenuItem extends React.Component {
                         </Media.Body>
                     </Media>
                 </button>
+                <a href={this.review_url}>See Related Reviews</a>
             </>
         )
     }

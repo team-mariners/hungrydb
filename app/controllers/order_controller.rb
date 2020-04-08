@@ -63,5 +63,44 @@ class OrderController < ApplicationController
     ActiveRecord::Base.connection.commit_db_transaction
 
     cookies[:oid] = stored_order['oid']
+
+    assign_order_to_rider(stored_order['oid'])
   end
+
+  def assign_order_to_rider(oid)
+    # Assigns Order to the rider with the earliest prior Delivery
+    ActiveRecord::Base.connection.begin_db_transaction
+
+    earliest_rider_query =
+      "WITH RidersPriorDeliveryTime AS
+        (SELECT rider_id, MAX(order_delivered_time) AS priordeliverytime
+        FROM Delivers
+        GROUP BY rider_id
+        HAVING MAX(order_delivered_time) IS DISTINCT FROM null
+        )
+      SELECT rider_id
+      FROM RidersPriorDeliveryTime
+      WHERE priordeliverytime <= ALL (
+        SELECT priordeliverytime
+        FROM RidersPriorDeliveryTime
+      )"
+
+    selected_rider_id = ActiveRecord::Base.connection.exec_query(earliest_rider_query)
+                        .to_a[0]['rider_id']
+
+    assign_rider_command =
+      "UPDATE Delivers
+      SET rider_id = #{selected_rider_id}
+      WHERE oid = #{oid}"
+
+    ActiveRecord::Base.connection.exec_query(assign_rider_command)
+
+    ActiveRecord::Base.connection.commit_db_transaction
+
+    # connection = ActiveRecord::Base.connection
+    # connection.execute("LISTEN assign_channel")
+    
+    # connection.wait_for_notify() do |channel, pid, payload|
+
+    end
 end

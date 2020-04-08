@@ -65,7 +65,7 @@ Rails.application.routes.draw do
       post 'clock_out', to: 'riders#clock_out'      
       get 'all_deliveries', to: 'riders#get_deliveries'
       get 'order/:id', to: 'riders#get_order'
-      post 'update_time/:id', to: 'riders#update_time'      
+      post 'update_time/:id', to: 'riders#update_time'
       get 'fetch_salary_summary', to: 'riders#get_salary_summary_data'
     end
 
@@ -88,6 +88,7 @@ Rails.application.routes.draw do
       namespace :customer do
         resources :customer, only: %i[index create destroy update]
         # [:index, :create, :destroy, :update]
+        get '/orders', to: 'customer#orders'
       end
 
       namespace :restaurants do

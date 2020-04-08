@@ -4,9 +4,16 @@ module Api::V1::Orders::OrdersHelper
   def retrieve_orders
     orders_query = "SELECT *
                    FROM Orders
-                   WHERE customer_id = #{current_user.id}
                    ORDER BY date_time DESC"
     ActiveRecord::Base.connection.execute(orders_query)
+  end
+
+  def retrieve_customer_orders
+    customer_orders_query = "SELECT *
+                            FROM Orders
+                            WHERE customer_id = #{current_user.id}
+                            ORDER BY date_time DESC"
+    ActiveRecord::Base.connection.execute(customer_orders_query)
   end
   
   def retrieve_order_foods(oid)

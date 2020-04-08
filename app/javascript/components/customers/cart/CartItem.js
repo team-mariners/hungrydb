@@ -22,8 +22,9 @@ const CartItem = (props) => {
                         ${parseFloat(props.foodDetails.quantity * props.foodDetails.price)
                         .toFixed(2)}
                     </td>
-                    <td><Button variant="danger" onClick={() => props.onDeleteItem(props.foodName)}>
-                            Delete
+                    <td>
+                        <Button variant="danger" onClick={() => props.onReduceItem(props.foodName)}>
+                            Reduce
                         </Button>
                     </td>
             </tr>

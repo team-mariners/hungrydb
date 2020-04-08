@@ -41,6 +41,11 @@ class Review extends React.Component {
             return;
         }
 
+        if (!confirm("Confirm Submit Review?")) {
+            e.preventDefault();
+            return;
+        }
+
         let review = {};
         review["oid"] = document.cookie.split("=")[1];
         review["rider_id"] = 3;

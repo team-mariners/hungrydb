@@ -32,7 +32,7 @@ class LastOrder extends React.Component {
             return (
                 <React.Fragment>
                     <h3>Previous Order:</h3>
-                    <ListGroup style={{ width: 350, marginLeft: "auto", marginRight: "auto" }}>
+                    <ListGroup style={{ width: 375, marginLeft: "auto", marginRight: "auto" }}>
                         <OrderHistoryItem order={this.state.lastOrder} />
                     </ListGroup>
                     <a href="customer/history">See more orders</a>

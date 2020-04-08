@@ -45,7 +45,7 @@ const OrderModal = (props) => {
 
     const discountInformation = props.isRider ? null : (
         <React.Fragment>            
-            <p><b>Points Offset: </b>{props.order.point_offset} points</p>
+            <p><b>Points Offset: </b>- ${props.order.point_offset}</p>
             <p><b>Promocode: </b>{promocode}</p>
             <p><b>Promo Percentage: </b>{!props.order.promo_percentage ? "-" : `${props.order.promo_percentage}%`}</p>
             {review}

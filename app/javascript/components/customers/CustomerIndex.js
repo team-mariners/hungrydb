@@ -107,7 +107,8 @@ class Index extends React.Component {
 
                     <Route exact path="/customer/history" render={() => <OrderHistory />} />
                     <Route exact path="/customer/reviews" render={() => <ReviewHistory />} />
-                    <Route exact path="/customer/promotions" render={() => <PromosPage />} />
+                    <Route exact path="/customer/promotions" render={() => <PromosPage
+                        location="customer" />} />
                 </Router>
             )
         }

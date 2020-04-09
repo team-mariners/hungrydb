@@ -48,7 +48,7 @@ class OrderController < ApplicationController
               CURRENT_TIMESTAMP)"
     )
 
-    # Insert corresponding Comprises entry and add num_order to food
+    # Insert corresponding Comprises entry
     foods = filtered_params['foods']
     foods.each do |foodKey, foodDetails|
       ActiveRecord::Base.connection.exec_query(

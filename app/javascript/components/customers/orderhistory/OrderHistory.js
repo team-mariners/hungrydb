@@ -23,7 +23,7 @@ class OrderHistory extends React.Component {
     }
 
     render() {
-        if (this.state.orders === null) {
+        if (!this.state.orders) {
             return null;
         } else {
 

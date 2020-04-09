@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
     get 'profile', to: 'users/registrations#edit'
     post 'profile', to: 'users/registrations#update'
+
+    get '/promotions', to: 'home#promotions'
   end
 
   authenticated :user do

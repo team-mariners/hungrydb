@@ -24,7 +24,7 @@ class LastOrder extends React.Component {
     }
 
     render() {
-        if (this.state.lastOrder === null) {
+        if (!this.state.lastOrder) {
             return (
                 <h3>No previous orders.</h3>
             )

@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 import RestaurantSelection from './RestaurantSelection';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 class Restaurants extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { restaurants: null };
+        this.handleEnterSearchQuery = this.handleEnterSearchQuery.bind(this);
+        this.state = { restaurants: null, searchQuery: "" };
     }
 
     componentDidMount() {
@@ -21,22 +24,37 @@ class Restaurants extends React.Component {
             })
     }
 
+    handleEnterSearchQuery(e) {
+        this.setState({searchQuery: e.target.value});
+        console.log(e.target.value);
+    }
+
     render() {
         if (this.state.restaurants === null) {
             return null;
         } else {
             let restaurants = this.state.restaurants.map((restaurant) => {
-                return (
-                    <RestaurantSelection res={restaurant}
-                        onResetOrder={this.props.onResetOrder} />
-                )
+                if (!this.state.searchQuery ||
+                    (this.state.searchQuery &&
+                    restaurant.name.toUpperCase().includes(this.state.searchQuery.toUpperCase()))) {
+                    return <RestaurantSelection res={restaurant}
+                    onResetOrder={this.props.onResetOrder} />;
+                } else {
+                    return null;
+                }
             })
             return (
                 <div className='restaurants-container'>
-                    <div><br/></div>
+                    <div><br /></div>
                     <h3>
                         {restaurants.length == 0 ? "No restaurants available." : "Restaurants"}
                     </h3>
+                    <div><br /></div>
+                    <Form inline>
+                        <FormControl type="text" placeholder="Search Restaurants"
+                            className="mr-sm-2" onChange={this.handleEnterSearchQuery} />
+                    </Form>
+                    <div><br /></div>
                     {restaurants}
                 </div>
             )

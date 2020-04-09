@@ -11,6 +11,9 @@ class Cart extends React.Component {
     constructor(props) {
         super(props);
         this.foods = JSON.parse(secureStorage.getItem('foods'));
+        this.restaurantMenuUrl = "/customer/order/"
+                                    + secureStorage.getItem('restaurant_id')
+                                    + "/menu"
         console.log(this.foods);
 
         this.handleReduceItem = this.handleReduceItem.bind(this)
@@ -63,25 +66,25 @@ class Cart extends React.Component {
         }
     }
 
-    handleReduceItem(foodName) {
-        if (!confirm("Are you sure you want to remove 1 " + foodName + "?")) {
+    handleReduceItem(foodToDelete) {
+        if (!confirm("Are you sure you want to remove 1 " + foodToDelete + "?")) {
             e.preventDefault();
             return;
         }
 
         for (let storedName in this.foods) {
-            if (storedName === foodName) {
+            if (storedName === foodToDelete) {
                 // delete this.foods.storedName;
                 let temp = {};
                 for (let food in this.foods) {
-                    if (food !== foodName) {
-                        temp[food] = this.foods[storedName];
+                    if (food !== foodToDelete) {
+                        temp[food] = this.foods[food];
                     } else {
-                        this.foods[storedName]["quantity"] -= 1;
-                        if (this.foods[storedName]["quantity"] == 0) {
+                        this.foods[foodToDelete]["quantity"] -= 1;
+                        if (this.foods[foodToDelete]["quantity"] == 0) {
                             continue;
                         }
-                        temp[food] = this.foods[storedName];
+                        temp[food] = this.foods[food];
                     }
                 }
                 this.foods = Object.keys(temp).length === 0 ? null : temp;
@@ -90,7 +93,7 @@ class Cart extends React.Component {
                 location.reload();
             }
         }
-        console.log(foodName);
+        console.log(foodToDelete);
     }
 
     handlePromoInsertChange(e) {
@@ -174,13 +177,17 @@ class Cart extends React.Component {
         return (
             <div className='cart-container'>
                 <div><br /></div>
-                <h3>Ordering From: {secureStorage.getItem('restaurant_name')}</h3>
+                <a href={this.restaurantMenuUrl} style={{fontSize: 26}}>
+                    Ordering From: {secureStorage.getItem('restaurant_name')}
+                </a>
+                
                 <h4>
                     (minimum order ${parseFloat(
                     secureStorage.getItem('restaurant_min')).toFixed(2)}
                         )
                     </h4>
                 <div><br /></div>
+                
                 <CartItemTable items={items} />
                 <div><br /></div>
 

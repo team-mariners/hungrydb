@@ -53,7 +53,7 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
 
         -- Delete or update of working interval (old record)
         IF ((TG_OP = 'DELETE') OR (TG_OP = 'UPDATE')) THEN
-          id2 = NEW.wi_id;
+          id2 = OLD.wi_id;
         END IF;
 
         -- Insert or update of working interval (new record)

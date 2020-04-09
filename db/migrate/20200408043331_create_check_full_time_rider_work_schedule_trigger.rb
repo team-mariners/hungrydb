@@ -62,7 +62,7 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
         IF id2 IS NOT NULL THEN
           -- Check if there is still any working interval belonging to the weekly work schedule (for deletion)
           SELECT true INTO still_exists
-          FROM working_interval 
+          FROM working_intervals 
           WHERE wws_id = id2;
           
           -- If the weekly work schedule still exists and it belongs to a monthly work schedule

@@ -1,4 +1,5 @@
 class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
+  # Check if there exist a 1 hour interval between 2 consecutive working intervals
   def up
     execute <<-SQL
       -- record: a tuple from the working_intervalss table

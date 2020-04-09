@@ -3,6 +3,25 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
   # comprising of two 4-hour periods with an hour break in between
   def up
     execute <<-SQL
+      CREATE OR REPLACE FUNCTION check_full_time_rider_work_schedule(id bigint) RETURNS boolean AS $$
+      DECLARE
+        violate_constraint boolean DEFAULT false;
+      BEGIN
+        -- Check if for full time rider's weekly schedule, all working intervals of the same day have
+        -- exactly 2 working intervals, with the sum of their duration being exactly 8 hours
+        -- (this in turns also checks if each of the working interval are exactly 4 hours)
+        -- In the following query, the negation of the above condition is checked
+        -- to find violating weekly work schedule.
+        SELECT true INTO violate_constraint
+        FROM working_intervals
+        WHERE wws_id = id
+        GROUP BY workingDay
+        HAVING ((COUNT(*) <> 2) OR (SUM(endHour - startHour) <> interval '8 hours'));
+
+        RETURN violate_constraint;
+      END;
+      $$ LANGUAGE plpgsql;
+
       CREATE OR REPLACE FUNCTION check_full_time_rider_work_schedule() RETURNS TRIGGER AS $$
       DECLARE
         schedule_type wws_type;
@@ -10,7 +29,7 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
         id bigint;
         id2 bigint;
         still_exists boolean;
-        violate_constraint boolean DEFAULT false;        
+        violate_constraint boolean DEFAULT false;
         is_working_intervals boolean DEFAULT false;
       BEGIN
         -- Guard clause              
@@ -56,12 +75,8 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
           -- Execute the check if the updated tuple is a weekly work schedule belonging to a monthly work schedule
           -- Or if it is a working interval that belongs to such weekly work schedule        
           IF (NOT is_working_intervals OR schedule_type = 'monthly_work_schedule') THEN
-            SELECT true INTO violate_constraint
-            FROM working_intervals
-            WHERE wws_id = id
-            GROUP BY workingDay
-            HAVING ((COUNT(*) <> 2) OR (SUM(endHour - startHour) <> interval '8 hours'));
-          END IF;
+            violate_constraint = check_full_time_rider_work_schedule(id);
+           END IF;
 
           IF violate_constraint THEN
             RAISE exception 'For full-time riders, each work day must consist of 8 work hours comprising of two 4-hour periods';
@@ -77,12 +92,8 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
           
           -- If the weekly work schedule still exists and it belongs to a monthly work schedule
           IF (FOUND AND (schedule_type2 = 'monthly_work_schedule')) THEN
-            SELECT true INTO violate_constraint
-            FROM working_intervals
-            WHERE wws_id = id2
-            GROUP BY workingDay
-            HAVING ((COUNT(*) <> 2) OR (SUM(endHour - startHour) <> interval '8 hours'));
-          END IF;
+            violate_constraint = check_full_time_rider_work_schedule(id2);
+         END IF;
 
           IF violate_constraint THEN
             RAISE exception 'For full-time riders, each work day must consist of 8 work hours comprising of two 4-hour periods';
@@ -114,6 +125,7 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
       DROP TRIGGER check_full_time_rider_working_interval_trigger ON working_intervals CASCADE;
       DROP TRIGGER check_full_time_rider_weekly_work_schedule_trigger ON weekly_work_schedules CASCADE;
       DROP FUNCTION check_full_time_rider_work_schedule() CASCADE;
+      DROP FUNCTION check_full_time_rider_work_schedule(bigint) CASCADE;
     SQL
   end
 end

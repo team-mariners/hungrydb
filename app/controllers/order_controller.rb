@@ -73,8 +73,8 @@ class OrderController < ApplicationController
 
     # 1. AvailableRiders: FullTimeRiders or PartTimeRiders that are working today at this time.
     # 2. RidersPriorDeliveryTime:
-    #    i) Get latest completed delivery times for all Riders (if latest time is null
-    #       but they are present in Delivers table, they are in the midst of delivering).
+    #    i) Get latest completed delivery times for all Riders (if latest time is null but
+    #       they are present in Delivers table, they are in the midst of their 1st ever Delivery).
     #    ii) AvailableRiders who are not in Delivers (never delivered) found with
     #        RidersWithoutDeliveries subquery have their latest delivery
     #        set to '1970-01-01 00:00:00-00', the "dawn of time" itself.
@@ -84,7 +84,8 @@ class OrderController < ApplicationController
       "WITH
         AvailableRiders AS
           (SELECT F.id as rider_id
-          FROM Full_time_riders F NATURAL JOIN Monthly_work_schedules M
+          FROM Full_time_riders F INNER JOIN Monthly_work_schedules M
+               ON F.id = M.rider_id
                INNER JOIN Weekly_work_schedules W USING (mws_id)
                INNER JOIN Working_intervals I USING (wws_id)
           WHERE TO_CHAR(NOW(), 'FMDay') = I.workingDay::text
@@ -131,15 +132,14 @@ class OrderController < ApplicationController
 
     ActiveRecord::Base.connection.commit_db_transaction
 
-    # Attempt OUTER JOIN & COALESCE (but AvailableRiders & Delivers only have rider_id in common)
+    # Attempt OUTER JOIN & COALESCE, but Riders who have just been assigned their 1st
+    # Delivery (in Delivers but latest delivered time null) will keep getting assigned
     # RidersPriorDeliveryTime AS
-    #       (SELECT D.rider_id,
-    #               COALESCE(MAX(order_delivered_time), TIMESTAMP '1970-01-01 00:00:00-00')
-    #               AS priordeliverytime
-    #       FROM AvailableRiders A LEFT OUTER JOIN Delivers D
-    #            ON (no common field)
-    #       GROUP BY rider_id
-    #       HAVING MAX(order_delivered_time) IS DISTINCT FROM null
-    #       )
+    #   (SELECT D.rider_id,
+    #   COALESCE(MAX(order_delivered_time), TIMESTAMP '1970-01-01 00:00:00-00')
+    #   AS priordeliverytime
+    #   FROM AvailableRiders NATURAL LEFT OUTER JOIN Delivers
+    #   GROUP BY rider_id
+    #   )
   end
 end

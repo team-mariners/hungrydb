@@ -50,10 +50,11 @@ Rails.application.routes.draw do
       get 'order/:rid/menu', to: 'customers#order'
       get 'cart', to: 'customers#cart'
       get 'complete_order', to: 'customers#complete_order'
-      get 'review_order', to: 'customers#review'
+      get 'review_order', to: 'customers#review', as: :customer_review_order
       get 'history', to: 'customers#history'
       get 'reviews', to: 'customers#reviews', as: :customer_reviews_path
       get 'promotions', to: 'customers#promotions'
+      get 'order_in_progress', to: 'customers#order_in_progress'
     end
 
     scope '/rider' do
@@ -89,6 +90,7 @@ Rails.application.routes.draw do
       namespace :customer do
         resources :customer, only: %i[index create destroy update]
         # [:index, :create, :destroy, :update]
+        get '/orders', to: 'customer#orders'
       end
 
       namespace :restaurants do

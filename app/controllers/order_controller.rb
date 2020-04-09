@@ -63,5 +63,83 @@ class OrderController < ApplicationController
     ActiveRecord::Base.connection.commit_db_transaction
 
     cookies[:oid] = stored_order['oid']
+
+    assign_order_to_rider(stored_order['oid'])
+  end
+
+  def assign_order_to_rider(oid)
+    # Assigns Order to the rider with the earliest prior Delivery
+    ActiveRecord::Base.connection.begin_db_transaction
+
+    # 1. AvailableRiders: FullTimeRiders or PartTimeRiders that are working today at this time.
+    # 2. RidersPriorDeliveryTime:
+    #    i) Get latest completed delivery times for all Riders (if latest time is null
+    #       but they are present in Delivers table, they are in the midst of delivering).
+    #    ii) AvailableRiders who are not in Delivers (never delivered) found with
+    #        RidersWithoutDeliveries subquery have their latest delivery
+    #        set to '1970-01-01 00:00:00-00', the "dawn of time" itself.
+    #    iii) Union Riders within or without Delivers table.
+    # 3. Get the earliest prior delivery time.
+    earliest_rider_query =
+      "WITH
+        AvailableRiders AS
+          (SELECT F.id as rider_id
+          FROM Full_time_riders F NATURAL JOIN Monthly_work_schedules M
+               INNER JOIN Weekly_work_schedules W USING (mws_id)
+               INNER JOIN Working_intervals I USING (wws_id)
+          WHERE TO_CHAR(NOW(), 'FMDay') = I.workingDay::text
+                AND EXTRACT(HOUR FROM CURRENT_TIMESTAMP) >= EXTRACT(HOUR FROM I.startHour)
+                AND EXTRACT(HOUR FROM CURRENT_TIMESTAMP) <= EXTRACT(HOUR FROM I.endHour)
+          UNION
+          SELECT P.id as rider_id
+          FROM Part_time_riders P INNER JOIN Weekly_work_schedules W
+               ON P.id = W.pt_rider_id
+               INNER JOIN Working_intervals I USING (wws_id)
+          WHERE TO_CHAR(NOW(), 'FMDay') = I.workingDay::text
+               AND EXTRACT(HOUR FROM CURRENT_TIMESTAMP) >= EXTRACT(HOUR FROM I.startHour)
+               AND EXTRACT(HOUR FROM CURRENT_TIMESTAMP) <= EXTRACT(HOUR FROM I.endHour)
+          ),
+        RidersPriorDeliveryTime AS
+          (SELECT rider_id, MAX(order_delivered_time) AS priordeliverytime
+          FROM Delivers
+          GROUP BY rider_id
+          HAVING MAX(order_delivered_time) IS DISTINCT FROM null
+          UNION
+          SELECT rider_id, TIMESTAMP '1970-01-01 00:00:00-00' as priordeliverytime
+          FROM (
+            SELECT rider_id FROM AvailableRiders
+            EXCEPT
+            SELECT rider_id FROM Delivers D
+          ) AS RidersWithoutDeliveries
+          )
+      SELECT rider_id
+      FROM RidersPriorDeliveryTime
+      WHERE priordeliverytime <= ALL (
+        SELECT priordeliverytime
+        FROM RidersPriorDeliveryTime
+      )"
+
+    selected_rider_id = ActiveRecord::Base.connection.exec_query(earliest_rider_query)
+                                          .to_a[0]['rider_id']
+
+    assign_rider_command =
+      "UPDATE Delivers
+      SET rider_id = #{selected_rider_id}
+      WHERE oid = #{oid}"
+
+    ActiveRecord::Base.connection.exec_query(assign_rider_command)
+
+    ActiveRecord::Base.connection.commit_db_transaction
+
+    # Attempt OUTER JOIN & COALESCE (but AvailableRiders & Delivers only have rider_id in common)
+    # RidersPriorDeliveryTime AS
+    #       (SELECT D.rider_id,
+    #               COALESCE(MAX(order_delivered_time), TIMESTAMP '1970-01-01 00:00:00-00')
+    #               AS priordeliverytime
+    #       FROM AvailableRiders A LEFT OUTER JOIN Delivers D
+    #            ON (no common field)
+    #       GROUP BY rider_id
+    #       HAVING MAX(order_delivered_time) IS DISTINCT FROM null
+    #       )
   end
 end

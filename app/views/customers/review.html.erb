@@ -1,1 +1,7 @@
-<%= react_component('customers/CustomerIndex', info: customer_info_bundle) %>
+<% flash.each do |type, msg| %>
+    <div class="alert alert-success">
+      <%= msg %>
+    </div>
+<% end %>
+
+<%= react_component('customers/revieworder/Review') %>

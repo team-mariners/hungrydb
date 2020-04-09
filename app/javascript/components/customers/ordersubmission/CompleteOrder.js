@@ -89,6 +89,8 @@ class CompleteOrder extends React.Component {
                 console.log(error);
                 alert("Failed to place order!");
             })
+        
+        secureStorage.setItem('active_order_present', true);
     }
 
     checkAllFoodActive() {
@@ -136,7 +138,7 @@ class CompleteOrder extends React.Component {
                 <br /><br />
 
                 <Button style={{ display: "block", width: 200, margin: "auto" }}
-                    href="/customer/review_order" variant="primary" size="lg"
+                    href="/customer/order_in_progress" variant="primary" size="lg"
                     onClick={this.handleSubmitOrder}>
                     CONFIRM
                 </Button>

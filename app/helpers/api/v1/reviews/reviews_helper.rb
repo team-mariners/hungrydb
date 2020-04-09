@@ -6,7 +6,7 @@ module Api::V1::Reviews::ReviewsHelper
                     FROM Orders O INNER JOIN Reviews R
                          ON O.customer_id = #{current_user.id}
                             and O.oid = R.oid
-                    ORDER BY O.date_time"
+                    ORDER BY O.date_time DESC"
     ActiveRecord::Base.connection.execute(reviews_query)
   end
 

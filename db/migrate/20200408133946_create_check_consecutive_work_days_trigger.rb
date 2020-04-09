@@ -1,4 +1,5 @@
 class CreateCheckConsecutiveWorkDaysTrigger < ActiveRecord::Migration[6.0]
+  # Checks if the weekly work schedule of a full-time rider consists of 5 consecutive work days
   def up
     execute <<-SQL    
     CREATE OR REPLACE FUNCTION check_consecutive_work_days(id bigint) RETURNS boolean AS $$
@@ -21,14 +22,22 @@ class CreateCheckConsecutiveWorkDaysTrigger < ActiveRecord::Migration[6.0]
           WHERE wws_id = id
         ),
         C AS (
+          -- Count the number of distinct working days in the full time rider weekly work schedule
           SELECT COUNT(*) as num_days
           FROM T
         ),
         R AS (
+          -- Select those working days (represented as integer) that are NOT in the set of distinct working days
+          -- of the full time rider
+          -- dow means day of week
           SELECT DISTINCT dow
           FROM (VALUES (0), (1), (2), (3), (4), (5), (6)) AS d (dow)
           WHERE d.dow NOT IN (SELECT dow FROM T)             
         )
+      -- Check if the set of distinct working days (C) violates the constraint by checking if its size is NOT 5
+      -- or if we cannot find two consecutive working days (represented as integer)
+      -- or cannot find two days such that one is 0 and another is 6
+      -- in the set of working days that are NOT in the full time rider's working days (R)
       SELECT true INTO violate_constraint
       FROM C
       WHERE C.num_days <> 5
@@ -112,7 +121,7 @@ class CreateCheckConsecutiveWorkDaysTrigger < ActiveRecord::Migration[6.0]
       IF id2 IS NOT NULL THEN
         -- Check if there is still any working intervals that belong to the weekly work schedule
         SELECT true INTO still_exists
-        FROM working_intervals
+        FROM weekly_work_schedules
         WHERE wws_id = id2;
         
         -- If the weekly work schedule still exists and it belongs to a monthly work schedule

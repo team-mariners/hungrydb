@@ -12,9 +12,6 @@ class CreateManagers < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE managers (
       id bigint NOT NULL DEFAULT nextval('managers_id_seq'),
       user_id bigint,
-      role varchar(100) NOT NULL DEFAULT 'manager'
-        CONSTRAINT managers_role 
-        CHECK (role = 'manager'),
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       PRIMARY KEY(id),

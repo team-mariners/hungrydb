@@ -6,9 +6,6 @@ class CreateRiders < ActiveRecord::Migration[6.0]
 
     execute "CREATE TABLE riders (
       user_id bigint NOT NULL PRIMARY KEY,
-      role varchar(100) NOT NULL DEFAULT 'rider'
-        CONSTRAINT riders_role 
-        CHECK (role = 'rider'),
       r_type rider_type NOT NULL,
       currLocation varchar(300),
       status varchar(300) NOT NULL DEFAULT '',

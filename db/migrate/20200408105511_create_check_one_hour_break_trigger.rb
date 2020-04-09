@@ -1,9 +1,9 @@
 class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
-  # Check if there exist a 1 hour interval between 2 consecutive working intervals
+  # Check if there exist at least 1 hour of break between 2 consecutive working intervals
   def up
     execute <<-SQL
-      -- record: a tuple from the working_intervalss table
-      -- Returns true if there does not exist a 1 hour interval between 2 consecutive working intervals 
+      -- record: a tuple from the working_intervals table
+      -- Returns true if there does not exist at least 1 hour break between 2 consecutive working intervals 
       -- , where the working intervals are of the same day and same schedule as the given record.
       CREATE OR REPLACE FUNCTION check_one_hour_break(record working_intervals) RETURNS BOOLEAN AS $$
         DECLARE
@@ -31,7 +31,8 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
               AND T3.endHour <= T2.startHour
               AND T3.startHour <> T2.startHour
             )
-            AND T2.startHour - T1.endHour <> interval '1 hour'
+            -- Check if there is NO at least one hour of break between two consecutive working intervals
+            AND T2.startHour - T1.endHour < interval '1 hour'
           );
           
           RETURN is_violating;
@@ -61,7 +62,7 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
           is_violating = check_one_hour_break(NEW);
 
           IF is_violating THEN
-            RAISE exception 'There must be an exact 1 hour break between consecutive working intervals';
+            RAISE exception 'There must be at least 1 hour break between consecutive working intervals';
           END IF;
         END IF;
         
@@ -77,7 +78,7 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
           END IF;
 
           IF is_violating THEN
-            RAISE exception 'There must be an exact 1 hour break between consecutive working intervals';
+            RAISE exception 'There must be at least 1 hour break between consecutive working intervals';
           END IF;
         END IF;
 

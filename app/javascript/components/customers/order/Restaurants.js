@@ -3,7 +3,6 @@ import axios from 'axios';
 import RestaurantSelection from './RestaurantSelection';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 
 class Restaurants extends React.Component {
     constructor(props) {

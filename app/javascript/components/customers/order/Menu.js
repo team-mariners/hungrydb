@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import MenuItem from './MenuItem';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import { withRouter } from 'react-router-dom';
 
 class Menu extends React.Component {
@@ -10,7 +12,8 @@ class Menu extends React.Component {
         // Need to wrap this class in withRouter to use match
         console.log("Menu props res ID " + this.props.match.params.rid);
         this.restaurant_id = this.props.match.params.rid;
-        this.state = { menu: null };
+        this.handleEnterSearchQuery = this.handleEnterSearchQuery.bind(this);
+        this.state = { menu: null, searchQuery: "" };
     }
 
     componentDidMount() {
@@ -25,6 +28,11 @@ class Menu extends React.Component {
             .catch(error => {
                 console.log(error)
             })
+    }
+
+    handleEnterSearchQuery(e) {
+        this.setState({searchQuery: e.target.value});
+        console.log(e.target.value);
     }
 
     render() {
@@ -42,15 +50,20 @@ class Menu extends React.Component {
                     menuArray.push(
                         // Section Header
                         <div className='menu-section-header'>
-                            <br /><br />
+                            <br /><br /><br /><br />
                             <h2>{section}</h2>
                         </div>
                     )
 
                     for (let food of food_array) {
-                        menuArray.push(
-                            <MenuItem food={food} onSubmitOrder={this.props.onSubmitOrder}/>
-                        )
+                        if (!this.state.searchQuery ||
+                            (this.state.searchQuery &&
+                            food.f_name.toUpperCase()
+                                .includes(this.state.searchQuery.toUpperCase()))) {
+                            menuArray.push(
+                                <MenuItem food={food} onSubmitOrder={this.props.onSubmitOrder} />
+                            )
+                        }
                     }
                 }
             }
@@ -63,6 +76,11 @@ class Menu extends React.Component {
             } else {
                 return (
                     <div className='menu-container'>
+                        <div><br /></div>
+                        <Form inline>
+                            <FormControl type="text" placeholder="Search Food"
+                                className="mr-sm-2" onChange={this.handleEnterSearchQuery} />
+                        </Form>
                         {menuArray}
                     </div>
                 )

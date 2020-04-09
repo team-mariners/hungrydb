@@ -14,6 +14,7 @@ class ReviewItem extends React.Component {
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleHideModal = this.handleHideModal.bind(this);
         this.state = { showModal: false };
+        console.log(props);
     }
 
     handleShowModal = () => {
@@ -28,7 +29,7 @@ class ReviewItem extends React.Component {
         return (
             <React.Fragment>
                 <ReviewModal show={this.state.showModal} onClose={this.handleHideModal}
-                    review={this.review} />
+                    review={this.review} nameShown={this.props.nameShown} />
 
                 <button onClick={this.handleShowModal}>
                     <ListGroup.Item variant="success" style={{

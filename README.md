@@ -106,3 +106,5 @@ bin/webpack-dev-server
 * For the cron jobs to be executed, the server needs to be enabled 24 hours if it's run on your local machine.
 
 * The cron jobs are not currently enabled on the hosted application on Heroku as it's a charged service.
+
+2. Kindly contact us should you face problems when setting up the project.

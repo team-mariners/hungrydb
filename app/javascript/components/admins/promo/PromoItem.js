@@ -11,7 +11,7 @@ import CardFooter from '../../utilities/CustomCard/CardFooter';
 momentDurationFormatSetup(moment);
 
 const PromoItem = (props) => {
-    const editButton = <Button onClick={() => props.showEditPromo(props.promo)}>Edit</Button>;
+    var editButton = <Button onClick={() => props.showEditPromo(props.promo)}>Edit</Button>;
 
     if (props.promoType === 'closed') {
         editButton = null;

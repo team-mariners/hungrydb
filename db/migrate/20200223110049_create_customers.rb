@@ -12,13 +12,16 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE customers (
       id bigint NOT NULL DEFAULT nextval('customers_id_seq'),
       user_id bigint,
+      role varchar(100) NOT NULL DEFAULT 'customer'
+        CONSTRAINT customers_role 
+        CHECK (role = 'customer'),
       can bigint,
       cvv integer,
       reward_points integer DEFAULT 0 NOT NULL,
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       PRIMARY KEY(id),
-      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+      FOREIGN KEY(user_id, role) REFERENCES users(id, roles) ON DELETE CASCADE
     );"
 
     execute "ALTER SEQUENCE customers_id_seq OWNED BY customers.id;"

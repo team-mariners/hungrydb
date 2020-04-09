@@ -6,14 +6,16 @@ class CreateRiders < ActiveRecord::Migration[6.0]
 
     execute "CREATE TABLE riders (
       user_id bigint NOT NULL PRIMARY KEY,
+      role varchar(100) NOT NULL DEFAULT 'rider'
+        CONSTRAINT riders_role 
+        CHECK (role = 'rider'),
       r_type rider_type NOT NULL,
       currLocation varchar(300),
       status varchar(300) NOT NULL DEFAULT '',
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       UNIQUE(user_id, r_type),
-      FOREIGN KEY(user_id) REFERENCES users
-        ON DELETE CASCADE
+      FOREIGN KEY(user_id, role) REFERENCES users(id, roles) ON DELETE CASCADE
     );"
   end
 

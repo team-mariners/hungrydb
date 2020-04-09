@@ -12,6 +12,7 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 # Create test users with multiple roles
+ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO users(username, email, encrypted_password, roles, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at) VALUES
     ('customer', 'customer@example.com', '#{Devise::Encryptor.digest(User, "12345678")}', 'customer', 1, 'now', 'now', '127.0.0.1', '127.0.0.1', 'now', 'now'),
@@ -1534,7 +1535,6 @@ ActiveRecord::Base.connection.exec_query(
 )
 
 # ------------------------------------------------ Riders ---------------------------------------------------
-ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO riders(user_id, r_type, created_at, updated_at) VALUES
     ('3', 'full_time', 'now', 'now'),
@@ -1999,25 +1999,6 @@ ActiveRecord::Base.connection.exec_query(
     ('983', '900');"
 )
 
-ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
-    VALUES ('3', '2020-03-01', '2020-03-31', '1200');"
-)
-
-ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
-    VALUES ('3', date_trunc('month', CURRENT_DATE),
-        date_trunc('month', CURRENT_DATE) + interval '1 month - 1 day', '1200');"
-)
-
-# ------------------------------------------------ Part Time Riders ---------------------------------------------------
-ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
-    VALUES ('4', date_trunc('week', CURRENT_DATE),
-        date_trunc('week', CURRENT_DATE) + interval '1 week - 1 day', '200');"
-)
-ActiveRecord::Base.connection.commit_db_transaction
-
 # ------------------------------------------------- Managers ----------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO managers(user_id, created_at, updated_at) VALUES
@@ -2273,6 +2254,8 @@ ActiveRecord::Base.connection.exec_query(
     "INSERT INTO admins(user_id, created_at, updated_at) VALUES
     ('7', 'now', 'now');"
 )
+ActiveRecord::Base.connection.commit_db_transaction
+
 
 # ------------------------------------------------ Restaurants -------------------------------------------------------
 ActiveRecord::Base.connection.exec_query(
@@ -8584,6 +8567,26 @@ ActiveRecord::Base.connection.exec_query(
     VALUES (#{in_progress_order_2['oid']}, '4146', 3);"
 )
 ActiveRecord::Base.connection.commit_db_transaction
+
+
+# ------------------------------------------------ Riders Salaries ---------------------------------------------------
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES ('3', '2020-03-01', '2020-03-31', '1200');"
+)
+
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES ('3', date_trunc('month', CURRENT_DATE),
+        date_trunc('month', CURRENT_DATE) + interval '1 month - 1 day', '1200');"
+)
+
+# ------------------------------------------------ Part Time Riders ---------------------------------------------------
+ActiveRecord::Base.connection.exec_query(
+    "INSERT INTO rider_salaries(rider_id, start_date, end_date, base_salary)
+    VALUES ('4', date_trunc('week', CURRENT_DATE),
+        date_trunc('week', CURRENT_DATE) + interval '1 week - 1 day', '200');"
+)
 
 # ---------------------------------------------- Monthly Work Schedules -----------------------------------------------
 # Rider 1

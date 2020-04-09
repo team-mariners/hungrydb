@@ -25,7 +25,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
       last_sign_in_ip inet,
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
-      PRIMARY KEY(id)
+      PRIMARY KEY(id),
+      UNIQUE(id, roles)
     );"
 
     execute "ALTER SEQUENCE users_id_seq OWNED BY users.id;"

@@ -345,73 +345,86 @@ module AdminsHelper
                 return false
             end
 
-            ActiveRecord::Base.connection.begin_db_transaction()
-            ActiveRecord::Base.connection.exec_query(
-                "DELETE FROM working_intervals
-                WHERE wws_id = #{wwsid};"
-            )
+            wwsid = ActiveRecord::Base.connection.exec_query(
+                "SELECT wws_id FROM weekly_work_schedules
+                WHERE pt_rider_id = '#{userid}';"
+            ).first['wws_id']
 
-            for i in 0..6 do
-                started = false
-                start = nil
-                ending = nil
+            begin
+                ActiveRecord::Base.connection.begin_db_transaction()
+                ActiveRecord::Base.connection.exec_query(
+                    "DELETE FROM working_intervals
+                    WHERE wws_id = '#{wwsid}';"
+                )
 
-                for j in 0..11 do
-                    if (matrix[i][j] == 1 && !started)
-                        started = true
-                        start = (Time.parse('10:00') + j.hours).strftime('%R')
-                    elsif (((j == 11 && matrix[i][j] == 1) || matrix[i][j + 1] == 0) && started)
-                        ending = (Time.parse('10:00') + j.hours).strftime('%R')
-                        ActiveRecord::Base.connection.exec_query(
-                            "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
-                            ('#{dow[i]}', '#{start}', '#{ending}', '#{wwsid}');"
-                        )
-                        started = false
+                for i in 0..6 do
+                    started = false
+                    start = nil
+                    ending = nil
+
+                    for j in 0..11 do
+                        if (matrix[i][j] == 1 && !started)
+                            started = true
+                            start = (Time.parse('10:00') + j.hours).strftime('%R')
+                        elsif (((j == 11 && matrix[i][j] == 1) || matrix[i][j + 1] == 0) && started)
+                            ending = (Time.parse('10:00') + j.hours).strftime('%R')
+                            ActiveRecord::Base.connection.exec_query(
+                                "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
+                                ('#{dow[i]}', '#{start}', '#{ending}', '#{wwsid}');"
+                            )
+                            started = false
+                        end
                     end
                 end
+                ActiveRecord::Base.connection.commit_db_transaction()
+            rescue Exception => e
+                return false
             end
-            ActiveRecord::Base.connection.commit_db_transaction()
 
             return true
         else
             wwsid = ActiveRecord::Base.connection.exec_query(
                 "SELECT wws_id FROM weekly_work_schedules ws
                 JOIN monthly_work_schedules ms ON (ws.mws_id = ms.mws_id)
-                WHERE rider_id = #{userid};"
+                WHERE rider_id = '#{userid}';"
             ).first['wws_id']
 
             # Take the first interval and assume the rest accordingly
-            ActiveRecord::Base.connection.begin_db_transaction()
-            ActiveRecord::Base.connection.exec_query(
-                "DELETE FROM working_intervals
-                WHERE wws_id = #{wwsid};"
-            )
+            begin
+                ActiveRecord::Base.connection.begin_db_transaction()
+                ActiveRecord::Base.connection.exec_query(
+                    "DELETE FROM working_intervals
+                    WHERE wws_id = '#{wwsid}';"
+                )
 
-            for i in 0..6 do
-                start1 = nil
-                ending1 = nil
-                start2 = nil
-                ending2 = nil
-                shouldExit = false
-                for j in 0..3
-                    if (matrix[i][j] == 1 && !shouldExit)
-                        start1 = (Time.parse('10:00') + j.hours).strftime('%R')
-                        ending1 = (Time.parse('10:00') + (j + 4).hours).strftime('%R')
-                        start2 = (Time.parse('10:00') + (j + 5).hours).strftime('%R')
-                        ending2 = (Time.parse('10:00') + (j + 9).hours).strftime('%R')
-                        shouldExit = true
+                for i in 0..6 do
+                    start1 = nil
+                    ending1 = nil
+                    start2 = nil
+                    ending2 = nil
+                    shouldExit = false
+                    for j in 0..3
+                        if (matrix[i][j] == 1 && !shouldExit)
+                            start1 = (Time.parse('10:00') + j.hours).strftime('%R')
+                            ending1 = (Time.parse('10:00') + (j + 4).hours).strftime('%R')
+                            start2 = (Time.parse('10:00') + (j + 5).hours).strftime('%R')
+                            ending2 = (Time.parse('10:00') + (j + 9).hours).strftime('%R')
+                            shouldExit = true
+                        end
+                    end
+
+                    if start1 != nil
+                        ActiveRecord::Base.connection.exec_query(
+                            "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
+                            ('#{dow[i]}', '#{start1}', '#{ending1}', '#{wwsid}'),
+                            ('#{dow[i]}', '#{start2}', '#{ending2}', '#{wwsid}')"
+                        )
                     end
                 end
-
-                if start1 != nil
-                    ActiveRecord::Base.connection.exec_query(
-                        "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
-                        ('#{dow[i]}', '#{start1}', '#{ending1}', '#{wwsid}'),
-                        ('#{dow[i]}', '#{start2}', '#{ending2}', '#{wwsid}')"
-                    )
-                end
+                ActiveRecord::Base.connection.commit_db_transaction()
+            rescue Exception => e
+                return false
             end
-            ActiveRecord::Base.connection.commit_db_transaction()
 
             return true
         end

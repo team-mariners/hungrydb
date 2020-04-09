@@ -8,6 +8,7 @@ import OrderModal from '../../managers/manageOrder/OrderModal';
 import UpdateTime from './UpdateTime';
 import { dateTimeFormat2 } from '../../utilities/Constants';
 import { getErrorMessage } from '../../helpers/FormHelpers';
+import { isNotOperatingHours } from '../../helpers/Helpers';
 
 const Delivery = (props) => {    
     const [isLoadOrder, loadOrder] = useState(false);
@@ -41,10 +42,12 @@ const Delivery = (props) => {
         ? props.delivery.depart_to_customer_time.format(dateTimeFormat2) : "-";
     const orderDeliveredTime = !!props.delivery.order_delivered_time
         ? props.delivery.order_delivered_time.format(dateTimeFormat2) : "-";
-
+    
     const updateTimeButton = !!props.delivery.order_delivered_time 
         ? null
-        : <Button className="mr-3" onClick={() => showUpdateTime(true)}>Update time</Button>;
+        : (<Button className="mr-3" onClick={() => showUpdateTime(true)} disabled={isNotOperatingHours()}>
+                Update time
+            </Button>);
     
     return (
         <React.Fragment>
@@ -64,7 +67,7 @@ const Delivery = (props) => {
 
                 <CardFooter>                
                     {updateTimeButton}
-                    <Button onClick={() => loadOrder(true)} disabled={isLoadOrder}>View Order</Button>                
+                    <Button onClick={() => loadOrder(true)} disabled={isLoadOrder}>View Order</Button>
                 </CardFooter>                        
             </CustomCard>                                    
 

@@ -21,11 +21,10 @@ class CreateNotifyCustomerOrderComplete < ActiveRecord::Migration[6.0]
       END;
       $$ LANGUAGE plpgsql;
 
-      DROP TRIGGER IF EXISTS notify_customer_order_complete_trigger ON Orders CASCADE;
-      CREATE CONSTRAINT TRIGGER notify_customer_order_complete_trigger
+      DROP TRIGGER IF EXISTS notify_customer_order_complete_trigger ON Delivers CASCADE;
+      CREATE TRIGGER notify_customer_order_complete_trigger
         AFTER UPDATE OF order_delivered_time
         ON Delivers
-        DEFERRABLE INITIALLY DEFERRED
         FOR EACH ROW
         WHEN (NEW.rider_id IS NOT NULL)
         EXECUTE PROCEDURE notify_customer_order_complete();

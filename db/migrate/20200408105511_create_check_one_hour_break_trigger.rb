@@ -47,17 +47,17 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
       still_exists boolean;
       BEGIN
         -- Insert or update of working interval (new record)
-        IF NEW IS NOT NULL THEN
+        IF ((TG_OP = 'INSERT') OR (TG_OP = 'UPDATE')) THEN
           id = NEW.wi_id;
         END IF;
 
         -- Delete or update of working interval (old record)
-        IF OLD IS NOT NULL THEN
+        IF ((TG_OP = 'DELETE') OR (TG_OP = 'UPDATE')) THEN
           id2 = NEW.wi_id;
         END IF;
 
         -- Insert or update of working interval (new record)
-        IF NEW IS NOT NULL THEN
+        IF id IS NOT NULL THEN
           is_violating = check_one_hour_break(NEW);
 
           IF is_violating THEN
@@ -66,7 +66,7 @@ class CreateCheckOneHourBreakTrigger < ActiveRecord::Migration[6.0]
         END IF;
         
         -- Delete or update of working interval (old record)
-        IF OLD IS NOT NULL THEN
+        IF id2 IS NOT NULL THEN
           -- Check if there is at least one working interval which belongs to the same schedule as the OLD tuple          
           SELECT DISTINCT true INTO still_exists
           FROM working_intervals

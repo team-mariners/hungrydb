@@ -8833,6 +8833,7 @@ ActiveRecord::Base.connection.exec_query(
     ('monthly_work_schedule', '119');"
 )
 
+ActiveRecord::Base.connection.begin_db_transaction
 for i in 0..4 do
     day = (Date.parse('2020-03-30') + i.days).strftime('%A')
     start_hour_1 = (Time.parse('10:00') + (i % 4).hours).strftime('%R')
@@ -8847,7 +8848,7 @@ for i in 0..4 do
 
     ActiveRecord::Base.connection.exec_query(
         "INSERT INTO working_intervals(workingDay, startHour, endHour, wws_id)
-        VALUES('#{day}', '#{start_hour_2}', '#{end_hour_2}', '2')"
+        VALUES('#{day}', '#{start_hour_2}', '#{end_hour_2}', '1')"
     )
 end
 ActiveRecord::Base.connection.commit_db_transaction

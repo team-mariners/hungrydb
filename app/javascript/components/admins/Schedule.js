@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table'
 import { Formik } from 'formik';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +9,11 @@ import * as Yup from 'yup';
 import axios from 'axios';
 
 const Schedule = (props) => {
+    const [isEditingSchedule, setIsEditingSchedule] = useState(false);
+    // Transpose the schedule matrix
+    if (props.userid != null) {
+        var riderSchedule = props.riderSchedule[0].map((col, i) => props.riderSchedule.map(row => row[i]));
+    }
     const dow = [
         "",
         "Monday",
@@ -55,6 +60,38 @@ const Schedule = (props) => {
         });
     }
 
+    const handleEditSchedule = () => {
+        if (!isEditingSchedule) {
+            setIsEditingSchedule(true);
+        } else {
+            const schedule = riderSchedule[0].map((col, i) => riderSchedule.map(row => row[i]))
+            axios.post('/admin/updateschedule', {
+                rid: props.userid,
+                schedule: schedule
+            }).then((response) => {
+                if (response.data == false) {
+                    const message = "The rider's schedule cannot be updated!";
+                    console.log(message);
+                } else {
+                    window.location.assign('/admin/schedule/' + props.userid);
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    }
+
+    const handleScheduleChange = (event) => {
+        const parts = event.currentTarget.value.split("-");
+        var value = 0;
+        if (parts[2] === 'blank') {
+            value = 0;
+        } else {
+            value = 1;
+        }
+        riderSchedule[parseInt(parts[0])][parseInt(parts[1])] = value;
+    }
+
     const displayForm = (formik) => {return (
         <Form onSubmit={formik.handleSubmit}>
             <Form.Group as={Row} controlId="formUsername">
@@ -93,22 +130,45 @@ const Schedule = (props) => {
                 initialValues={initialVals}
                 onSubmit={handleSubmit}
             >
-                {(props) => displayForm(props)}
+                {(formik) => displayForm(formik)}
             </Formik>
         );
     }
 
-    const displayRiderSchedule = (props) => {
-        // Transpose the schedule matrix
-        const schedule = props.riderSchedule[0].map((col, i) => props.riderSchedule.map(row => row[i]));
+    const displayEditScheduleButton = () => {
+        return (
+            <React.Fragment>
+                <Button variant="primary" type="submit" onClick={handleEditSchedule} sm={1}>
+                    Edit Schedule
+                </Button>
+                <p>&nbsp;</p>
+            </React.Fragment>
+        )
+    }
 
+    const displayRiderSchedule = (props) => {
+        console.log(riderSchedule);
         const intervalValues = intervals.map((val, i) => {
             return (
                 <tr>
                     <td>{val}</td>
-                    {schedule[i].map((val) => {
-                        const value = (val == 0) ? '' : 'Active';
-                        return (<td>{value}</td>);
+                    {riderSchedule[i].map((val, j) => {
+                        const key = i + "-" + j;
+                        const inactive = key + "-blank";
+                        const active = key + "-active";
+                        var value = (val == 0) ? inactive : active;
+                        const display = (val == 0) ? "" : "Active";
+                        const selection = (<Form.Control
+                            name="role"
+                            defaultValue={value}
+                            onChange={handleScheduleChange}
+                            as="select"
+                        >
+                            <option key={inactive} value={inactive}></option>
+                            <option key={active} value={active}>Active</option>
+                        </Form.Control>);
+                        const output = (isEditingSchedule) ? selection : display;
+                        return (<td>{output}</td>);
                     })}
                 </tr>
             );
@@ -177,6 +237,7 @@ const Schedule = (props) => {
             return (
                 <React.Fragment>
                     {displayRiderForm()}
+                    {displayEditScheduleButton()}
                     {displayRiderSchedule(props)}
                 </React.Fragment>
             )

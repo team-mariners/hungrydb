@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       post 'getuserid', to: 'admins#getuserid'
       post 'getriderid', to: 'admins#getriderid'
       post 'updaterole', to: 'admins#updaterole'
+      post 'updateschedule', to: 'admins#updateschedule'
       post 'fdspromo', to: 'admins#fdspromo'
       post 'getstatistics', to: 'admins#getstatistics'
     end

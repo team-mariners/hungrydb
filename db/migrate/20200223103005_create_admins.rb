@@ -12,10 +12,13 @@ class CreateAdmins < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE admins (
       id bigint NOT NULL DEFAULT nextval('admins_id_seq'),
       user_id bigint,
+      role varchar(100) NOT NULL DEFAULT 'admin'
+        CONSTRAINT admins_role 
+        CHECK (role = 'admin'),
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       PRIMARY KEY(id),
-      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+      FOREIGN KEY(user_id, role) REFERENCES users(id, roles) ON DELETE CASCADE
     );"
 
     execute "ALTER SEQUENCE admins_id_seq OWNED BY admins.id;"

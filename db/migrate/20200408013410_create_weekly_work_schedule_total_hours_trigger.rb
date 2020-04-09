@@ -1,5 +1,7 @@
 class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
   # Check if the total number of hours in each weekly work schedule is at least 10 and at most 48
+  # Note that empty weekly work schedule is allowed, i.e. the weekly work schedule has no working intervals
+  # for the flexibility of creating rider.
   def up
     execute <<-SQL
       CREATE OR REPLACE FUNCTION check_weekly_work_schedule_duration() RETURNS TRIGGER AS $$
@@ -9,21 +11,15 @@ class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
         total_hours interval;
         still_exists boolean;         
       BEGIN
-        -- Selecting the id of weekly_work_schedule
-        IF (TG_TABLE_NAME = 'weekly_work_schedules') THEN
-          -- Insert or update on weekly_work_schedules
-          id = NEW.wws_id;
-        ELSE
-          IF NEW IS NOT NULL THEN
-            -- Insert or update of working interval (new record)
-            id = NEW.wws_id;                      
-          END IF;
+        IF NEW IS NOT NULL THEN
+          -- Insert or update of working interval (new record)
+          id = NEW.wws_id;                      
+        END IF;
 
-          IF OLD IS NOT NULL THEN
-            IF id IS NULL OR id <> OLD.wws_id THEN
-              -- Delete or update of wws_id of working interval (old record)
-              id2 = OLD.wws_id;            
-            END IF;
+        IF OLD IS NOT NULL THEN
+          IF id IS NULL OR id <> OLD.wws_id THEN
+            -- Delete or update of wws_id of working interval (old record)
+            id2 = OLD.wws_id;            
           END IF;
         END IF;
 
@@ -41,9 +37,9 @@ class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
         
         -- Delete or update of wws_id of old working interval
         IF id2 IS NOT NULL THEN
-          -- Check if the working interval still exists (for deletion)
+          -- Check if there is still any working interval belonging to the weekly work schedule (for deletion)
           SELECT true INTO still_exists
-          FROM weekly_work_schedules
+          FROM working_intervals 
           WHERE wws_id = id2;
           
           IF FOUND THEN
@@ -60,12 +56,6 @@ class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
       END;
       $$ LANGUAGE plpgsql;
 
-      DROP TRIGGER IF EXISTS weekly_work_schedule_total_hours_trigger ON weekly_work_schedules CASCADE;
-      CREATE CONSTRAINT TRIGGER weekly_work_schedule_total_hours_trigger
-        AFTER INSERT ON weekly_work_schedules
-        DEFERRABLE INITIALLY DEFERRED
-        FOR EACH ROW EXECUTE PROCEDURE check_weekly_work_schedule_duration();
-
       DROP TRIGGER IF EXISTS working_interval_total_hours_trigger ON working_intervals CASCADE;
       CREATE CONSTRAINT TRIGGER working_interval_total_hours_trigger
         AFTER DELETE OR UPDATE OR INSERT ON working_intervals
@@ -76,7 +66,6 @@ class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
 
   def down
     execute <<-SQL
-      DROP TRIGGER weekly_work_schedule_total_hours_trigger ON weekly_work_schedules CASCADE;
       DROP TRIGGER working_interval_total_hours_trigger ON working_intervals CASCADE;
       DROP FUNCTION check_weekly_work_schedule_duration();
     SQL

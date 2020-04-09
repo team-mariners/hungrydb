@@ -63,25 +63,25 @@ class Cart extends React.Component {
         }
     }
 
-    handleReduceItem(foodName) {
-        if (!confirm("Are you sure you want to remove 1 " + foodName + "?")) {
+    handleReduceItem(foodToDelete) {
+        if (!confirm("Are you sure you want to remove 1 " + foodToDelete + "?")) {
             e.preventDefault();
             return;
         }
 
         for (let storedName in this.foods) {
-            if (storedName === foodName) {
+            if (storedName === foodToDelete) {
                 // delete this.foods.storedName;
                 let temp = {};
                 for (let food in this.foods) {
-                    if (food !== foodName) {
-                        temp[food] = this.foods[storedName];
+                    if (food !== foodToDelete) {
+                        temp[food] = this.foods[food];
                     } else {
-                        this.foods[storedName]["quantity"] -= 1;
-                        if (this.foods[storedName]["quantity"] == 0) {
+                        this.foods[foodToDelete]["quantity"] -= 1;
+                        if (this.foods[foodToDelete]["quantity"] == 0) {
                             continue;
                         }
-                        temp[food] = this.foods[storedName];
+                        temp[food] = this.foods[food];
                     }
                 }
                 this.foods = Object.keys(temp).length === 0 ? null : temp;
@@ -90,7 +90,7 @@ class Cart extends React.Component {
                 location.reload();
             }
         }
-        console.log(foodName);
+        console.log(foodToDelete);
     }
 
     handlePromoInsertChange(e) {

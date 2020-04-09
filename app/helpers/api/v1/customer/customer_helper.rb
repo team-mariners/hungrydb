@@ -22,6 +22,9 @@ module Api::V1::Customer::CustomerHelper
     two_promos_query = "SELECT *
                        FROM Promotions P INNER JOIN Fds_Promotions F
                             ON P.id = F.promotion_id
+                            and CURRENT_TIMESTAMP >= P.start_datetime
+                            and CURRENT_TIMESTAMP <= P.end_datetime
+                            and num_redeemed < max_redeem
                        LIMIT 2"
     ActiveRecord::Base.connection.execute(two_promos_query)
   end

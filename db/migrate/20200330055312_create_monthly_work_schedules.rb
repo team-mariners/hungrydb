@@ -11,11 +11,9 @@ class CreateMonthlyWorkSchedules < ActiveRecord::Migration[6.0]
       CACHE 1;"
     
     execute "CREATE TABLE monthly_work_schedules (
-      mws_id bigint NOT NULL DEFAULT nextval('mws_id_seq'),
-      rider_id bigint,
-      PRIMARY KEY(mws_id),
-      FOREIGN KEY(rider_id) REFERENCES full_time_riders
-        ON DELETE CASCADE
+      mws_id bigint PRIMARY KEY DEFAULT nextval('mws_id_seq'),
+      rider_id bigint UNIQUE REFERENCES full_time_riders
+        ON DELETE CASCADE            
     );"
 
     execute "ALTER SEQUENCE mws_id_seq OWNED BY monthly_work_schedules.mws_id;"

@@ -31,15 +31,15 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
         still_exists boolean;
         violate_constraint boolean DEFAULT false;
       BEGIN
-        IF NEW IS NOT NULL THEN
-          -- Insert or update of working interval (new record)
+        -- Insert or update of working interval (new record)
+        IF ((TG_OP = 'INSERT') OR (TG_OP = 'UPDATE')) THEN          
           id = NEW.wws_id;                      
           schedule_type = (SELECT w_type FROM weekly_work_schedules WHERE wws_id = NEW.wws_id);
         END IF;
 
-        IF OLD IS NOT NULL THEN
+        -- Delete or update of wws_id of working interval (old record)
+        IF ((TG_OP = 'DELETE') OR (TG_OP = 'UPDATE')) THEN
           IF id IS NULL OR id <> OLD.wws_id THEN
-            -- Delete or update of wws_id of working interval (old record)
             id2 = OLD.wws_id;            
             schedule_type2 = (SELECT w_type FROM weekly_work_schedules WHERE wws_id = OLD.wws_id);
           END IF;
@@ -68,7 +68,7 @@ class CreateCheckFullTimeRiderWorkScheduleTrigger < ActiveRecord::Migration[6.0]
           -- If the weekly work schedule still exists and it belongs to a monthly work schedule
           IF (FOUND AND (schedule_type2 = 'monthly_work_schedule')) THEN
             violate_constraint = check_full_time_rider_work_schedule(id2);
-         END IF;
+          END IF;
 
           IF violate_constraint THEN
             RAISE exception 'For full-time riders, each work day must consist of 8 work hours comprising of two 4-hour periods';

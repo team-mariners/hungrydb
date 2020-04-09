@@ -65,15 +65,15 @@ class CreateCheckConsecutiveWorkDaysTrigger < ActiveRecord::Migration[6.0]
       still_exists boolean;      
       violate_constraint boolean DEFAULT false;
     BEGIN
-      IF NEW IS NOT NULL THEN
-        -- Insert or update of working interval (new record)
+      -- Insert or update of working interval (new record)
+      IF ((TG_OP = 'INSERT') OR (TG_OP = 'UPDATE')) THEN        
         id = NEW.wws_id;                      
         schedule_type = (SELECT w_type FROM weekly_work_schedules WHERE wws_id = NEW.wws_id);
       END IF;
 
-      IF OLD IS NOT NULL THEN
+      -- Delete or update of wws_id of working interval (old record)
+      IF ((TG_OP = 'DELETE') OR (TG_OP = 'UPDATE')) THEN
         IF id IS NULL OR id <> OLD.wws_id THEN
-          -- Delete or update of wws_id of working interval (old record)
           id2 = OLD.wws_id;            
           schedule_type2 = (SELECT w_type FROM weekly_work_schedules WHERE wws_id = OLD.wws_id);
         END IF;

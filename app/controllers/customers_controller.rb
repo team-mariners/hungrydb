@@ -16,7 +16,7 @@ class CustomersController < UsersController
       begin
         conn.async_exec "LISTEN user_#{current_user.id}_channel"
 
-        conn.wait_for_notify(10) do |channel, pid, payload|
+        conn.wait_for_notify(5) do |channel, pid, payload|
           redirect_to customer_review_order_path,
             notice: 'Your order was delivered by ' + payload
         end

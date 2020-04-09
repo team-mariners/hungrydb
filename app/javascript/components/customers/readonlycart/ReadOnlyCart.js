@@ -26,7 +26,7 @@ class ReadOnlyCart extends React.Component {
     componentWillMount() {
         this.refreshId = setInterval(() => {
             window.location.reload();
-        }, 10000);
+        }, 5000);
     }
 
     componentWillUnmount() {

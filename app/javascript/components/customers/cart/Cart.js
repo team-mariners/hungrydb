@@ -13,7 +13,7 @@ class Cart extends React.Component {
         this.foods = JSON.parse(secureStorage.getItem('foods'));
         console.log(this.foods);
 
-        this.handleDeleteItem = this.handleDeleteItem.bind(this)
+        this.handleReduceItem = this.handleReduceItem.bind(this)
         this.handlePromoInsertChange = this.handlePromoInsertChange.bind(this);
         this.handleSubmitPromo = this.handleSubmitPromo.bind(this);
         this.handlePointsInsertChange = this.handlePointsInsertChange.bind(this);
@@ -63,8 +63,8 @@ class Cart extends React.Component {
         }
     }
 
-    handleDeleteItem(foodName) {
-        if (!confirm("Are you sure you want to remove " + foodName + "?")) {
+    handleReduceItem(foodName) {
+        if (!confirm("Are you sure you want to remove 1 " + foodName + "?")) {
             e.preventDefault();
             return;
         }
@@ -73,9 +73,15 @@ class Cart extends React.Component {
             if (storedName === foodName) {
                 // delete this.foods.storedName;
                 let temp = {};
-                for (let order in this.foods) {
-                    if (order !== foodName) {
-                        temp[order] = this.foods[storedName];
+                for (let food in this.foods) {
+                    if (food !== foodName) {
+                        temp[food] = this.foods[storedName];
+                    } else {
+                        this.foods[storedName]["quantity"] -= 1;
+                        if (this.foods[storedName]["quantity"] == 0) {
+                            continue;
+                        }
+                        temp[food] = this.foods[storedName];
                     }
                 }
                 this.foods = Object.keys(temp).length === 0 ? null : temp;
@@ -158,7 +164,7 @@ class Cart extends React.Component {
                 let foodDetails = this.foods[item];
                 items.push(
                     <CartItem foodName={item} foodDetails={foodDetails}
-                        onDeleteItem={this.handleDeleteItem} />
+                        onReduceItem={this.handleReduceItem} />
                 )
                 this.totalCost += foodDetails.price * foodDetails.quantity;
             }

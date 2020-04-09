@@ -50,6 +50,12 @@ class CompleteOrder extends React.Component {
         }
 
         if (!this.checkAllFoodActive()) {
+            e.preventDefault();
+            return;
+        }
+
+        if (!confirm("Confirm Submit Order?")) {
+            e.preventDefault();
             return;
         }
 

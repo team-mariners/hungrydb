@@ -23,7 +23,7 @@ class ReviewHistory extends React.Component {
     }
 
     render() {
-        if (this.state.reviews === null) {
+        if (!this.state.reviews) {
             return null;
         } else {
             let reviews = this.state.reviews.map((review) => {

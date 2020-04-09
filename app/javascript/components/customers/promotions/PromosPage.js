@@ -2,11 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import PromoItem from './PromoItem';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 class PromosPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {fds_promos: null, restaurant_promos: null};
+        this.handleEnterSearchQuery = this.handleEnterSearchQuery.bind(this);
+        this.state = {fds_promos: null, restaurant_promos: null, searchQuery: ""};
     }
 
     componentDidMount() {
@@ -26,14 +29,24 @@ class PromosPage extends React.Component {
             })
     }
 
+    handleEnterSearchQuery(e) {
+        this.setState({searchQuery: e.target.value});
+        console.log(e.target.value);
+    }
+
     render() {
         if (!this.state.fds_promos && !this.state.restaurant_promos) {
             return null;
         } else {
             let fds_promos = this.state.fds_promos.map((fpromo) => {
-                return (
-                    <PromoItem promo={fpromo}/>
-                )
+                if (!this.state.searchQuery ||
+                    (this.state.searchQuery &&
+                    fpromo.promocode.toUpperCase()
+                        .includes(this.state.searchQuery.toUpperCase()))) {
+                    return (
+                        <PromoItem promo={fpromo}/>
+                    )
+                }
             })
 
             let resPromosArray = [];
@@ -44,10 +57,14 @@ class PromosPage extends React.Component {
                         continue;
                     }
 
-
                     // Create PromoItem from all promos by current restaurant rname
                     let currResPromos = resPromos[rname].map((rpromo) => {
-                        return <PromoItem promo={rpromo} />
+                        if (!this.state.searchQuery ||
+                            (this.state.searchQuery &&
+                            rpromo.promocode.toUpperCase()
+                                .includes(this.state.searchQuery.toUpperCase()))) {
+                            return <PromoItem promo={rpromo} />
+                        }
                     });
 
                     resPromosArray.push(
@@ -65,6 +82,11 @@ class PromosPage extends React.Component {
             return (
                 <div className='promo-page-container'>
                     <div><br/></div>
+                    <Form inline>
+                            <FormControl type="text" placeholder="Search Promotions"
+                                className="mr-sm-2" onChange={this.handleEnterSearchQuery} />
+                    </Form>
+                    <div><br/><br/></div>
                     <h3>App-Wide Promotions:</h3>
                     <ListGroup fluid style={{ width: 500, marginLeft: "auto", marginRight: "auto" }}>
                         {fds_promos}

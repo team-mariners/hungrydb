@@ -11,6 +11,9 @@ class Cart extends React.Component {
     constructor(props) {
         super(props);
         this.foods = JSON.parse(secureStorage.getItem('foods'));
+        this.restaurantMenuUrl = "/customer/order/"
+                                    + secureStorage.getItem('restaurant_id')
+                                    + "/menu"
         console.log(this.foods);
 
         this.handleReduceItem = this.handleReduceItem.bind(this)
@@ -174,13 +177,17 @@ class Cart extends React.Component {
         return (
             <div className='cart-container'>
                 <div><br /></div>
-                <h3>Ordering From: {secureStorage.getItem('restaurant_name')}</h3>
+                <a href={this.restaurantMenuUrl} style={{fontSize: 26}}>
+                    Ordering From: {secureStorage.getItem('restaurant_name')}
+                </a>
+                
                 <h4>
                     (minimum order ${parseFloat(
                     secureStorage.getItem('restaurant_min')).toFixed(2)}
                         )
                     </h4>
                 <div><br /></div>
+                
                 <CartItemTable items={items} />
                 <div><br /></div>
 

@@ -4,6 +4,7 @@ import MenuItem from './MenuItem';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { withRouter } from 'react-router-dom';
+import secureStorage from '../../utilities/HungrySecureStorage';
 
 class Menu extends React.Component {
     constructor(props) {
@@ -76,6 +77,8 @@ class Menu extends React.Component {
             } else {
                 return (
                     <div className='menu-container'>
+                        <div><br /></div>
+                        <h3>{secureStorage.getItem('restaurant_name')}</h3>
                         <div><br /></div>
                         <Form inline>
                             <FormControl type="text" placeholder="Search Food"

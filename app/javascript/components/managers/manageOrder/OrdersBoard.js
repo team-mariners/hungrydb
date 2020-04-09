@@ -23,6 +23,11 @@ const OrdersBoard = () => {
         axios.get('/api/v1/orders/index_restaurant')
             .then(result => {
                 console.log(result);
+
+                if (!result.data) {
+                    return;
+                }
+
                 result.data.forEach(order => momentiseDateTime(order));
                 setOrdersAndVisibleOrders(result.data);
             }).catch(error => {

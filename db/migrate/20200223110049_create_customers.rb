@@ -12,9 +12,6 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
     execute "CREATE TABLE customers (
       id bigint NOT NULL DEFAULT nextval('customers_id_seq'),
       user_id bigint,
-      role varchar(100) NOT NULL DEFAULT 'customer'
-        CONSTRAINT customers_role 
-        CHECK (role = 'customer'),
       can bigint,
       cvv integer,
       reward_points integer DEFAULT 0 NOT NULL,

@@ -22,7 +22,6 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
   end
 
   def index_restaurant
-    ActiveRecord::Base.connection.begin_db_transaction
     orders = ActiveRecord::Base.connection.exec_query(
       "SELECT oid, point_offset, payment_method, delivery_fee, date_time, status, food_review,
         (total_price - delivery_fee) AS total_cost,
@@ -38,6 +37,11 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
 
     order_ids = get_order_ids(orders)
 
+    if order_ids.empty?
+      render json: nil
+      return
+    end
+
     ordered_foods = ActiveRecord::Base.connection.exec_query(
       "WITH T AS (
         SELECT *
@@ -48,7 +52,6 @@ class Api::V1::Orders::OrdersController < Api::V1::BaseController
       FROM T JOIN Foods F ON (T.food_id = F.id)
       ORDER BY T.oid, F.id;"      
     ).to_a  
-    ActiveRecord::Base.connection.commit_db_transaction
 
     process_orders(orders, ordered_foods)
 

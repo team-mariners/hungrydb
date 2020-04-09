@@ -11,14 +11,14 @@ class CreateWeeklyWorkScheduleTotalHoursTrigger < ActiveRecord::Migration[6.0]
         total_hours interval;
         still_exists boolean;         
       BEGIN
-        IF NEW IS NOT NULL THEN
-          -- Insert or update of working interval (new record)
+        -- Insert or update of working interval (new record)      
+        IF ((TG_OP = 'INSERT') OR (TG_OP = 'UPDATE')) THEN          
           id = NEW.wws_id;                      
         END IF;
 
-        IF OLD IS NOT NULL THEN
+        -- Delete or update of wws_id of working interval (old record)        
+        IF ((TG_OP = 'DELETE') OR (TG_OP = 'UPDATE')) THEN
           IF id IS NULL OR id <> OLD.wws_id THEN
-            -- Delete or update of wws_id of working interval (old record)
             id2 = OLD.wws_id;            
           END IF;
         END IF;

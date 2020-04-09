@@ -367,7 +367,7 @@ module AdminsHelper
                             started = true
                             start = (Time.parse('10:00') + j.hours).strftime('%R')
                         elsif (((j == 11 && matrix[i][j] == 1) || matrix[i][j + 1] == 0) && started)
-                            ending = (Time.parse('10:00') + j.hours).strftime('%R')
+                            ending = (Time.parse('10:00') + (j + 1).hours).strftime('%R')
                             ActiveRecord::Base.connection.exec_query(
                                 "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
                                 ('#{dow[i]}', '#{start}', '#{ending}', '#{wwsid}');"

@@ -67,6 +67,14 @@ class AdminsController < UsersController
         end
     end
 
+    def updateschedule
+        if (params.has_key?(:rid) && params.has_key?(:schedule))
+            render plain: helpers.update_rider_schedule(params[:rid], params[:schedule])
+        else
+            render plain: false
+        end
+    end
+
     def fdspromo
         if (params.has_key?(:func) && params.has_key?(:code) && params.has_key?(:start) && params.has_key?(:end) && params.has_key?(:percent) && params.has_key?(:max))
             if (params[:func] == 'new' && params.has_key?(:name) )

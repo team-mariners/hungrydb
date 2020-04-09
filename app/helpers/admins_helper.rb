@@ -312,13 +312,119 @@ module AdminsHelper
         return get_schedule_matrix(intervals)
     end
 
+    def update_rider_schedule(userid, matrix)
+        if (!user_has_role?(userid, 'rider'))
+            return false
+        end
+
+        dow = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        rtype = ActiveRecord::Base.connection.exec_query(
+            "SELECT r_type FROM riders
+            WHERE user_id = '#{userid}';"
+        ).first['r_type']
+
+        if (rtype == 'part_time')
+            total = 0
+
+            for i in 0..6 do
+                daily = 0
+
+                for j in 0..11 do
+                    total += matrix[i][j]
+                    daily += matrix[i][j]
+
+                    if (daily > 4)
+                        return false
+                    elsif (matrix[i][j] == 0)
+                        daily = 0
+                    end
+                end
+            end
+
+            if (total < 10 || total > 48)
+                return false
+            end
+
+            ActiveRecord::Base.connection.begin_db_transaction()
+            ActiveRecord::Base.connection.exec_query(
+                "DELETE FROM working_intervals
+                WHERE wws_id = #{wwsid};"
+            )
+
+            for i in 0..6 do
+                started = false
+                start = nil
+                ending = nil
+
+                for j in 0..11 do
+                    if (matrix[i][j] == 1 && !started)
+                        started = true
+                        start = (Time.parse('10:00') + j.hours).strftime('%R')
+                    elsif (((j == 11 && matrix[i][j] == 1) || matrix[i][j + 1] == 0) && started)
+                        ending = (Time.parse('10:00') + j.hours).strftime('%R')
+                        ActiveRecord::Base.connection.exec_query(
+                            "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
+                            ('#{dow[i]}', '#{start}', '#{ending}', '#{wwsid}');"
+                        )
+                        started = false
+                    end
+                end
+            end
+            ActiveRecord::Base.connection.commit_db_transaction()
+
+            return true
+        else
+            wwsid = ActiveRecord::Base.connection.exec_query(
+                "SELECT wws_id FROM weekly_work_schedules ws
+                JOIN monthly_work_schedules ms ON (ws.mws_id = ms.mws_id)
+                WHERE rider_id = #{userid};"
+            ).first['wws_id']
+
+            # Take the first interval and assume the rest accordingly
+            ActiveRecord::Base.connection.begin_db_transaction()
+            ActiveRecord::Base.connection.exec_query(
+                "DELETE FROM working_intervals
+                WHERE wws_id = #{wwsid};"
+            )
+
+            for i in 0..6 do
+                start1 = nil
+                ending1 = nil
+                start2 = nil
+                ending2 = nil
+                shouldExit = false
+                for j in 0..3
+                    if (matrix[i][j] == 1 && !shouldExit)
+                        start1 = (Time.parse('10:00') + j.hours).strftime('%R')
+                        ending1 = (Time.parse('10:00') + (j + 4).hours).strftime('%R')
+                        start2 = (Time.parse('10:00') + (j + 5).hours).strftime('%R')
+                        ending2 = (Time.parse('10:00') + (j + 9).hours).strftime('%R')
+                        shouldExit = true
+                    end
+                end
+
+                if start1 != nil
+                    ActiveRecord::Base.connection.exec_query(
+                        "INSERT INTO working_intervals(workingday, starthour, endhour, wws_id) VALUES
+                        ('#{dow[i]}', '#{start1}', '#{ending1}', '#{wwsid}'),
+                        ('#{dow[i]}', '#{start2}', '#{ending2}', '#{wwsid}')"
+                    )
+                end
+            end
+            ActiveRecord::Base.connection.commit_db_transaction()
+
+            return true
+        end
+
+    end
+
     def get_schedule_matrix(intervals)
         # A week will start from Monday to Sunday and each day is 10AM to 10PM
         matrix = Array.new(7) { Array.new(12, 0) }
 
         for i in 0..6 do
             for j in 0..11 do
-                time = (Time.parse('10:00') + j.hours).strftime('%R')
+                time = (Time.parse('11:00') + j.hours).strftime('%R')
                 matrix[i][j] = get_interval_count(intervals, i, time)
             end
         end

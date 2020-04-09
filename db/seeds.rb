@@ -8850,9 +8850,11 @@ for i in 0..4 do
         VALUES('#{day}', '#{start_hour_2}', '#{end_hour_2}', '2')"
     )
 end
+ActiveRecord::Base.connection.commit_db_transaction
 
 # ---------------------------------------------- Weekly Work Schedules -----------------------------------------------
 # For part time rider 1
+ActiveRecord::Base.connection.begin_db_transaction
 ActiveRecord::Base.connection.exec_query(
     "INSERT INTO weekly_work_schedules(w_type, pt_rider_id)
     VALUES ('part_time_rider', '4'),
@@ -8975,6 +8977,7 @@ for i in 0..2 do
         VALUES('#{day}', '#{start_hour}', '#{end_hour}', '120')"
     )
 end
+ActiveRecord::Base.connection.commit_db_transaction
 
 # --------------------------------------------------- Attendance ------------------------------------------------------
 # Rider 1

@@ -15,7 +15,7 @@ class CreateManagers < ActiveRecord::Migration[6.0]
       created_at timestamp(6) without time zone NOT NULL,
       updated_at timestamp(6) without time zone NOT NULL,
       PRIMARY KEY(id),
-      FOREIGN KEY(user_id, role) REFERENCES users(id, roles) ON DELETE CASCADE
+      FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
     );"
 
     execute "ALTER SEQUENCE managers_id_seq OWNED BY managers.id;"

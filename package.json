@@ -32,7 +32,7 @@
     "react_ujs": "^2.6.1",
     "secure-web-storage": "^1.0.2",
     "turbolinks": "^5.2.0",
-    "yup": "^0.28.3"
+    "yup": "^0.28.4"
   },
   "version": "0.1.0",
   "devDependencies": {

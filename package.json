@@ -8,7 +8,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@rails/actioncable": "^6.0.0",
-    "@rails/activestorage": "^6.0.0",
+    "@rails/activestorage": "^6.1.2",
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "5.0.1",
     "axios": "^0.19.2",
